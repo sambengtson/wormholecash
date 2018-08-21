@@ -14,8 +14,8 @@ class Wallet {
     });
   }
 
-  sendTo(address, amount) {
-    return axios.post(`${this.restURL}wallet/sendTo/:address/:amount`)
+  sendToAddress(address, amount) {
+    return axios.post(`${this.restURL}wallet/sendToAddress/:address/:amount`)
     .then((response) => {
       return response.data;
     })
