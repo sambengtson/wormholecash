@@ -4,9 +4,11 @@ import DataRetrieval from './DataRetrieval';
 import PayloadCreation from './PayloadCreation';
 import RawTransactions from './RawTransactions';
 import Transaction from './Transaction';
+import Wallet from './Wallet';
 
-class Wormhole {
+class Wormhole extends BITBOXCli {
   constructor(config) {
+    super(config);
     if(config && config.restURL && config.restURL !== '') {
       this.restURL = config.restURL;
     } else {
@@ -18,8 +20,7 @@ class Wormhole {
     this.PayloadCreation = new PayloadCreation(this.restURL);
     this.RawTransactions = new RawTransactions(this.restURL);
     this.Transaction = new Transaction(this.restURL);
-
-    this.BITBOX = new BITBOXCli();
+    this.Wallet = new Wallet(this.restURL);
   }
 }
 
