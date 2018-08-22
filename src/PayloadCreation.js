@@ -80,8 +80,8 @@ class PayloadCreation {
     });
   }
 
-  partiCrwoSale(amount) {
-    return axios.post(`${this.restURL}payloadCreation/partiCrwoSale/${amount}`)
+  participateCrowdSale(amount) {
+    return axios.post(`${this.restURL}payloadCreation/participateCrowdSale/${amount}`)
     .then((response) => {
       return response.data;
     })
