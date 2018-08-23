@@ -4,24 +4,22 @@ class Wallet {
     this.restURL = restURL;
   }
 
-  newAddress() {
-    return axios.get(`${this.restURL}wallet/newAddress`)
-    .then((response) => {
+  async newAddress() {
+    try {
+      let response = await axios.get(`${this.restURL}wallet/newAddress`)
       return response.data;
-    })
-    .catch((error) => {
+    } catch (err) {
       return JSON.stringify(error.response.data.error.message);
-    });
+    }
   }
 
-  sendToAddress(address, amount) {
-    return axios.post(`${this.restURL}wallet/sendToAddress/:address/:amount`)
-    .then((response) => {
+  async sendToAddress(address, amount) {
+    try {
+      let response = await axios.post(`${this.restURL}wallet/sendToAddress/${address}/${amount}`)
       return response.data;
-    })
-    .catch((error) => {
+    } catch (err) {
       return JSON.stringify(error.response.data.error.message);
-    });
+    }
   }
 }
 

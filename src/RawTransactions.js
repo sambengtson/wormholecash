@@ -4,59 +4,55 @@ class RawTransactions {
     this.restURL = restURL;
   }
 
-  change(rawtx, prevTxs, destination, fee, position = undefined) {
+  async change(rawtx, prevTxs, destination, fee, position = undefined) {
     let path;
     if(position) {
       path = `${this.restURL}rawTransactions/change/${rawtx}/${JSON.stringify(prevTxs)}/${destination}/${fee}?position=${position}`;
     } else {
       path = `${this.restURL}rawTransactions/change/${rawtx}/${JSON.stringify(prevTxs)}/${destination}/${fee}`;
     }
-    return axios.post(path)
-    .then((response) => {
+    try {
+      let response = await axios.post(path)
       return response.data;
-    })
-    .catch((error) => {
+    } catch (err) {
       return JSON.stringify(error.response.data.error.message);
-    });
+    }
   }
 
-  input(rawtx, txid, n) {
-    return axios.post(`${this.restURL}rawTransactions/input/${rawtx}/${txid}/${n}`)
-    .then((response) => {
+  async input(rawtx, txid, n) {
+    try {
+      let response = await axios.post(`${this.restURL}rawTransactions/input/${rawtx}/${txid}/${n}`)
       return response.data;
-    })
-    .catch((error) => {
+    } catch (err) {
       return JSON.stringify(error.response.data.error.message);
-    });
+    }
   }
 
-  opReturn(rawtx, payload) {
-    return axios.post(`${this.restURL}rawTransactions/opReturn/${rawtx}/${payload}`)
-    .then((response) => {
+  async opReturn(rawtx, payload) {
+    try {
+      let response = await axios.post(`${this.restURL}rawTransactions/opReturn/${rawtx}/${payload}`)
       return response.data;
-    })
-    .catch((error) => {
+    } catch (err) {
       return JSON.stringify(error.response.data.error.message);
-    });
+    }
   }
 
-  reference(rawtx, destination, amount) {
+  async reference(rawtx, destination, amount) {
     let path;
     if(amount) {
       path = `${this.restURL}rawTransactions/reference/${rawtx}/${destination}?amount=${amount}`;
     } else {
       path = `${this.restURL}rawTransactions/reference/${rawtx}/${destination}`;
     }
-    return axios.post(path)
-    .then((response) => {
+    try {
+      let response = await axios.post(path)
       return response.data;
-    })
-    .catch((error) => {
+    } catch (err) {
       return JSON.stringify(error.response.data.error.message);
-    });
+    }
   }
 
-  decodeTransaction(rawtx, prevTxs = undefined, height = undefined) {
+  async decodeTransaction(rawtx, prevTxs = undefined, height = undefined) {
     let path;
     if(prevTxs) {
       path = `${this.restURL}rawTransactions/decodeTransaction/${rawtx}?prevTxs=${JSON.stringify(prevTxs)}`;
@@ -67,13 +63,12 @@ class RawTransactions {
     } else {
       path = `${this.restURL}rawTransactions/decodeTransaction/${rawtx}`;
     }
-    return axios.get(path)
-    .then((response) => {
+    try {
+      let response = await axios.post(path)
       return response.data;
-    })
-    .catch((error) => {
+    } catch (err) {
       return JSON.stringify(error.response.data.error.message);
-    });
+    }
   }
 }
 

@@ -4,136 +4,124 @@ class PayloadCreation {
     this.restURL = restURL;
   }
 
-  burnBCH() {
-    return axios.get(`${this.restURL}payloadCreation/burnBCH`)
-    .then((response) => {
+  async burnBCH() {
+    try {
+      let response = await axios.get(`${this.restURL}payloadCreation/burnBCH`)
       return response.data;
-    })
-    .catch((error) => {
+    } catch (err) {
       return JSON.stringify(error.response.data.error.message);
-    });
+    }
   }
 
-  changeIssuer(propertyId) {
-    return axios.post(`${this.restURL}payloadCreation/changeIssuer/${propertyId}`)
-    .then((response) => {
+  async changeIssuer(propertyId) {
+    try {
+      let response = await axios.post(`${this.restURL}payloadCreation/changeIssuer/${propertyId}`)
       return response.data;
-    })
-    .catch((error) => {
+    } catch (err) {
       return JSON.stringify(error.response.data.error.message);
-    });
+    }
   }
 
-  closeCrowdSale(propertyId) {
-    return axios.post(`${this.restURL}payloadCreation/closeCrowdSale/${propertyId}`)
-    .then((response) => {
+  async closeCrowdSale(propertyId) {
+    try {
+      let response = await axios.post(`${this.restURL}payloadCreation/closeCrowdSale/${propertyId}`)
       return response.data;
-    })
-    .catch((error) => {
+    } catch (err) {
       return JSON.stringify(error.response.data.error.message);
-    });
+    }
   }
 
-  grant(propertyId, amount, memo = '') {
+  async grant(propertyId, amount, memo = '') {
     let path;
     if(memo !== '') {
       path = `${this.restURL}payloadCreation/grant/${propertyId}/${amount}?memo=${memo}`;
     } else {
       path = `${this.restURL}payloadCreation/grant/${propertyId}/${amount}`;
     }
-    return axios.post(path)
-    .then((response) => {
+    try {
+      let response = await axios.post(path)
       return response.data;
-    })
-    .catch((error) => {
+    } catch (err) {
       return JSON.stringify(error.response.data.error.message);
-    });
+    }
   }
 
-  crowdsale(ecosystem, propertyPrecision, previousId, category, subcategory, name, url, data, propertyIdDesired, tokensPerUnit, deadline, earlyBonus, undefine, totalNumber) {
-    return axios.post(`${this.restURL}payloadCreation/crowdsale/${ecosystem}/${propertyPrecision}/${previousId}/${category}/${subcategory}/${name}/${url}/${data}/${propertyIdDesired}/${tokensPerUnit}/${deadline}/${earlyBonus}/${undefine}/${totalNumber}`)
-    .then((response) => {
+  async crowdsale(ecosystem, propertyPrecision, previousId, category, subcategory, name, url, data, propertyIdDesired, tokensPerUnit, deadline, earlyBonus, undefine, totalNumber) {
+    try {
+      let response = await axios.post(`${this.restURL}payloadCreation/crowdsale/${ecosystem}/${propertyPrecision}/${previousId}/${category}/${subcategory}/${name}/${url}/${data}/${propertyIdDesired}/${tokensPerUnit}/${deadline}/${earlyBonus}/${undefine}/${totalNumber}`)
       return response.data;
-    })
-    .catch((error) => {
+    } catch (err) {
       return JSON.stringify(error.response.data.error.message);
-    });
+    }
   }
 
-  fixed(ecosystem, propertyPrecision, previousId, category, subcategory, name, url, data, amount) {
-    return axios.post(`${this.restURL}payloadCreation/fixed/${ecosystem}/${propertyPrecision}/${previousId}/${category}/${subcategory}/${name}/${url}/${data}/${amount}`)
-    .then((response) => {
+  async fixed(ecosystem, propertyPrecision, previousId, category, subcategory, name, url, data, amount) {
+    try {
+      let response = await axios.post(`${this.restURL}payloadCreation/fixed/${ecosystem}/${propertyPrecision}/${previousId}/${category}/${subcategory}/${name}/${url}/${data}/${amount}`)
       return response.data;
-    })
-    .catch((error) => {
+    } catch (err) {
       return JSON.stringify(error.response.data.error.message);
-    });
+    }
   }
 
-  managed(ecosystem, propertyPrecision, previousId, category, subcategory, name, url, data) {
-    return axios.post(`${this.restURL}payloadCreation/managed/${ecosystem}/${propertyPrecision}/${previousId}/${category}/${subcategory}/${name}/${url}/${data}`)
-    .then((response) => {
+  async managed(ecosystem, propertyPrecision, previousId, category, subcategory, name, url, data) {
+    try {
+      let response = await axios.post(`${this.restURL}payloadCreation/managed/${ecosystem}/${propertyPrecision}/${previousId}/${category}/${subcategory}/${name}/${url}/${data}`)
       return response.data;
-    })
-    .catch((error) => {
+    } catch (err) {
       return JSON.stringify(error.response.data.error.message);
-    });
+    }
   }
 
-  participateCrowdSale(amount) {
-    return axios.post(`${this.restURL}payloadCreation/participateCrowdSale/${amount}`)
-    .then((response) => {
+  async participateCrowdSale(amount) {
+    try {
+      let response = await axios.post(`${this.restURL}payloadCreation/participateCrowdSale/${amount}`)
       return response.data;
-    })
-    .catch((error) => {
+    } catch (err) {
       return JSON.stringify(error.response.data.error.message);
-    });
+    }
   }
 
-  revoke(propertyId, amount) {
-    return axios.post(`${this.restURL}payloadCreation/revoke/${propertyId}/${amount}`)
-    .then((response) => {
+  async revoke(propertyId, amount) {
+    try {
+      let response = await axios.post(`${this.restURL}payloadCreation/revoke/${propertyId}/${amount}`)
       return response.data;
-    })
-    .catch((error) => {
+    } catch (err) {
       return JSON.stringify(error.response.data.error.message);
-    });
+    }
   }
 
-  sendAll(ecosystem) {
-    return axios.post(`${this.restURL}payloadCreation/sendAll/${ecosystem}`)
-    .then((response) => {
+  async sendAll(ecosystem) {
+    try {
+      let response = await axios.post(`${this.restURL}payloadCreation/sendAll/${ecosystem}`)
       return response.data;
-    })
-    .catch((error) => {
+    } catch (err) {
       return JSON.stringify(error.response.data.error.message);
-    });
+    }
   }
 
-  simpleSend(propertyId, amount) {
-    return axios.post(`${this.restURL}payloadCreation/simpleSend/${propertyId}/${amount}`)
-    .then((response) => {
+  async simpleSend(propertyId, amount) {
+    try {
+      let response = await axios.post(`${this.restURL}payloadCreation/simpleSend/${propertyId}/${amount}`)
       return response.data;
-    })
-    .catch((error) => {
+    } catch (err) {
       return JSON.stringify(error.response.data.error.message);
-    });
+    }
   }
 
-  STO(propertyId, amount, distributionProperty = undefined) {
+  async STO(propertyId, amount, distributionProperty = undefined) {
     let path;
     if(distributionProperty !== undefined) {
       path = `${this.restURL}payloadCreation/STO/${propertyId}/${amount}?distributionProperty=${distributionProperty}`;
     } else {
       path = `${this.restURL}payloadCreation/STO/${propertyId}/${amount}`;
     }
-    return axios.post(path)
-    .then((response) => {
+    try {
+      let response = await axios.post(path)
       return response.data;
-    })
-    .catch((error) => {
+    } catch (err) {
       return JSON.stringify(error.response.data.error.message);
-    });
+    }
   }
 }
 

@@ -4,7 +4,7 @@ class Configuration {
     this.restURL = restURL;
   }
 
-  autoCommit(flag = true) {
+  async autoCommit(flag = true) {
     let final;
     if(flag === true) {
       final = 'true';
@@ -12,13 +12,12 @@ class Configuration {
       final = 'false';
     }
 
-    return axios.post(`${this.restURL}configuration/autoCommit/${final}`)
-    .then((response) => {
+    try {
+      let response = await axios.get(`${this.restURL}configuration/autoCommit/${final}`)
       return response.data;
-    })
-    .catch((error) => {
+    } catch (err) {
       return JSON.stringify(error.response.data.error.message);
-    });
+    }
   }
 }
 

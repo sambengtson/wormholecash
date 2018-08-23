@@ -4,23 +4,22 @@ class Transaction {
     this.restURL = restURL;
   }
 
-  burnBCHGetWHC(amount, redeemAddress = undefined) {
+  async burnBCHGetWHC(amount, redeemAddress = undefined) {
     let path;
     if(redeemAddress) {
       path = `${this.restURL}transaction/burnBCHGetWHC/${amount}?redeemAddress=${redeemAddress}`;
     } else {
       path = `${this.restURL}transaction/burnBCHGetWHC/${amount}`;
     }
-    return axios.post(path)
-    .then((response) => {
+    try {
+      let response = await axios.post(path)
       return response.data;
-    })
-    .catch((error) => {
+    } catch (err) {
       return JSON.stringify(error.response.data.error.message);
-    });
+    }
   }
 
-  partiCrowSale(fromAddress, toAddress, amount, redeemAddress = undefined, referenceAmount = undefined) {
+  async partiCrowSale(fromAddress, toAddress, amount, redeemAddress = undefined, referenceAmount = undefined) {
     let path;
     if(redeemAddress) {
       path = `${this.restURL}transaction/partiCrowSale/${fromAddress}/${toAddress}/${amount}?redeemAddress=${redeemAddress}`;
@@ -31,16 +30,15 @@ class Transaction {
     } else {
       path = `${this.restURL}transaction/partiCrowSale/${fromAddress}/${toAddress}/${amount}`;
     }
-    return axios.post(path)
-    .then((response) => {
+    try {
+      let response = await axios.post(path)
       return response.data;
-    })
-    .catch((error) => {
+    } catch (err) {
       return JSON.stringify(error.response.data.error.message);
-    });
+    }
   }
 
-  send(fromAddress, toAddress, propertyId, amount, redeemAddress = undefined, referenceAmount = undefined) {
+  async send(fromAddress, toAddress, propertyId, amount, redeemAddress = undefined, referenceAmount = undefined) {
     let path;
     if(redeemAddress) {
       path = `${this.restURL}transaction/send/${fromAddress}/${toAddress}/${propertyId}/${amount}?redeemAddress=${redeemAddress}`;
@@ -51,16 +49,15 @@ class Transaction {
     } else {
       path = `${this.restURL}transaction/send/${fromAddress}/${toAddress}/${propertyId}/${amount}`;
     }
-    return axios.post(path)
-    .then((response) => {
+    try {
+      let response = await axios.post(path)
       return response.data;
-    })
-    .catch((error) => {
+    } catch (err) {
       return JSON.stringify(error.response.data.error.message);
-    });
+    }
   }
 
-  all(fromAddress, toAddress, ecosystem, redeemAddress = undefined, referenceAmount = undefined) {
+  async all(fromAddress, toAddress, ecosystem, redeemAddress = undefined, referenceAmount = undefined) {
     let path;
     if(redeemAddress) {
       path = `${this.restURL}transaction/all/${fromAddress}/${toAddress}/${ecosystem}?redeemAddress=${redeemAddress}`;
@@ -71,109 +68,99 @@ class Transaction {
     } else {
       path = `${this.restURL}transaction/all/${fromAddress}/${toAddress}/${ecosystem}`;
     }
-    return axios.post(path)
-    .then((response) => {
+    try {
+      let response = await axios.post(path)
       return response.data;
-    })
-    .catch((error) => {
+    } catch (err) {
       return JSON.stringify(error.response.data.error.message);
-    });
+    }
   }
 
-  changeIssuer(fromAddress, toAddress, propertyId) {
-    return axios.post(`${this.restURL}transaction/changeIssuer/${fromAddress}/${toAddress}/${propertyId}`)
-    .then((response) => {
+  async changeIssuer(fromAddress, toAddress, propertyId) {
+    try {
+      let response = await axios.post(`${this.restURL}transaction/changeIssuer/${fromAddress}/${toAddress}/${propertyId}`)
       return response.data;
-    })
-    .catch((error) => {
+    } catch (err) {
       return JSON.stringify(error.response.data.error.message);
-    });
+    }
   }
 
-  closeCrowdSale(fromAddress, propertyId) {
-    return axios.post(`${this.restURL}transaction/closeCrowdSale/${fromAddress}/${propertyId}`)
-    .then((response) => {
+  async closeCrowdSale(fromAddress, propertyId) {
+    try {
+      let response = await axios.post(`${this.restURL}transaction/closeCrowdSale/${fromAddress}/${propertyId}`)
       return response.data;
-    })
-    .catch((error) => {
+    } catch (err) {
       return JSON.stringify(error.response.data.error.message);
-    });
+    }
   }
 
-  grant(fromAddress, toAddress, propertyId, amount, memo = undefined) {
+  async grant(fromAddress, toAddress, propertyId, amount, memo = undefined) {
     let path;
     if(memo) {
       path = `${this.restURL}transaction/grant/${fromAddress}/${toAddress}/${propertyId}/${amount}?memo=${memo}`;
     } else {
       path = `${this.restURL}transaction/grant/${fromAddress}/${toAddress}/${propertyId}/${amount}`;
     }
-    return axios.post(path)
-    .then((response) => {
+    try {
+      let response = await axios.post(path)
       return response.data;
-    })
-    .catch((error) => {
+    } catch (err) {
       return JSON.stringify(error.response.data.error.message);
-    });
+    }
   }
 
-  crowdSale(fromAddress, ecosystem, propertyPrecision, previousId, category, subcategory, name, url, data, propertyIdDesired, tokensPerUnit, deadline, earlyBonus, undefine, totalNumber) {
-    return axios.post(`${this.restURL}transaction/crowdSale/${fromAddress}/${ecosystem}/${propertyPrecision}/${previousId}/${category}/${subcategory}/${name}/${url}/${data}/${propertyIdDesired}/${tokensPerUnit}/${deadline}/${earlyBonus}/${undefine}/${totalNumber}`)
-    .then((response) => {
+  async crowdSale(fromAddress, ecosystem, propertyPrecision, previousId, category, subcategory, name, url, data, propertyIdDesired, tokensPerUnit, deadline, earlyBonus, undefine, totalNumber) {
+    try {
+      let response = await axios.post(`${this.restURL}transaction/crowdSale/${fromAddress}/${ecosystem}/${propertyPrecision}/${previousId}/${category}/${subcategory}/${name}/${url}/${data}/${propertyIdDesired}/${tokensPerUnit}/${deadline}/${earlyBonus}/${undefine}/${totalNumber}`)
       return response.data;
-    })
-    .catch((error) => {
+    } catch (err) {
       return JSON.stringify(error.response.data.error.message);
-    });
+    }
   }
 
-  fixed(fromAddress, ecosystem, propertyPrecision, previousId, category, subcategory, name, url, data, totalNumber) {
-    return axios.post(`${this.restURL}transaction/fixed/${fromAddress}/${ecosystem}/${propertyPrecision}/${previousId}/${category}/${subcategory}/${name}/${url}/${data}/${totalNumber}`)
-    .then((response) => {
+  async fixed(fromAddress, ecosystem, propertyPrecision, previousId, category, subcategory, name, url, data, totalNumber) {
+    try {
+      let response = await axios.post(`${this.restURL}transaction/fixed/${fromAddress}/${ecosystem}/${propertyPrecision}/${previousId}/${category}/${subcategory}/${name}/${url}/${data}/${totalNumber}`)
       return response.data;
-    })
-    .catch((error) => {
+    } catch (err) {
       return JSON.stringify(error.response.data.error.message);
-    });
+    }
   }
 
-  managed(fromAddress, ecosystem, propertyPrecision, previousId, category, subcategory, name, url, data) {
-    return axios.post(`${this.restURL}transaction/managed/${fromAddress}/${ecosystem}/${propertyPrecision}/${previousId}/${category}/${subcategory}/${name}/${url}/${data}`)
-    .then((response) => {
+  async managed(fromAddress, ecosystem, propertyPrecision, previousId, category, subcategory, name, url, data) {
+    try {
+      let response = await axios.post(`${this.restURL}transaction/managed/${fromAddress}/${ecosystem}/${propertyPrecision}/${previousId}/${category}/${subcategory}/${name}/${url}/${data}`)
       return response.data;
-    })
-    .catch((error) => {
+    } catch (err) {
       return JSON.stringify(error.response.data.error.message);
-    });
+    }
   }
 
-  rawTx(fromAddress, rawTransaction) {
-    return axios.post(`${this.restURL}transaction/rawTx/${fromAddress}/${rawTransaction}`)
-    .then((response) => {
+  async rawTx(fromAddress, rawTransaction) {
+    try {
+      let response = await axios.post(`${this.restURL}transaction/rawTx/${fromAddress}/${rawTransaction}`)
       return response.data;
-    })
-    .catch((error) => {
+    } catch (err) {
       return JSON.stringify(error.response.data.error.message);
-    });
+    }
   }
 
-  revoke(fromAddress, propertyId, amount) {
-    return axios.post(`${this.restURL}transaction/revoke/${fromAddress}/${propertyId}/${amount}`)
-    .then((response) => {
+  async revoke(fromAddress, propertyId, amount) {
+    try {
+      let response = await axios.post(`${this.restURL}transaction/revoke/${fromAddress}/${propertyId}/${amount}`)
       return response.data;
-    })
-    .catch((error) => {
+    } catch (err) {
       return JSON.stringify(error.response.data.error.message);
-    });
+    }
   }
 
-  STO(fromAddress, propertyId, amount) {
-    return axios.post(`${this.restURL}transaction/STO/${fromAddress}/${propertyId}/${amount}`)
-    .then((response) => {
+  async STO(fromAddress, propertyId, amount) {
+    try {
+      let response = await axios.post(`${this.restURL}transaction/STO/${fromAddress}/${propertyId}/${amount}`)
       return response.data;
-    })
-    .catch((error) => {
+    } catch (err) {
       return JSON.stringify(error.response.data.error.message);
-    });
+    }
   }
 }
 

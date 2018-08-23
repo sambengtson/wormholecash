@@ -4,188 +4,170 @@ class DataRetrieval {
     this.restURL = restURL;
   }
 
-  balancesForAddress(address) {
-    return axios.get(`${this.restURL}dataRetrieval/balancesForAddress/${address}`)
-    .then((response) => {
+  async balancesForAddress(address) {
+    try {
+      let response = await axios.get(`${this.restURL}dataRetrieval/balancesForAddress/${address}`)
       return response.data;
-    })
-    .catch((error) => {
+    } catch (err) {
       return JSON.stringify(error.response.data.error.message);
-    });
+    }
   }
 
-  balancesForId(propertyId) {
-    return axios.get(`${this.restURL}dataRetrieval/balancesForId/${propertyId}`)
-    .then((response) => {
+  async balancesForId(propertyId) {
+    try {
+      let response = await axios.get(`${this.restURL}dataRetrieval/balancesForId/${propertyId}`)
       return response.data;
-    })
-    .catch((error) => {
+    } catch (err) {
       return JSON.stringify(error.response.data.error.message);
-    });
+    }
   }
 
-  balance(address, propertyId) {
-    return axios.get(`${this.restURL}dataRetrieval/balance/${address}/${propertyId}`)
-    .then((response) => {
+  async balance(address, propertyId) {
+    try {
+      let response = await axios.get(`${this.restURL}dataRetrieval/balance/${address}/${propertyId}`)
       return response.data;
-    })
-    .catch((error) => {
+    } catch (err) {
       return JSON.stringify(error.response.data.error.message);
-    });
+    }
   }
 
-  balancesHash(propertyId) {
-    return axios.get(`${this.restURL}dataRetrieval/balancesHash/${propertyId}`)
-    .then((response) => {
+  async balancesHash(propertyId) {
+    try {
+      let response = await axios.get(`${this.restURL}dataRetrieval/balancesHash/${propertyId}`)
       return response.data;
-    })
-    .catch((error) => {
+    } catch (err) {
       return JSON.stringify(error.response.data.error.message);
-    });
+    }
   }
 
-  crowdSale(propertyId) {
-    return axios.get(`${this.restURL}dataRetrieval/crowdSale/${propertyId}`)
-    .then((response) => {
+  async crowdSale(propertyId) {
+    try {
+      let response = await axios.get(`${this.restURL}dataRetrieval/crowdSale/${propertyId}`)
       return response.data;
-    })
-    .catch((error) => {
+    } catch (err) {
       return JSON.stringify(error.response.data.error.message);
-    });
+    }
   }
 
-  currentConsensusHash() {
-    return axios.get(`${this.restURL}dataRetrieval/currentConsensusHash`)
-    .then((response) => {
+  async currentConsensusHash() {
+    try {
+      let response = await axios.get(`${this.restURL}dataRetrieval/currentConsensusHash`)
       return response.data;
-    })
-    .catch((error) => {
+    } catch (err) {
       return JSON.stringify(error.response.data.error.message);
-    });
+    }
   }
 
-  feeShare() {
-    return axios.get(`${this.restURL}dataRetrieval/feeShare`)
-    .then((response) => {
+  async feeShare() {
+    try {
+      let response = await axios.get(`${this.restURL}dataRetrieval/feeShare`)
       return response.data;
-    })
-    .catch((error) => {
+    } catch (err) {
       return JSON.stringify(error.response.data.error.message);
-    });
+    }
   }
 
-  grants(propertyId) {
-    return axios.get(`${this.restURL}dataRetrieval/grants/${propertyId}`)
-    .then((response) => {
+  async grants(propertyId) {
+    try {
+      let response = await axios.get(`${this.restURL}dataRetrieval/grants/${propertyId}`)
       return response.data;
-    })
-    .catch((error) => {
+    } catch (err) {
       return JSON.stringify(error.response.data.error.message);
-    });
+    }
   }
 
-  info() {
-    return axios.get(`${this.restURL}dataRetrieval/info`)
-    .then((response) => {
+  async info() {
+    try {
+      let response = await axios.get(`${this.restURL}dataRetrieval/info`)
       return response.data;
-    })
-    .catch((error) => {
+    } catch (err) {
       return JSON.stringify(error.response.data.error.message);
-    });
+    }
   }
 
-  payload(txid) {
-    return axios.get(`${this.restURL}dataRetrieval/payload/${txid}`)
-    .then((response) => {
+  async payload(txid) {
+    try {
+      let response = await axios.get(`${this.restURL}dataRetrieval/payload/${txid}`)
       return response.data;
-    })
-    .catch((error) => {
+    } catch (err) {
       return JSON.stringify(error.response.data.error.message);
-    });
+    }
   }
 
-  property(propertyId) {
-    return axios.get(`${this.restURL}dataRetrieval/property/${propertyId}`)
-    .then((response) => {
+  async property(propertyId) {
+    try {
+      let response = await axios.get(`${this.restURL}dataRetrieval/property/${propertyId}`)
       return response.data;
-    })
-    .catch((error) => {
+    } catch (err) {
       return JSON.stringify(error.response.data.error.message);
-    });
+    }
   }
 
-  seedBlocks(startBlock, endBlock) {
-    return axios.get(`${this.restURL}dataRetrieval/seedBlocks/${startBlock}/${endBlock}`)
-    .then((response) => {
+  async seedBlocks(startBlock, endBlock) {
+    try {
+      let response = await axios.get(`${this.restURL}dataRetrieval/seedBlocks/${startBlock}/${endBlock}`)
       return response.data;
-    })
-    .catch((error) => {
+    } catch (err) {
       return JSON.stringify(error.response.data.error.message);
-    });
+    }
   }
 
-  STO(txid, recipientFilter) {
-    return axios.get(`${this.restURL}dataRetrieval/STO/${txid}/${recipientFilter}`)
-    .then((response) => {
+  async STO(txid, recipientFilter) {
+    try {
+      let response = await axios.get(`${this.restURL}dataRetrieval/STO/${txid}/${recipientFilter}`)
       return response.data;
-    })
-    .catch((error) => {
+    } catch (err) {
       return JSON.stringify(error.response.data.error.message);
-    });
+    }
   }
 
-  transaction(txid) {
-    return axios.get(`${this.restURL}dataRetrieval/transaction/${txid}`)
-    .then((response) => {
+  async transaction(txid) {
+    try {
+      let response = await axios.get(`${this.restURL}dataRetrieval/transaction/${txid}`)
       return response.data;
-    })
-    .catch((error) => {
+    } catch (err) {
       return JSON.stringify(error.response.data.error.message);
-    });
+    }
   }
 
-  blockTransactions(index) {
-    return axios.get(`${this.restURL}dataRetrieval/blockTransactions/${index}`)
-    .then((response) => {
+  async blockTransactions(index) {
+    try {
+      let response = await axios.get(`${this.restURL}dataRetrieval/blockTransactions/${index}`)
       return response.data;
-    })
-    .catch((error) => {
+    } catch (err) {
       return JSON.stringify(error.response.data.error.message);
-    });
+    }
   }
 
-  pendingTransactions(address) {
+  async pendingTransactions(address) {
     let path = `${this.restURL}dataRetrieval/pendingTransactions`;
     if(address) {
       path = `${this.restURL}dataRetrieval/pendingTransactions?address=${address}`
     }
-    return axios.get(path)
-    .then((response) => {
+    try {
+      let response = await axios.get(path)
       return response.data;
-    })
-    .catch((error) => {
+    } catch (err) {
       return JSON.stringify(error.response.data.error.message);
-    });
+    }
   }
 
-  properties() {
-    return axios.get(`${this.restURL}dataRetrieval/properties`)
-    .then((response) => {
+  async properties() {
+    try {
+      let response = await axios.get(`${this.restURL}dataRetrieval/properties`)
       return response.data;
-    })
-    .catch((error) => {
+    } catch (err) {
       return JSON.stringify(error.response.data.error.message);
-    });
+    }
   }
 
-  transactions() {
-    return axios.get(`${this.restURL}dataRetrieval/transactions`)
-    .then((response) => {
+  async transactions() {
+    try {
+      let response = await axios.get(`${this.restURL}dataRetrieval/transactions`)
       return response.data;
-    })
-    .catch((error) => {
+    } catch (err) {
       return JSON.stringify(error.response.data.error.message);
-    });
+    }
   }
 }
 
