@@ -14,7 +14,7 @@ class RawTransactions {
     try {
       let response = await axios.post(path)
       return response.data;
-    } catch (err) {
+    } catch (error) {
       return JSON.stringify(error.response.data.error.message);
     }
   }
@@ -23,7 +23,7 @@ class RawTransactions {
     try {
       let response = await axios.post(`${this.restURL}rawTransactions/input/${rawtx}/${txid}/${n}`)
       return response.data;
-    } catch (err) {
+    } catch (error) {
       return JSON.stringify(error.response.data.error.message);
     }
   }
@@ -32,7 +32,7 @@ class RawTransactions {
     try {
       let response = await axios.post(`${this.restURL}rawTransactions/opReturn/${rawtx}/${payload}`)
       return response.data;
-    } catch (err) {
+    } catch (error) {
       return JSON.stringify(error.response.data.error.message);
     }
   }
@@ -47,7 +47,7 @@ class RawTransactions {
     try {
       let response = await axios.post(path)
       return response.data;
-    } catch (err) {
+    } catch (error) {
       return JSON.stringify(error.response.data.error.message);
     }
   }
@@ -66,7 +66,16 @@ class RawTransactions {
     try {
       let response = await axios.post(path)
       return response.data;
-    } catch (err) {
+    } catch (error) {
+      return JSON.stringify(error.response.data.error.message);
+    }
+  }
+
+  async create(inputs, outputs = {}) {
+    try {
+      let response = await axios.post(`${this.restURL}rawTransactions/create/${JSON.stringify(inputs)}/${JSON.stringify(outputs)}`)
+      return response.data;
+    } catch (error) {
       return JSON.stringify(error.response.data.error.message);
     }
   }

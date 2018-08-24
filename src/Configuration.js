@@ -14,8 +14,9 @@ class Configuration {
 
     try {
       let response = await axios.get(`${this.restURL}configuration/autoCommit/${final}`)
+      console.log('ererer', response)
       return response.data;
-    } catch (err) {
+    } catch (error) {
       return JSON.stringify(error.response.data.error.message);
     }
   }

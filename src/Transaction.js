@@ -14,7 +14,7 @@ class Transaction {
     try {
       let response = await axios.post(path)
       return response.data;
-    } catch (err) {
+    } catch (error) {
       return JSON.stringify(error.response.data.error.message);
     }
   }
@@ -33,7 +33,7 @@ class Transaction {
     try {
       let response = await axios.post(path)
       return response.data;
-    } catch (err) {
+    } catch (error) {
       return JSON.stringify(error.response.data.error.message);
     }
   }
@@ -52,7 +52,7 @@ class Transaction {
     try {
       let response = await axios.post(path)
       return response.data;
-    } catch (err) {
+    } catch (error) {
       return JSON.stringify(error.response.data.error.message);
     }
   }
@@ -71,7 +71,7 @@ class Transaction {
     try {
       let response = await axios.post(path)
       return response.data;
-    } catch (err) {
+    } catch (error) {
       return JSON.stringify(error.response.data.error.message);
     }
   }
@@ -80,7 +80,7 @@ class Transaction {
     try {
       let response = await axios.post(`${this.restURL}transaction/changeIssuer/${fromAddress}/${toAddress}/${propertyId}`)
       return response.data;
-    } catch (err) {
+    } catch (error) {
       return JSON.stringify(error.response.data.error.message);
     }
   }
@@ -89,7 +89,7 @@ class Transaction {
     try {
       let response = await axios.post(`${this.restURL}transaction/closeCrowdSale/${fromAddress}/${propertyId}`)
       return response.data;
-    } catch (err) {
+    } catch (error) {
       return JSON.stringify(error.response.data.error.message);
     }
   }
@@ -104,7 +104,7 @@ class Transaction {
     try {
       let response = await axios.post(path)
       return response.data;
-    } catch (err) {
+    } catch (error) {
       return JSON.stringify(error.response.data.error.message);
     }
   }
@@ -113,7 +113,7 @@ class Transaction {
     try {
       let response = await axios.post(`${this.restURL}transaction/crowdSale/${fromAddress}/${ecosystem}/${propertyPrecision}/${previousId}/${category}/${subcategory}/${name}/${url}/${data}/${propertyIdDesired}/${tokensPerUnit}/${deadline}/${earlyBonus}/${undefine}/${totalNumber}`)
       return response.data;
-    } catch (err) {
+    } catch (error) {
       return JSON.stringify(error.response.data.error.message);
     }
   }
@@ -122,7 +122,7 @@ class Transaction {
     try {
       let response = await axios.post(`${this.restURL}transaction/fixed/${fromAddress}/${ecosystem}/${propertyPrecision}/${previousId}/${category}/${subcategory}/${name}/${url}/${data}/${totalNumber}`)
       return response.data;
-    } catch (err) {
+    } catch (error) {
       return JSON.stringify(error.response.data.error.message);
     }
   }
@@ -131,7 +131,7 @@ class Transaction {
     try {
       let response = await axios.post(`${this.restURL}transaction/managed/${fromAddress}/${ecosystem}/${propertyPrecision}/${previousId}/${category}/${subcategory}/${name}/${url}/${data}`)
       return response.data;
-    } catch (err) {
+    } catch (error) {
       return JSON.stringify(error.response.data.error.message);
     }
   }
@@ -140,7 +140,7 @@ class Transaction {
     try {
       let response = await axios.post(`${this.restURL}transaction/rawTx/${fromAddress}/${rawTransaction}`)
       return response.data;
-    } catch (err) {
+    } catch (error) {
       return JSON.stringify(error.response.data.error.message);
     }
   }
@@ -149,7 +149,7 @@ class Transaction {
     try {
       let response = await axios.post(`${this.restURL}transaction/revoke/${fromAddress}/${propertyId}/${amount}`)
       return response.data;
-    } catch (err) {
+    } catch (error) {
       return JSON.stringify(error.response.data.error.message);
     }
   }
@@ -158,7 +158,7 @@ class Transaction {
     try {
       let response = await axios.post(`${this.restURL}transaction/STO/${fromAddress}/${propertyId}/${amount}`)
       return response.data;
-    } catch (err) {
+    } catch (error) {
       return JSON.stringify(error.response.data.error.message);
     }
   }

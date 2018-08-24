@@ -8,7 +8,7 @@ class Wallet {
     try {
       let response = await axios.get(`${this.restURL}wallet/newAddress`)
       return response.data;
-    } catch (err) {
+    } catch (error) {
       return JSON.stringify(error.response.data.error.message);
     }
   }
@@ -17,7 +17,7 @@ class Wallet {
     try {
       let response = await axios.post(`${this.restURL}wallet/sendToAddress/${address}/${amount}`)
       return response.data;
-    } catch (err) {
+    } catch (error) {
       return JSON.stringify(error.response.data.error.message);
     }
   }

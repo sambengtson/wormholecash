@@ -8,7 +8,7 @@ class PayloadCreation {
     try {
       let response = await axios.get(`${this.restURL}payloadCreation/burnBCH`)
       return response.data;
-    } catch (err) {
+    } catch (error) {
       return JSON.stringify(error.response.data.error.message);
     }
   }
@@ -17,7 +17,7 @@ class PayloadCreation {
     try {
       let response = await axios.post(`${this.restURL}payloadCreation/changeIssuer/${propertyId}`)
       return response.data;
-    } catch (err) {
+    } catch (error) {
       return JSON.stringify(error.response.data.error.message);
     }
   }
@@ -26,7 +26,7 @@ class PayloadCreation {
     try {
       let response = await axios.post(`${this.restURL}payloadCreation/closeCrowdSale/${propertyId}`)
       return response.data;
-    } catch (err) {
+    } catch (error) {
       return JSON.stringify(error.response.data.error.message);
     }
   }
@@ -41,7 +41,7 @@ class PayloadCreation {
     try {
       let response = await axios.post(path)
       return response.data;
-    } catch (err) {
+    } catch (error) {
       return JSON.stringify(error.response.data.error.message);
     }
   }
@@ -50,7 +50,7 @@ class PayloadCreation {
     try {
       let response = await axios.post(`${this.restURL}payloadCreation/crowdsale/${ecosystem}/${propertyPrecision}/${previousId}/${category}/${subcategory}/${name}/${url}/${data}/${propertyIdDesired}/${tokensPerUnit}/${deadline}/${earlyBonus}/${undefine}/${totalNumber}`)
       return response.data;
-    } catch (err) {
+    } catch (error) {
       return JSON.stringify(error.response.data.error.message);
     }
   }
@@ -59,7 +59,7 @@ class PayloadCreation {
     try {
       let response = await axios.post(`${this.restURL}payloadCreation/fixed/${ecosystem}/${propertyPrecision}/${previousId}/${category}/${subcategory}/${name}/${url}/${data}/${amount}`)
       return response.data;
-    } catch (err) {
+    } catch (error) {
       return JSON.stringify(error.response.data.error.message);
     }
   }
@@ -68,7 +68,7 @@ class PayloadCreation {
     try {
       let response = await axios.post(`${this.restURL}payloadCreation/managed/${ecosystem}/${propertyPrecision}/${previousId}/${category}/${subcategory}/${name}/${url}/${data}`)
       return response.data;
-    } catch (err) {
+    } catch (error) {
       return JSON.stringify(error.response.data.error.message);
     }
   }
@@ -77,7 +77,7 @@ class PayloadCreation {
     try {
       let response = await axios.post(`${this.restURL}payloadCreation/participateCrowdSale/${amount}`)
       return response.data;
-    } catch (err) {
+    } catch (error) {
       return JSON.stringify(error.response.data.error.message);
     }
   }
@@ -86,7 +86,7 @@ class PayloadCreation {
     try {
       let response = await axios.post(`${this.restURL}payloadCreation/revoke/${propertyId}/${amount}`)
       return response.data;
-    } catch (err) {
+    } catch (error) {
       return JSON.stringify(error.response.data.error.message);
     }
   }
@@ -95,7 +95,7 @@ class PayloadCreation {
     try {
       let response = await axios.post(`${this.restURL}payloadCreation/sendAll/${ecosystem}`)
       return response.data;
-    } catch (err) {
+    } catch (error) {
       return JSON.stringify(error.response.data.error.message);
     }
   }
@@ -104,7 +104,7 @@ class PayloadCreation {
     try {
       let response = await axios.post(`${this.restURL}payloadCreation/simpleSend/${propertyId}/${amount}`)
       return response.data;
-    } catch (err) {
+    } catch (error) {
       return JSON.stringify(error.response.data.error.message);
     }
   }
@@ -119,7 +119,7 @@ class PayloadCreation {
     try {
       let response = await axios.post(path)
       return response.data;
-    } catch (err) {
+    } catch (error) {
       return JSON.stringify(error.response.data.error.message);
     }
   }
