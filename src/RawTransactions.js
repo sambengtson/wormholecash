@@ -1,7 +1,11 @@
 import axios from 'axios';
 class RawTransactions {
-  constructor(restURL) {
+  constructor(restURL, rawTransactions) {
     this.restURL = restURL;
+    this.decodeRawTransaction = rawTransactions.decodeRawTransaction;
+    this.decodeScript = rawTransactions.decodeScript;
+    this.getRawTransaction = rawTransactions.getRawTransaction;
+    this.sendRawTransaction = rawTransactions.sendRawTransaction;
   }
 
   async change(rawtx, prevTxs, destination, fee, position = undefined) {
