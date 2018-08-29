@@ -9,7 +9,7 @@ class DataRetrieval {
       let response = await axios.get(`${this.restURL}dataRetrieval/balancesForAddress/${address}`)
       return response.data;
     } catch (error) {
-      throw error;
+      throw error.response.data;
     }
   }
 
@@ -18,7 +18,7 @@ class DataRetrieval {
       let response = await axios.get(`${this.restURL}dataRetrieval/balancesForId/${propertyId}`)
       return response.data;
     } catch (error) {
-      throw error;
+      throw error.response.data;
     }
   }
 
@@ -27,7 +27,7 @@ class DataRetrieval {
       let response = await axios.get(`${this.restURL}dataRetrieval/balance/${address}/${propertyId}`)
       return response.data;
     } catch (error) {
-      throw error;
+      throw error.response.data;
     }
   }
 
@@ -36,7 +36,7 @@ class DataRetrieval {
       let response = await axios.get(`${this.restURL}dataRetrieval/balancesHash/${propertyId}`)
       return response.data;
     } catch (error) {
-      throw error;
+      throw error.response.data;
     }
   }
 
@@ -45,7 +45,7 @@ class DataRetrieval {
       let response = await axios.get(`${this.restURL}dataRetrieval/crowdSale/${propertyId}`)
       return response.data;
     } catch (error) {
-      throw error;
+      throw error.response.data;
     }
   }
 
@@ -54,7 +54,7 @@ class DataRetrieval {
       let response = await axios.get(`${this.restURL}dataRetrieval/currentConsensusHash`)
       return response.data;
     } catch (error) {
-      throw error;
+      throw error.response.data;
     }
   }
 
@@ -63,7 +63,7 @@ class DataRetrieval {
       let response = await axios.get(`${this.restURL}dataRetrieval/grants/${propertyId}`)
       return response.data;
     } catch (error) {
-      throw error;
+      throw error.response.data;
     }
   }
 
@@ -72,7 +72,7 @@ class DataRetrieval {
       let response = await axios.get(`${this.restURL}dataRetrieval/info`)
       return response.data;
     } catch (error) {
-      throw error;
+      throw error.response.data;
     }
   }
 
@@ -81,7 +81,7 @@ class DataRetrieval {
       let response = await axios.get(`${this.restURL}dataRetrieval/payload/${txid}`)
       return response.data;
     } catch (error) {
-      throw error;
+      throw error.response.data;
     }
   }
 
@@ -90,7 +90,7 @@ class DataRetrieval {
       let response = await axios.get(`${this.restURL}dataRetrieval/property/${propertyId}`)
       return response.data;
     } catch (error) {
-      throw error;
+      throw error.response.data;
     }
   }
 
@@ -99,7 +99,7 @@ class DataRetrieval {
       let response = await axios.get(`${this.restURL}dataRetrieval/seedBlocks/${startBlock}/${endBlock}`)
       return response.data;
     } catch (error) {
-      throw error;
+      throw error.response.data;
     }
   }
 
@@ -108,7 +108,7 @@ class DataRetrieval {
       let response = await axios.get(`${this.restURL}dataRetrieval/STO/${txid}/${recipientFilter}`)
       return response.data;
     } catch (error) {
-      throw error;
+      throw error.response.data;
     }
   }
 
@@ -117,7 +117,7 @@ class DataRetrieval {
       let response = await axios.get(`${this.restURL}dataRetrieval/transaction/${txid}`)
       return response.data;
     } catch (error) {
-      throw error;
+      throw error.response.data;
     }
   }
 
@@ -126,7 +126,7 @@ class DataRetrieval {
       let response = await axios.get(`${this.restURL}dataRetrieval/blockTransactions/${index}`)
       return response.data;
     } catch (error) {
-      throw error;
+      throw error.response.data;
     }
   }
 
@@ -139,7 +139,7 @@ class DataRetrieval {
       let response = await axios.get(path)
       return response.data;
     } catch (error) {
-      throw error;
+      throw error.response.data;
     }
   }
 
@@ -148,7 +148,7 @@ class DataRetrieval {
       let response = await axios.get(`${this.restURL}dataRetrieval/properties`)
       return response.data;
     } catch (error) {
-      throw error;
+      throw error.response.data;
     }
   }
 
@@ -157,7 +157,7 @@ class DataRetrieval {
       let response = await axios.get(`${this.restURL}dataRetrieval/transactions`)
       return response.data;
     } catch (error) {
-      throw error;
+      throw error.response.data;
     }
   }
 }
