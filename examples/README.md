@@ -12,6 +12,10 @@ Some setup is required to run the code in this PR.
 - A local wormhole node is used because `trest.bitcoin.com` does not yet support
   Wormhole rest calls.
 
+- Beyond providing examples of how to use the SDK, these examples provide a solid
+  foundation for creating end-to-end tests to ensure things like the NPM library
+  doesn't break, or that `trest.bitcoin.com` is up and functioning correctly.
+
 ## Installation
 
 Install dependencies by running `npm install` in the parent directory.

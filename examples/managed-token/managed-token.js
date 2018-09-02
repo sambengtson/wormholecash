@@ -1,5 +1,8 @@
 /*
   Consume 1 WHC to create a new managed token.
+
+  Dev Note: This code needs to be refactored to remove Bitbox-cli
+  dependencies.
 */
 
 "use strict";
@@ -14,16 +17,6 @@ const BITBOXCli = require("bitbox-cli/lib/bitbox-cli").default;
 const BITBOX = new BITBOXCli({ restURL: "https://trest.bitcoin.com/v1/" });
 
 const fs = require("fs");
-
-const util = require("util");
-util.inspect.defaultOptions = {
-  showHidden: true,
-  colors: true
-};
-console.log(
-  `wormhole.RawTransactions: ${util.inspect(wormhole.RawTransactions)}`
-);
-//process.exit(0);
 
 // Open the wallet generated with create-wallet.
 let walletInfo;
@@ -100,10 +93,14 @@ async function createManagedToken() {
     tb.sign(0, keyPair, redeemScript, 0x01, utxo.satoshis);
     let builtTx = tb.build();
     let txHex = builtTx.toHex();
-    console.log(txHex);
+    //console.log(txHex);
+
+    // sendRawTransaction to running BCH node
+    const broadcast = await BITBOX.RawTransactions.sendRawTransaction(txHex);
+    console.log(`Transaction ID: ${broadcast}`);
 
     // Write out the basic information into a json file for other apps to use.
-    const tokenInfo = { tokenTx: txHex };
+    const tokenInfo = { tokenTx: broadcast };
     fs.writeFile("token-tx.json", JSON.stringify(tokenInfo, null, 2), function(
       err
     ) {
