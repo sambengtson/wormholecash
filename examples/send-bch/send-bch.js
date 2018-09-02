@@ -1,6 +1,5 @@
 /*
-  Create an HDNode wallet using Bitbox. The mnemonic from this wallet
-  will be used in future examples.
+  Send 1000 satoshis to RECV_ADDR.
 */
 
 "use strict";
@@ -8,60 +7,128 @@
 const BITBOXCli = require("bitbox-cli/lib/bitbox-cli").default;
 const BITBOX = new BITBOXCli({ restURL: "https://trest.bitcoin.com/v1/" });
 
-const fs = require("fs");
+// Replace the address below with the address you want to send the BCH to.
+const RECV_ADDR = `bchtest:qp2wkugtxhylsq253lxqq9dgmsf57m7p0uky9zjzns`;
 
-let lang = "english";
-let outStr = "";
-let outObj = {};
-
-// create 256 bit BIP39 mnemonic
-let mnemonic = BITBOX.Mnemonic.generate(256, BITBOX.Mnemonic.wordLists()[lang]);
-console.log("BIP44 $BCH Wallet");
-outStr += "BIP44 $BCH Wallet\n";
-console.log(`256 bit ${lang} BIP39 Mnemonic: `, mnemonic);
-outStr += `\n256 bit ${lang} BIP32 Mnemonic:\n${mnemonic}\n\n`;
-outObj.mnemonic = mnemonic;
-
-// root seed buffer
-let rootSeed = BITBOX.Mnemonic.toSeed(mnemonic);
-
-// master HDNode
-let masterHDNode = BITBOX.HDNode.fromSeed(rootSeed, "testnet");
-
-// HDNode of BIP44 account
-let account = BITBOX.HDNode.derivePath(masterHDNode, "m/44'/145'/0'");
-console.log(`BIP44 Account: "m/44'/145'/0'"`);
-outStr += `BIP44 Account: "m/44'/145'/0'"\n`;
-
-for (let i = 0; i < 10; i++) {
-  let childNode = masterHDNode.derivePath(`m/44'/145'/0'/0/${i}`);
+// Open the wallet generated with create-wallet.
+let walletInfo;
+try {
+  walletInfo = require(`../create-wallet/wallet.json`);
+} catch (err) {
   console.log(
-    `m/44'/145'/0'/0/${i}: ${BITBOX.HDNode.toCashAddress(childNode)}`
+    `Could not open wallet.json. Generate a wallet with create-wallet first.`
   );
-  outStr += `m/44'/145'/0'/0/${i}: ${BITBOX.HDNode.toCashAddress(childNode)}\n`;
-
-  if (i === 0) {
-    outObj.cashAddress = BITBOX.HDNode.toCashAddress(childNode);
-  }
+  process.exit(0);
 }
 
-// derive the first external change address HDNode which is going to spend utxo
-let change = BITBOX.HDNode.derivePath(account, "0/0");
+const SEND_ADDR = walletInfo.cashAddress;
+const SEND_MNEMONIC = walletInfo.mnemonic;
 
-// get the cash address
-let cashAddress = BITBOX.HDNode.toCashAddress(change);
+async function sendBch() {
+  const balance = await getBCHBalance(SEND_ADDR, false);
+  console.log(`balance: ${JSON.stringify(balance, null, 2)}`);
+  console.log(`Balance of sending address ${SEND_ADDR} is ${balance} BCH.`);
 
-outStr += `\n\n\n`;
-fs.writeFile("wallet-info.txt", outStr, function(err) {
-  if (err) {
-    return console.error(err);
+  if (balance <= 0.0) {
+    console.log(`Balance of sending address is zero. Exiting.`);
+    process.exit(0);
   }
 
-  console.log(`wallet-info.txt written successfully.`);
-});
+  const SEND_ADDR_LEGACY = BITBOX.Address.toLegacyAddress(SEND_ADDR);
+  const RECV_ADDR_LEGACY = BITBOX.Address.toLegacyAddress(RECV_ADDR);
+  console.log(`Sender Legacy Address: ${SEND_ADDR_LEGACY}`);
+  console.log(`Receiver Legacy Address: ${RECV_ADDR_LEGACY}`);
 
-// Write out the basic information into a json file for other apps to use.
-fs.writeFile("wallet.json", JSON.stringify(outObj, null, 2), function(err) {
-  if (err) return console.error(err);
-  console.log(`wallet.json written successfully.`);
-});
+  const balance2 = await getBCHBalance(RECV_ADDR, false);
+  console.log(`Balance of recieving address ${RECV_ADDR} is ${balance2} BCH.`);
+
+  const utxo = await BITBOX.Address.utxo(SEND_ADDR);
+  console.log(`utxo: ${JSON.stringify(utxo, null, 2)}`);
+
+  // instance of transaction builder
+  let transactionBuilder = new BITBOX.TransactionBuilder("testnet");
+
+  const satoshisToSend = 1000;
+  let originalAmount = utxo[0].satoshis;
+  const vout = utxo[0].vout;
+  const txid = utxo[0].txid;
+
+  // add input with txid and index of vout
+  transactionBuilder.addInput(txid, vout);
+
+  // get byte count to calculate fee. paying 1 sat/byte
+  let byteCount = BITBOX.BitcoinCash.getByteCount({ P2PKH: 1 }, { P2PKH: 2 });
+  console.log(`byteCount: ${byteCount}`);
+  const satoshisPerByte = 1.2;
+  const txFee = Math.floor(satoshisPerByte * byteCount);
+  console.log(`txFee: ${txFee}`);
+
+  // amount to send back to the sending address. It's the original amount - 1 sat/byte for tx size
+  let remainder = originalAmount - satoshisToSend - txFee;
+
+  // add output w/ address and amount to send
+  transactionBuilder.addOutput(RECV_ADDR, satoshisToSend);
+  transactionBuilder.addOutput(SEND_ADDR, remainder);
+
+  // Generate a change address from a Mnemonic of a private key.
+  const change = changeAddrFromMnemonic(SEND_MNEMONIC);
+
+  // Generate a keypair from the change address.
+  const keyPair = BITBOX.HDNode.toKeyPair(change);
+
+  // Sign the transaction with the HD node.
+  let redeemScript;
+  transactionBuilder.sign(
+    0,
+    keyPair,
+    redeemScript,
+    transactionBuilder.hashTypes.SIGHASH_ALL,
+    originalAmount
+  );
+
+  // build tx
+  let tx = transactionBuilder.build();
+  // output rawhex
+  let hex = tx.toHex();
+  //console.log(`Transaction raw hex: `);
+  //console.log(`${hex}`);
+
+  // sendRawTransaction to running BCH node
+  const broadcast = await BITBOX.RawTransactions.sendRawTransaction(hex);
+  console.log(`Transaction ID: ${broadcast}`);
+}
+sendBch();
+
+// Generate a change address from a Mnemonic of a private key.
+function changeAddrFromMnemonic(mnemonic) {
+  // root seed buffer
+  let rootSeed = BITBOX.Mnemonic.toSeed(mnemonic);
+
+  // master HDNode
+  let masterHDNode = BITBOX.HDNode.fromSeed(rootSeed, "testnet");
+
+  // HDNode of BIP44 account
+  let account = BITBOX.HDNode.derivePath(masterHDNode, "m/44'/145'/0'");
+
+  // derive the first external change address HDNode which is going to spend utxo
+  let change = BITBOX.HDNode.derivePath(account, "0/0");
+
+  return change;
+}
+
+// Get the balance in BCH of a BCH address.
+async function getBCHBalance(addr, verbose) {
+  try {
+    const result = await BITBOX.Address.details([addr]);
+
+    if (verbose) console.log(result);
+
+    const bchBalance = result[0];
+
+    return bchBalance.balance;
+  } catch (err) {
+    console.error(`Error in getBCHBalance: `, err);
+    console.log(`addr: ${addr}`);
+    throw err;
+  }
+}
