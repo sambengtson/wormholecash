@@ -17,6 +17,9 @@ to code up common use cases for a Wormhole wallet and managing tokens.
 
 ## Wormhole Token Functions
 
+- [ping-wh-node](ping-wh-node) Ping the Wormhole node to ensure all networking
+  between you and the node is functioning correctly.
+
 - [send-token](send-token) Send generated tokens or WHC tokens.
 
 - [managed-token](managed-token) Create a managed token.

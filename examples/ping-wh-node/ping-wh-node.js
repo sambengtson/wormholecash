@@ -7,6 +7,7 @@
 
 let Wormhole = require("wormholecash/lib/Wormhole").default;
 let wormhole = new Wormhole({ restURL: `http://localhost:3000/v1/` });
+//let wormhole = new Wormhole({ restURL: `https://trest.bitcoin.com/v1/` });
 
 async function pingNode() {
   try {
