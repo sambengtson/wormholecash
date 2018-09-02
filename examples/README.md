@@ -35,6 +35,6 @@ You can run each example script by entering its directory and executing `npm sta
 - [token-balance](token-balance) Check the balance of WHC and other tokens for
   a given address.
 
-- [send-token](send-token) Send generated tokens or WHC tokens.
-
 - [managed-token](managed-token) Create a managed token.
+
+- [send-token](send-token) Send generated tokens or WHC tokens.
