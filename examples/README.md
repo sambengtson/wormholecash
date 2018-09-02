@@ -1,6 +1,17 @@
 This directory contains a series of small examples apps that illustrate how
 to code up common use cases for a Wormhole wallet and managing tokens.
 
+## PR Notes _(will be removed)_
+
+Some setup is required to run the code in this PR.
+
+- Because of
+  [Issue 7](https://github.com/Bitcoin-com/wormholecash/issues/7) this PR also
+  includes the code in [PR 8](https://github.com/Bitcoin-com/wormholecash/pull/8).
+
+- A local wormhole node is used because `trest.bitcoin.com` does not yet support
+  Wormhole rest calls.
+
 ## Installation
 
 Install dependencies by running `npm install` in the parent directory.
