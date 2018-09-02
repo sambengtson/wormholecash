@@ -1,0 +1,32 @@
+{
+  "name": "token-balance",
+  "version": "1.0.0",
+  "description": "Check the balance of WHC and other tokens",
+  "main": "token-balance.js",
+  "scripts": {
+    "test": "echo no tests yet",
+    "start": "node token-balance.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Bitcoin-com/wormholecash.git"
+  },
+  "keywords": [
+    "wormholecash",
+    "example",
+    "bch",
+    "bitcoin cash",
+    "tokens",
+    "token",
+    "wormhole",
+    "node",
+    "node.js",
+    "javascript"
+  ],
+  "author": "Chris Troutner <chris.troutner@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Bitcoin-com/wormholecash/issues"
+  },
+  "homepage": "https://github.com/Bitcoin-com/wormholecash#readme"
+}

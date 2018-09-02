@@ -1,6 +1,14 @@
 This directory contains a series of small examples apps that illustrate how
 to code up common use cases for a Wormhole wallet and managing tokens.
 
+## Installation
+
+Install dependencies by running `npm install` in the parent directory.
+
+## Running Examples
+
+You can run each example script by entering its directory and executing `npm start`
+
 ## General BCH Functions
 
 - [create-wallet](create-wallet) Create a Wormhole compatible HD Node wallet on
@@ -19,6 +27,13 @@ to code up common use cases for a Wormhole wallet and managing tokens.
 
 - [ping-wh-node](ping-wh-node) Ping the Wormhole node to ensure all networking
   between you and the node is functioning correctly.
+
+- [burn-bch](burn-bch) **NOT WORKING**
+  Burn 1 BCH to generate 100 WHC tokens. These WHC tokens
+  are needed to creating your own tokens.
+
+- [token-balance](token-balance) Check the balance of WHC and other tokens for
+  a given address.
 
 - [send-token](send-token) Send generated tokens or WHC tokens.
 
