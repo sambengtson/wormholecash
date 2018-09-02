@@ -1,6 +1,6 @@
 /*
-  Ping the Wormhole node to make sure all the networking involved
-  is functioning correctly.
+  Get the token balance for the wallet generated with create-wallet.
+  Note: WHC tokens have a propertyid of 1.
 */
 
 "use strict";
