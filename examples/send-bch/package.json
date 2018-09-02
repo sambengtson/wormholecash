@@ -4,8 +4,7 @@
   "description": "Create an HDNode wallet",
   "main": "create-wallet.js",
   "scripts": {
-    "test": "echo no tests yet",
-    "start": "node create-wallet.js"
+    "test": "echo no tests yet"
   },
   "repository": {
     "type": "git",

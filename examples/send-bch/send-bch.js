@@ -42,7 +42,6 @@ for (let i = 0; i < 10; i++) {
 
   if (i === 0) {
     outObj.cashAddress = BITBOX.HDNode.toCashAddress(childNode);
-    outObj.legacyAddress = BITBOX.HDNode.toLegacyAddress(childNode);
   }
 }
 
@@ -51,8 +50,6 @@ let change = BITBOX.HDNode.derivePath(account, "0/0");
 
 // get the cash address
 let cashAddress = BITBOX.HDNode.toCashAddress(change);
-
-// Get the legacy address.
 
 outStr += `\n\n\n`;
 fs.writeFile("wallet-info.txt", outStr, function(err) {

@@ -1,11 +1,11 @@
 {
-  "name": "create-wallet",
+  "name": "check-balance",
   "version": "1.0.0",
   "description": "Create an HDNode wallet",
   "main": "create-wallet.js",
   "scripts": {
     "test": "echo no tests yet",
-    "start": "node create-wallet.js"
+    "start": "node check-balance.js"
   },
   "repository": {
     "type": "git",
