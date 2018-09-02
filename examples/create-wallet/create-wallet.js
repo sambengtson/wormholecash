@@ -1,0 +1,4 @@
+/*
+  Create an HDNode wallet using Bitbox. The mnemonic from this wallet
+  will be used in future examples.
+*/
