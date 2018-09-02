@@ -16,3 +16,7 @@ to code up common use cases for a Wormhole wallet and managing tokens.
   back to the testnet faucet.)
 
 ## Wormhole Token Functions
+
+- [send-token](send-token) Send generated tokens or WHC tokens.
+
+- [managed-token](managed-token) Create a managed token.
