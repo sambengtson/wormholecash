@@ -5,7 +5,8 @@
 "use strict";
 
 // Instantiate wormholecash
-let Wormhole = require("wormholecash/lib/Wormhole").default;
+//let Wormhole = require("wormholecash/lib/Wormhole").default;
+let Wormhole = require("../../src/node/Wormhole");
 let wormhole = new Wormhole({ restURL: `http://localhost:3000/v1/` });
 //let wormhole = new Wormhole({ restURL: `https://trest.bitcoin.com/v1/` });
 
@@ -22,7 +23,7 @@ util.inspect.defaultOptions = {
 console.log(
   `wormhole.RawTransactions: ${util.inspect(wormhole.RawTransactions)}`
 );
-process.exit(0);
+//process.exit(0);
 
 // Open the wallet generated with create-wallet.
 let walletInfo;
