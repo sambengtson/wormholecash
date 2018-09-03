@@ -1,8 +1,5 @@
 /*
-  Consume 1 WHC to create a new managed token.
-
-  Dev Note: This code needs to be refactored to remove Bitbox-cli
-  dependencies.
+  Issue new tokens for a manged token.
 */
 
 "use strict";
@@ -16,8 +13,6 @@ let wormhole = new Wormhole({ restURL: `http://localhost:3000/v1/` });
 const BITBOXCli = require("bitbox-cli/lib/bitbox-cli").default;
 const BITBOX = new BITBOXCli({ restURL: "https://trest.bitcoin.com/v1/" });
 
-const fs = require("fs");
-
 // Open the wallet generated with create-wallet.
 let walletInfo;
 try {
@@ -30,8 +25,11 @@ try {
   process.exit(0);
 }
 
-// Create a managed token.
-async function createManagedToken() {
+// Change this value to match your token.
+const propertyId = 195;
+
+// Issue new tokens.
+async function issueNewTokens() {
   try {
     let mnemonic = walletInfo.mnemonic;
 
@@ -50,17 +48,8 @@ async function createManagedToken() {
     //let cashAddress = BITBOX.HDNode.toCashAddress(change);
     let cashAddress = walletInfo.cashAddress;
 
-    // Create the managed token.
-    let managed = await wormhole.PayloadCreation.managed(
-      1, // Ecosystem, must be 1.
-      1, // Precision, number of decimal places. Must be 0-8.
-      0, // Predecessor token. 0 for new tokens.
-      "Companies", // Category.
-      "Bitcoin Cash Mining", // Subcategory
-      "QMC", // Name/Ticker
-      "www.qmc.cash", // URL
-      "Made with BITBOX" // Description.
-    );
+    // grant 10 new tokens.
+    let grant = await wormhole.PayloadCreation.grant(propertyId, "10");
 
     // Get a utxo to use for this transaction.
     let u = await BITBOX.Address.utxo([cashAddress]);
@@ -71,9 +60,12 @@ async function createManagedToken() {
     let rawTx = await wormhole.RawTransactions.create([utxo], {});
 
     // Add the token information as an op-return code to the tx.
-    let opReturn = await wormhole.RawTransactions.opReturn(rawTx, managed);
+    let opReturn = await wormhole.RawTransactions.opReturn(rawTx, grant);
 
-    // Set the destination/recieving address, with the actual amount of BCH set to a minimal amount.
+    // Set the destination/recieving address, with the actual amount of BCH set
+    // to a minimal amount.
+    // This sends the token to the same address as the issue. Change this to the
+    // an address you want to send tokens to.
     let ref = await wormhole.RawTransactions.reference(opReturn, cashAddress);
 
     // Generate a change output.
@@ -98,20 +90,11 @@ async function createManagedToken() {
     // sendRawTransaction to running BCH node
     const broadcast = await BITBOX.RawTransactions.sendRawTransaction(txHex);
     console.log(`Transaction ID: ${broadcast}`);
-
-    // Write out the basic information into a json file for other apps to use.
-    const tokenInfo = { tokenTx: broadcast };
-    fs.writeFile("token-tx.json", JSON.stringify(tokenInfo, null, 2), function(
-      err
-    ) {
-      if (err) return console.error(err);
-      console.log(`token-tx.json written successfully.`);
-    });
   } catch (err) {
     console.log(err);
   }
 }
-createManagedToken();
+issueNewTokens();
 
 // SUPPORT/PRIVATE FUNCTIONS BELOW
 
