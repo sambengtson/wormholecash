@@ -1,11 +1,11 @@
 {
-  "name": "send-token",
+  "name": "send-tokens",
   "version": "1.0.0",
-  "description": "Send WHC or other tokens",
-  "main": "create-wallet.js",
+  "description": "Send existing tokens to another address.",
+  "main": "send-tokens.js",
   "scripts": {
     "test": "echo no tests yet",
-    "start": "node send-token.js"
+    "start": "node send-tokens.js"
   },
   "repository": {
     "type": "git",
@@ -13,7 +13,15 @@
   },
   "keywords": [
     "wormholecash",
-    "example"
+    "example",
+    "bch",
+    "bitcoin cash",
+    "tokens",
+    "token",
+    "wormhole",
+    "node",
+    "node.js",
+    "javascript"
   ],
   "author": "Chris Troutner <chris.troutner@gmail.com>",
   "license": "MIT",
