@@ -93,7 +93,7 @@ describe('#DataRetrieval', () => {
         let response  = await Wormhole.DataRetrieval.payload("000000000000000000000000000000000000000000000000000000000000000");
         return response.data;
       } catch (error) {
-        assert.deepEqual(error, 'txid must be hexadecimal string (not \'000000000000000000000000000000000000000000000000000000000000000\')');
+        assert.equal(error.message, 'txid must be hexadecimal string (not \'000000000000000000000000000000000000000000000000000000000000000\')');
       }
     });
   });
