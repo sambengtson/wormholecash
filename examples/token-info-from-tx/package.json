@@ -1,0 +1,32 @@
+{
+  "name": "token-info-from-tx",
+  "version": "1.0.0",
+  "description": "Get token details from a TX",
+  "main": "token-info-from-tx.js",
+  "scripts": {
+    "test": "echo no tests yet",
+    "start": "node token-info-from-tx.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Bitcoin-com/wormholecash.git"
+  },
+  "keywords": [
+    "wormholecash",
+    "example",
+    "bch",
+    "bitcoin cash",
+    "tokens",
+    "token",
+    "wormhole",
+    "node",
+    "node.js",
+    "javascript"
+  ],
+  "author": "Chris Troutner <chris.troutner@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Bitcoin-com/wormholecash/issues"
+  },
+  "homepage": "https://github.com/Bitcoin-com/wormholecash#readme"
+}

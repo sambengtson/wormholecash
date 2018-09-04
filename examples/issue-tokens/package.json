@@ -1,0 +1,32 @@
+{
+  "name": "issue-tokens",
+  "version": "1.0.0",
+  "description": "Issue new tokens from a managed token.",
+  "main": "issue-tokens.js",
+  "scripts": {
+    "test": "echo no tests yet",
+    "start": "node issue-tokens.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Bitcoin-com/wormholecash.git"
+  },
+  "keywords": [
+    "wormholecash",
+    "example",
+    "bch",
+    "bitcoin cash",
+    "tokens",
+    "token",
+    "wormhole",
+    "node",
+    "node.js",
+    "javascript"
+  ],
+  "author": "Chris Troutner <chris.troutner@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Bitcoin-com/wormholecash/issues"
+  },
+  "homepage": "https://github.com/Bitcoin-com/wormholecash#readme"
+}
