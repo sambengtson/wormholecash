@@ -5,13 +5,14 @@
 
 "use strict";
 
-let Wormhole = require("wormholecash/lib/Wormhole").default;
-let wormhole = new Wormhole({ restURL: `http://localhost:3000/v1/` });
-//let wormhole = new Wormhole({ restURL: `https://trest.bitcoin.com/v1/` });
+const WH = require("wormholecash/lib/Wormhole").default;
+const Wormhole = new WH({
+  restURL: `https://wormholecash-staging.herokuapp.com/v1/`
+});
 
 async function pingNode() {
   try {
-    const result = await wormhole.DataRetrieval.info();
+    const result = await Wormhole.DataRetrieval.info();
     console.log(`Ping succeeded: `);
     console.log(result);
   } catch (err) {

@@ -1,12 +1,14 @@
 /*
-  Create an HDNode wallet using Bitbox. The mnemonic from this wallet
+  Create an HDNode wallet using Wormhole. The mnemonic from this wallet
   will be used in future examples.
 */
 
 "use strict";
 
-const BITBOXCli = require("bitbox-cli/lib/bitbox-cli").default;
-const BITBOX = new BITBOXCli({ restURL: "https://trest.bitcoin.com/v1/" });
+const WH = require("wormholecash/lib/Wormhole").default;
+const Wormhole = new WH({
+  restURL: `https://wormholecash-staging.herokuapp.com/v1/`
+});
 
 const fs = require("fs");
 
@@ -15,7 +17,10 @@ let outStr = "";
 let outObj = {};
 
 // create 256 bit BIP39 mnemonic
-let mnemonic = BITBOX.Mnemonic.generate(256, BITBOX.Mnemonic.wordLists()[lang]);
+let mnemonic = Wormhole.Mnemonic.generate(
+  256,
+  Wormhole.Mnemonic.wordLists()[lang]
+);
 console.log("BIP44 $BCH Wallet");
 outStr += "BIP44 $BCH Wallet\n";
 console.log(`256 bit ${lang} BIP39 Mnemonic: `, mnemonic);
@@ -23,34 +28,36 @@ outStr += `\n256 bit ${lang} BIP32 Mnemonic:\n${mnemonic}\n\n`;
 outObj.mnemonic = mnemonic;
 
 // root seed buffer
-let rootSeed = BITBOX.Mnemonic.toSeed(mnemonic);
+let rootSeed = Wormhole.Mnemonic.toSeed(mnemonic);
 
 // master HDNode
-let masterHDNode = BITBOX.HDNode.fromSeed(rootSeed, "testnet");
+let masterHDNode = Wormhole.HDNode.fromSeed(rootSeed, "testnet");
 
 // HDNode of BIP44 account
-let account = BITBOX.HDNode.derivePath(masterHDNode, "m/44'/145'/0'");
+let account = Wormhole.HDNode.derivePath(masterHDNode, "m/44'/145'/0'");
 console.log(`BIP44 Account: "m/44'/145'/0'"`);
 outStr += `BIP44 Account: "m/44'/145'/0'"\n`;
 
 for (let i = 0; i < 10; i++) {
   let childNode = masterHDNode.derivePath(`m/44'/145'/0'/0/${i}`);
   console.log(
-    `m/44'/145'/0'/0/${i}: ${BITBOX.HDNode.toCashAddress(childNode)}`
+    `m/44'/145'/0'/0/${i}: ${Wormhole.HDNode.toCashAddress(childNode)}`
   );
-  outStr += `m/44'/145'/0'/0/${i}: ${BITBOX.HDNode.toCashAddress(childNode)}\n`;
+  outStr += `m/44'/145'/0'/0/${i}: ${Wormhole.HDNode.toCashAddress(
+    childNode
+  )}\n`;
 
   if (i === 0) {
-    outObj.cashAddress = BITBOX.HDNode.toCashAddress(childNode);
-    outObj.legacyAddress = BITBOX.HDNode.toLegacyAddress(childNode);
+    outObj.cashAddress = Wormhole.HDNode.toCashAddress(childNode);
+    outObj.legacyAddress = Wormhole.HDNode.toLegacyAddress(childNode);
   }
 }
 
 // derive the first external change address HDNode which is going to spend utxo
-let change = BITBOX.HDNode.derivePath(account, "0/0");
+let change = Wormhole.HDNode.derivePath(account, "0/0");
 
 // get the cash address
-let cashAddress = BITBOX.HDNode.toCashAddress(change);
+let cashAddress = Wormhole.HDNode.toCashAddress(change);
 
 // Get the legacy address.
 

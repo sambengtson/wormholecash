@@ -5,21 +5,27 @@
 "use strict";
 
 // Instantiate wormholecash
-let Wormhole = require("wormholecash/lib/Wormhole").default;
-let wormhole = new Wormhole({ restURL: `http://localhost:3000/v1/` });
-//let wormhole = new Wormhole({ restURL: `https://trest.bitcoin.com/v1/` });
+const WH = require("wormholecash/lib/Wormhole").default;
+const Wormhole = new WH({
+  restURL: `https://wormholecash-staging.herokuapp.com/v1/`
+});
 
 const propertyId = 195;
 
 async function getTokenInfo() {
-  const retVal = await wormhole.DataRetrieval.property(propertyId);
+  try {
+    const retVal = await Wormhole.DataRetrieval.property(propertyId);
 
-  console.log(
-    `Info from token with propertyId of ${propertyId}: ${JSON.stringify(
-      retVal,
-      null,
-      2
-    )}`
-  );
+    console.log(
+      `Info from token with propertyId of ${propertyId}: ${JSON.stringify(
+        retVal,
+        null,
+        2
+      )}`
+    );
+  } catch (err) {
+    console.error(`Error in getTokenInfo: `, err);
+    throw err;
+  }
 }
 getTokenInfo();

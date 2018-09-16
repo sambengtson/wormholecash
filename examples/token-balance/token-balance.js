@@ -6,9 +6,10 @@
 "use strict";
 
 // Instantiate wormholecash
-let Wormhole = require("wormholecash/lib/Wormhole").default;
-let wormhole = new Wormhole({ restURL: `http://localhost:3000/v1/` });
-//let wormhole = new Wormhole({ restURL: `https://trest.bitcoin.com/v1/` });
+const WH = require("wormholecash/lib/Wormhole").default;
+const Wormhole = new WH({
+  restURL: `https://wormholecash-staging.herokuapp.com/v1/`
+});
 
 // Open the wallet generated with create-wallet.
 let walletInfo;
@@ -25,7 +26,7 @@ try {
 // Retrieve the token balance.
 async function tokenBalance() {
   try {
-    const result = await wormhole.DataRetrieval.balancesForAddress(
+    const result = await Wormhole.DataRetrieval.balancesForAddress(
       walletInfo.cashAddress
     );
     console.log(JSON.stringify(result, null, 2));
