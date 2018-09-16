@@ -7,7 +7,7 @@
 
 const BITBOXCli = require("bitbox-cli/lib/bitbox-cli").default;
 const BITBOX = new BITBOXCli({ restURL: "https://trest.bitcoin.com/v1/" });
-const WH = require("../../src/node/Wormhole");
+const WH = require("wormholecash/lib/Wormhole").default;
 const Wormhole = new WH({
   restURL: `https://wormholecash-staging.herokuapp.com/v1/`
 });

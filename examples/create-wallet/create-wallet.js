@@ -5,7 +5,7 @@
 
 "use strict";
 
-const WH = require("../../src/node/Wormhole");
+const WH = require("wormholecash/lib/Wormhole").default;
 const Wormhole = new WH({
   restURL: `https://wormholecash-staging.herokuapp.com/v1/`
 });
