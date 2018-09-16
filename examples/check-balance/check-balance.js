@@ -26,13 +26,11 @@ try {
 async function getBalance() {
   try {
     // first get BCH balance
-    let balance = await BITBOX.Address.details([
-      "bchtest:qzgmwth8jkyvr0juke4ug87f6eehnyfq45ckq46ckv"
-    ]);
+    let balance = await BITBOX.Address.details([walletInfo.cashAddress]);
 
     // get token balances
     balance[0].tokens = await Wormhole.DataRetrieval.balancesForAddress(
-      "bchtest:qzgmwth8jkyvr0juke4ug87f6eehnyfq45ckq46ckv"
+      walletInfo.cashAddress
     );
     console.log(balance);
   } catch (err) {
