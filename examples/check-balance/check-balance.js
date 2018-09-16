@@ -31,7 +31,7 @@ async function getBalance() {
     ]);
 
     // get token balances
-    balance.tokens = await Wormhole.DataRetrieval.balancesForAddress(
+    balance[0].tokens = await Wormhole.DataRetrieval.balancesForAddress(
       "bchtest:qzgmwth8jkyvr0juke4ug87f6eehnyfq45ckq46ckv"
     );
     console.log(balance);
