@@ -7,6 +7,10 @@
 
 const BITBOXCli = require("bitbox-cli/lib/bitbox-cli").default;
 const BITBOX = new BITBOXCli({ restURL: "https://trest.bitcoin.com/v1/" });
+const WH = require("../../src/node/Wormhole");
+const Wormhole = new WH({
+  restURL: `https://wormholecash-staging.herokuapp.com/v1/`
+});
 
 // Open the wallet generated with create-wallet.
 let walletInfo;
@@ -21,14 +25,16 @@ try {
 
 async function getBalance() {
   try {
-    BITBOX.Address.details([walletInfo.cashAddress]).then(
-      result => {
-        console.log(result);
-      },
-      err => {
-        console.log(err);
-      }
+    // first get BCH balance
+    let balance = await BITBOX.Address.details([
+      "bchtest:qzgmwth8jkyvr0juke4ug87f6eehnyfq45ckq46ckv"
+    ]);
+
+    // get token balances
+    balance.tokens = await Wormhole.DataRetrieval.balancesForAddress(
+      "bchtest:qzgmwth8jkyvr0juke4ug87f6eehnyfq45ckq46ckv"
     );
+    console.log(balance);
   } catch (err) {
     console.error(`Error in getBalance: `, err);
     throw err;
