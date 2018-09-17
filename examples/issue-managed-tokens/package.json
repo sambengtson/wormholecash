@@ -5,7 +5,7 @@
   "main": "issue-managed-tokens.js",
   "scripts": {
     "test": "echo no tests yet",
-    "start": "node issue-tokens.js"
+    "start": "node issue-managed-tokens.js"
   },
   "repository": {
     "type": "git",

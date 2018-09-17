@@ -5,7 +5,7 @@
   "main": "create-managed-token.js",
   "scripts": {
     "test": "echo no tests yet",
-    "start": "node managed-token.js"
+    "start": "node create-managed-token.js"
   },
   "repository": {
     "type": "git",
