@@ -57,7 +57,7 @@ async function createManagedToken() {
       0, // Predecessor token. 0 for new tokens.
       "Companies", // Category.
       "Bitcoin Cash Mining", // Subcategory
-      "QMC1", // Name/Ticker
+      "QMC", // Name/Ticker
       "www.qmc.cash", // URL
       "Made with BITBOX" // Description.
     );

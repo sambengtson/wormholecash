@@ -27,6 +27,7 @@ try {
 }
 
 // Change this value to match your token.
+const RECV_ADDR = "";
 const propertyId = 216;
 
 // Issue new tokens.
@@ -44,12 +45,10 @@ async function sendTokens() {
     let account = Wormhole.HDNode.derivePath(masterHDNode, "m/44'/145'/0'");
 
     let change = Wormhole.HDNode.derivePath(account, "0/0");
-    let change2 = Wormhole.HDNode.derivePath(account, "0/1");
 
     // get the cash address
     //let cashAddress = BITBOX.HDNode.toCashAddress(change);
     let cashAddress = walletInfo.cashAddress;
-    const RECV_ADDR = Wormhole.HDNode.toCashAddress(change2);
 
     // Create simple send payload.
     const payload = await Wormhole.PayloadCreation.simpleSend(propertyId, "2");
