@@ -1,11 +1,13 @@
 /*
-  Send existing tokens to another address.
+  Consume 1 WHC to create a new fixed token.
+
+  Dev Note: This code needs to be refactored to remove Bitbox-cli
+  dependencies.
 */
 
 "use strict";
 
 // Instantiate wormholecash
-//let Wormhole = require("wormholecash/lib/Wormhole").default;
 const WH = require("wormholecash/lib/Wormhole").default;
 const Wormhole = new WH({
   restURL: `https://wormholecash-staging.herokuapp.com/v1/`
@@ -13,6 +15,8 @@ const Wormhole = new WH({
 
 const BITBOXCli = require("bitbox-cli/lib/bitbox-cli").default;
 const BITBOX = new BITBOXCli({ restURL: "https://trest.bitcoin.com/v1/" });
+
+const fs = require("fs");
 
 // Open the wallet generated with create-wallet.
 let walletInfo;
@@ -26,11 +30,8 @@ try {
   process.exit(0);
 }
 
-// Change this value to match your token.
-const propertyId = 219;
-
-// Issue new tokens.
-async function revokeManagedTokens() {
+// Create a fixed token.
+async function createFixedToken() {
   try {
     let mnemonic = walletInfo.mnemonic;
 
@@ -49,9 +50,18 @@ async function revokeManagedTokens() {
     //let cashAddress = BITBOX.HDNode.toCashAddress(change);
     let cashAddress = walletInfo.cashAddress;
 
-    const propertyId = 216;
-    // Create simple send payload.
-    let payload = await Wormhole.PayloadCreation.revoke(propertyId, "33.0");
+    // Create the fixed token.
+    let fixed = await Wormhole.PayloadCreation.fixed(
+      1, // Ecosystem, must be 1.
+      1, // Precision, number of decimal places. Must be 0-8.
+      0, // Predecessor token. 0 for new tokens.
+      "Companies", // Category.
+      "Bitcoin Cash Mining", // Subcategory
+      "QMC", // Name/Ticker
+      "www.qmc.cash", // URL
+      "Made with BITBOX", // Description.
+      "1000" // amount
+    );
 
     // Get a utxo to use for this transaction.
     let u = await BITBOX.Address.utxo([cashAddress]);
@@ -62,10 +72,9 @@ async function revokeManagedTokens() {
     let rawTx = await Wormhole.RawTransactions.create([utxo], {});
 
     // Add the token information as an op-return code to the tx.
-    let opReturn = await Wormhole.RawTransactions.opReturn(rawTx, payload);
+    let opReturn = await Wormhole.RawTransactions.opReturn(rawTx, fixed);
 
-    // Set the destination/recieving address for the tokens, with the actual
-    // amount of BCH set to a minimal amount.
+    // Set the destination/recieving address
     let ref = await Wormhole.RawTransactions.reference(opReturn, cashAddress);
 
     // Generate a change output.
@@ -77,7 +86,7 @@ async function revokeManagedTokens() {
     );
 
     let tx = Wormhole.Transaction.fromHex(changeHex);
-    let tb = Wormhole.Transaction.fromTransaction(tx);
+    const tb = Wormhole.Transaction.fromTransaction(tx);
 
     // Finalize and sign transaction.
     let keyPair = Wormhole.HDNode.toKeyPair(change);
@@ -90,11 +99,20 @@ async function revokeManagedTokens() {
     // sendRawTransaction to running BCH node
     const broadcast = await BITBOX.RawTransactions.sendRawTransaction(txHex);
     console.log(`Transaction ID: ${broadcast}`);
+
+    // Write out the basic information into a json file for other apps to use.
+    const tokenInfo = { tokenTx: broadcast };
+    fs.writeFile("token-tx.json", JSON.stringify(tokenInfo, null, 2), function(
+      err
+    ) {
+      if (err) return console.error(err);
+      console.log(`token-tx.json written successfully.`);
+    });
   } catch (err) {
     console.log(err);
   }
 }
-revokeManagedTokens();
+createFixedToken();
 
 // SUPPORT/PRIVATE FUNCTIONS BELOW
 
@@ -103,7 +121,7 @@ function findBiggestUtxo(utxos) {
   let largestAmount = 0;
   let largestIndex = 0;
 
-  for (var i = 0; i < utxos.length; i++) {
+  for (let i = 0; i < utxos.length; i++) {
     const thisUtxo = utxos[i];
 
     if (thisUtxo.satoshis > largestAmount) {
