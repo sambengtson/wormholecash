@@ -6,9 +6,10 @@
 
 // Instantiate wormholecash
 //let Wormhole = require("wormholecash/lib/Wormhole").default;
-let Wormhole = require("../../src/node/Wormhole");
-let wormhole = new Wormhole({ restURL: `http://localhost:3000/v1/` });
-//let wormhole = new Wormhole({ restURL: `https://trest.bitcoin.com/v1/` });
+const WH = require("wormholecash/lib/Wormhole").default;
+const Wormhole = new WH({
+  restURL: `https://wormholecash-staging.herokuapp.com/v1/`
+});
 
 const BITBOXCli = require("bitbox-cli/lib/bitbox-cli").default;
 const BITBOX = new BITBOXCli({ restURL: "https://trest.bitcoin.com/v1/" });
@@ -26,8 +27,8 @@ try {
 }
 
 // Change this value to match your token.
-const propertyId = 195;
-const RECV_ADDR = `bchtest:qr0kw4whkzacmj3h0a65spaef7fd0gg0wcpmuddaay`;
+const RECV_ADDR = "";
+const propertyId = 216;
 
 // Issue new tokens.
 async function sendTokens() {
@@ -35,22 +36,22 @@ async function sendTokens() {
     let mnemonic = walletInfo.mnemonic;
 
     // root seed buffer
-    let rootSeed = BITBOX.Mnemonic.toSeed(mnemonic);
+    let rootSeed = Wormhole.Mnemonic.toSeed(mnemonic);
 
     // master HDNode
-    let masterHDNode = BITBOX.HDNode.fromSeed(rootSeed, "testnet");
+    let masterHDNode = Wormhole.HDNode.fromSeed(rootSeed, "testnet");
 
     // HDNode of BIP44 account
-    let account = BITBOX.HDNode.derivePath(masterHDNode, "m/44'/145'/0'");
+    let account = Wormhole.HDNode.derivePath(masterHDNode, "m/44'/145'/0'");
 
-    let change = BITBOX.HDNode.derivePath(account, "0/0");
+    let change = Wormhole.HDNode.derivePath(account, "0/0");
 
     // get the cash address
     //let cashAddress = BITBOX.HDNode.toCashAddress(change);
     let cashAddress = walletInfo.cashAddress;
 
     // Create simple send payload.
-    const payload = await wormhole.PayloadCreation.simpleSend(propertyId, "2");
+    const payload = await Wormhole.PayloadCreation.simpleSend(propertyId, "2");
 
     // Get a utxo to use for this transaction.
     let u = await BITBOX.Address.utxo([cashAddress]);
@@ -58,28 +59,28 @@ async function sendTokens() {
 
     // Create a rawTx using the largest utxo in the wallet.
     utxo.value = utxo.amount;
-    let rawTx = await wormhole.RawTransactions.create([utxo], {});
+    let rawTx = await Wormhole.RawTransactions.create([utxo], {});
 
     // Add the token information as an op-return code to the tx.
-    let opReturn = await wormhole.RawTransactions.opReturn(rawTx, payload);
+    let opReturn = await Wormhole.RawTransactions.opReturn(rawTx, payload);
 
     // Set the destination/recieving address for the tokens, with the actual
     // amount of BCH set to a minimal amount.
-    let ref = await wormhole.RawTransactions.reference(opReturn, RECV_ADDR);
+    let ref = await Wormhole.RawTransactions.reference(opReturn, RECV_ADDR);
 
     // Generate a change output.
-    let changeHex = await wormhole.RawTransactions.change(
+    let changeHex = await Wormhole.RawTransactions.change(
       ref, // Raw transaction we're working with.
       [utxo], // Previous utxo
       cashAddress, // Destination address.
       0.00001 // Miner fee.
     );
 
-    let tx = BITBOX.Transaction.fromHex(changeHex);
-    let tb = BITBOX.Transaction.fromTransaction(tx);
+    let tx = Wormhole.Transaction.fromHex(changeHex);
+    let tb = Wormhole.Transaction.fromTransaction(tx);
 
     // Finalize and sign transaction.
-    let keyPair = BITBOX.HDNode.toKeyPair(change);
+    let keyPair = Wormhole.HDNode.toKeyPair(change);
     let redeemScript;
     tb.sign(0, keyPair, redeemScript, 0x01, utxo.satoshis);
     let builtTx = tb.build();

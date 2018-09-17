@@ -1,17 +1,22 @@
 /*
-  Issue new tokens for a manged token.
+  Consume 1 WHC to create a new managed token.
+
+  Dev Note: This code needs to be refactored to remove Bitbox-cli
+  dependencies.
 */
 
 "use strict";
 
 // Instantiate wormholecash
-//let Wormhole = require("wormholecash/lib/Wormhole").default;
-let Wormhole = require("../../src/node/Wormhole");
-let wormhole = new Wormhole({ restURL: `http://localhost:3000/v1/` });
-//let wormhole = new Wormhole({ restURL: `https://trest.bitcoin.com/v1/` });
+const WH = require("wormholecash/lib/Wormhole").default;
+const Wormhole = new WH({
+  restURL: `https://wormholecash-staging.herokuapp.com/v1/`
+});
 
 const BITBOXCli = require("bitbox-cli/lib/bitbox-cli").default;
 const BITBOX = new BITBOXCli({ restURL: "https://trest.bitcoin.com/v1/" });
+
+const fs = require("fs");
 
 // Open the wallet generated with create-wallet.
 let walletInfo;
@@ -25,62 +30,67 @@ try {
   process.exit(0);
 }
 
-// Change this value to match your token.
-const propertyId = 195;
-
-// Issue new tokens.
-async function issueNewTokens() {
+// Create a managed token.
+async function createManagedToken() {
   try {
     let mnemonic = walletInfo.mnemonic;
 
     // root seed buffer
-    let rootSeed = BITBOX.Mnemonic.toSeed(mnemonic);
+    let rootSeed = Wormhole.Mnemonic.toSeed(mnemonic);
 
     // master HDNode
-    let masterHDNode = BITBOX.HDNode.fromSeed(rootSeed, "testnet");
+    let masterHDNode = Wormhole.HDNode.fromSeed(rootSeed, "testnet");
 
     // HDNode of BIP44 account
-    let account = BITBOX.HDNode.derivePath(masterHDNode, "m/44'/145'/0'");
+    let account = Wormhole.HDNode.derivePath(masterHDNode, "m/44'/145'/0'");
 
-    let change = BITBOX.HDNode.derivePath(account, "0/0");
+    let change = Wormhole.HDNode.derivePath(account, "0/0");
 
     // get the cash address
     //let cashAddress = BITBOX.HDNode.toCashAddress(change);
     let cashAddress = walletInfo.cashAddress;
 
-    // grant 10 new tokens.
-    let grant = await wormhole.PayloadCreation.grant(propertyId, "10");
+    // Create the managed token.
+    let managed = await Wormhole.PayloadCreation.managed(
+      1, // Ecosystem, must be 1.
+      1, // Precision, number of decimal places. Must be 0-8.
+      0, // Predecessor token. 0 for new tokens.
+      "Companies", // Category.
+      "Bitcoin Cash Mining", // Subcategory
+      "QMC", // Name/Ticker
+      "www.qmc.cash", // URL
+      "Made with BITBOX" // Description.
+    );
 
     // Get a utxo to use for this transaction.
     let u = await BITBOX.Address.utxo([cashAddress]);
+    console.log(u);
     let utxo = findBiggestUtxo(u[0]);
+    console.log(utxo);
 
     // Create a rawTx using the largest utxo in the wallet.
     utxo.value = utxo.amount;
-    let rawTx = await wormhole.RawTransactions.create([utxo], {});
+    let rawTx = await Wormhole.RawTransactions.create([utxo], {});
 
     // Add the token information as an op-return code to the tx.
-    let opReturn = await wormhole.RawTransactions.opReturn(rawTx, grant);
+    let opReturn = await Wormhole.RawTransactions.opReturn(rawTx, managed);
 
-    // Set the destination/recieving address, with the actual amount of BCH set
-    // to a minimal amount.
-    // This sends the token to the same address as the issue. Change this to the
-    // an address you want to send tokens to.
-    let ref = await wormhole.RawTransactions.reference(opReturn, cashAddress);
+    // Set the destination/recieving address, with the actual amount of BCH set to a minimal amount.
+    let ref = await Wormhole.RawTransactions.reference(opReturn, cashAddress);
 
     // Generate a change output.
-    let changeHex = await wormhole.RawTransactions.change(
+    let changeHex = await Wormhole.RawTransactions.change(
       ref, // Raw transaction we're working with.
       [utxo], // Previous utxo
       cashAddress, // Destination address.
       0.00001 // Miner fee.
     );
 
-    let tx = BITBOX.Transaction.fromHex(changeHex);
-    let tb = BITBOX.Transaction.fromTransaction(tx);
+    let tx = Wormhole.Transaction.fromHex(changeHex);
+    let tb = Wormhole.Transaction.fromTransaction(tx);
 
     // Finalize and sign transaction.
-    let keyPair = BITBOX.HDNode.toKeyPair(change);
+    let keyPair = Wormhole.HDNode.toKeyPair(change);
     let redeemScript;
     tb.sign(0, keyPair, redeemScript, 0x01, utxo.satoshis);
     let builtTx = tb.build();
@@ -90,11 +100,20 @@ async function issueNewTokens() {
     // sendRawTransaction to running BCH node
     const broadcast = await BITBOX.RawTransactions.sendRawTransaction(txHex);
     console.log(`Transaction ID: ${broadcast}`);
+
+    // Write out the basic information into a json file for other apps to use.
+    const tokenInfo = { tokenTx: broadcast };
+    fs.writeFile("token-tx.json", JSON.stringify(tokenInfo, null, 2), function(
+      err
+    ) {
+      if (err) return console.error(err);
+      console.log(`token-tx.json written successfully.`);
+    });
   } catch (err) {
     console.log(err);
   }
 }
-issueNewTokens();
+createManagedToken();
 
 // SUPPORT/PRIVATE FUNCTIONS BELOW
 
