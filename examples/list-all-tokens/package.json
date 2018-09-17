@@ -1,11 +1,11 @@
 {
-  "name": "issue-managed-tokens",
+  "name": "list-all-tokens",
   "version": "1.0.0",
-  "description": "Issue new tokens from a managed token.",
-  "main": "issue-managed-tokens.js",
+  "description": "List all tokens",
+  "main": "list-all-tokens.js",
   "scripts": {
     "test": "echo no tests yet",
-    "start": "node issue-tokens.js"
+    "start": "node list-all-tokens.js"
   },
   "repository": {
     "type": "git",
@@ -23,7 +23,7 @@
     "node.js",
     "javascript"
   ],
-  "author": "Chris Troutner <chris.troutner@gmail.com>",
+  "author": "Gabriel Cardona <gabriel@bitcoin.com>",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/Bitcoin-com/wormholecash/issues"
