@@ -1,11 +1,11 @@
 {
-  "name": "token-balance",
+  "name": "participate-in-crowdsale",
   "version": "1.0.0",
-  "description": "Check the balance of WHC and other tokens",
-  "main": "token-balance.js",
+  "description": "Use 1 WHC to create a crowd sale / ICO.",
+  "main": "participate-in-crowdsale.js",
   "scripts": {
     "test": "echo no tests yet",
-    "start": "node token-balance.js"
+    "start": "node participate-in-crowdsale.js"
   },
   "repository": {
     "type": "git",
@@ -23,10 +23,13 @@
     "node.js",
     "javascript"
   ],
-  "author": "Chris Troutner <chris.troutner@gmail.com>",
+  "author": "Gabriel Cardona <gabriel@bitcoin.com>",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/Bitcoin-com/wormholecash/issues"
   },
-  "homepage": "https://github.com/Bitcoin-com/wormholecash#readme"
+  "homepage": "https://github.com/Bitcoin-com/wormholecash#readme",
+  "dependencies": {
+    "wormholecash": "^0.6.0"
+  }
 }
