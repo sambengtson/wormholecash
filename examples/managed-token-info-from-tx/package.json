@@ -1,8 +1,8 @@
 {
-  "name": "token-info-from-tx",
+  "name": "managed-token-info-from-tx",
   "version": "1.0.0",
-  "description": "Get token details from a TX",
-  "main": "token-info-from-tx.js",
+  "description": "Get managed token details from a TX",
+  "main": "managed-token-info-from-tx.js",
   "scripts": {
     "test": "echo no tests yet",
     "start": "node token-info-from-tx.js"

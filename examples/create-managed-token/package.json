@@ -1,8 +1,8 @@
 {
-  "name": "managed-token",
+  "name": "create-managed-token",
   "version": "1.0.0",
   "description": "Use 1 WHC to create a managed token.",
-  "main": "managed-token.js",
+  "main": "create-managed-token.js",
   "scripts": {
     "test": "echo no tests yet",
     "start": "node managed-token.js"

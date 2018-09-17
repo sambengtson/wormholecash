@@ -1,8 +1,8 @@
 {
-  "name": "issue-tokens",
+  "name": "issue-managed-tokens",
   "version": "1.0.0",
   "description": "Issue new tokens from a managed token.",
-  "main": "issue-tokens.js",
+  "main": "issue-managed-tokens.js",
   "scripts": {
     "test": "echo no tests yet",
     "start": "node issue-tokens.js"
