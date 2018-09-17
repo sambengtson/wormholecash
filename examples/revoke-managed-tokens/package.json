@@ -1,11 +1,11 @@
 {
-  "name": "managed-token-info-from-tx",
+  "name": "revoke-managed-tokens",
   "version": "1.0.0",
-  "description": "Get managed token details from a TX",
-  "main": "managed-token-info-from-tx.js",
+  "description": "Revoke managed tokens",
+  "main": "revoke-managed-tokens.js",
   "scripts": {
     "test": "echo no tests yet",
-    "start": "node managed-token-info-from-tx.js"
+    "start": "node revoke-managed-tokens.js"
   },
   "repository": {
     "type": "git",
