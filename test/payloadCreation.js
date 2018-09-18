@@ -97,16 +97,6 @@ describe('#PayloadCreation', () => {
     });
   });
 
-  describe('#sendAll', () => {
-    it(`should sendAll`, async () => {
-      try {
-        let sendAll = await Wormhole.PayloadCreation.sendAll(2, "100");
-        assert.equal(sendAll, '0000000402');
-      } catch (error) {
-      }
-    });
-  });
-
   describe('#simpleSend', () => {
     it(`should simpleSend`, async () => {
       try {
