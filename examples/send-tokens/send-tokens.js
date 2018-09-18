@@ -8,7 +8,7 @@
 //let Wormhole = require("wormholecash/lib/Wormhole").default;
 const WH = require("wormholecash/lib/Wormhole").default;
 const Wormhole = new WH({
-  restURL: `https://wormholecash-staging.herokuapp.com/v1/`
+  restURL: `https://wormholecash-staging.herokuapp.com/v1/`,
 });
 
 const BITBOXCli = require("bitbox-cli/lib/bitbox-cli").default;
@@ -26,69 +26,72 @@ try {
   process.exit(0);
 }
 
-// Change this value to match your token.
+// Change these values to match your token.
 const RECV_ADDR = "";
-const propertyId = 216;
+const propertyId = 195; // WH ID identifying the token.
+const TOKEN_QTY = 1; // Number of tokens to send.
 
 // Issue new tokens.
 async function sendTokens() {
   try {
-    let mnemonic = walletInfo.mnemonic;
+    const mnemonic = walletInfo.mnemonic;
 
     // root seed buffer
-    let rootSeed = Wormhole.Mnemonic.toSeed(mnemonic);
+    const rootSeed = Wormhole.Mnemonic.toSeed(mnemonic);
 
     // master HDNode
-    let masterHDNode = Wormhole.HDNode.fromSeed(rootSeed, "testnet");
+    const masterHDNode = Wormhole.HDNode.fromSeed(rootSeed, "testnet");
 
     // HDNode of BIP44 account
-    let account = Wormhole.HDNode.derivePath(masterHDNode, "m/44'/145'/0'");
+    const account = Wormhole.HDNode.derivePath(masterHDNode, "m/44'/145'/0'");
 
-    let change = Wormhole.HDNode.derivePath(account, "0/0");
+    const change = Wormhole.HDNode.derivePath(account, "0/0");
 
     // get the cash address
     //let cashAddress = BITBOX.HDNode.toCashAddress(change);
-    let cashAddress = walletInfo.cashAddress;
+    const cashAddress = walletInfo.cashAddress;
 
     // Create simple send payload.
-    const payload = await Wormhole.PayloadCreation.simpleSend(propertyId, "2");
+    const payload = await Wormhole.PayloadCreation.simpleSend(propertyId, TOKEN_QTY.toString());
 
     // Get a utxo to use for this transaction.
-    let u = await BITBOX.Address.utxo([cashAddress]);
-    let utxo = findBiggestUtxo(u[0]);
+    const u = await BITBOX.Address.utxo([cashAddress]);
+    const utxo = findBiggestUtxo(u[0]);
 
     // Create a rawTx using the largest utxo in the wallet.
     utxo.value = utxo.amount;
-    let rawTx = await Wormhole.RawTransactions.create([utxo], {});
+    const rawTx = await Wormhole.RawTransactions.create([utxo], {});
 
     // Add the token information as an op-return code to the tx.
-    let opReturn = await Wormhole.RawTransactions.opReturn(rawTx, payload);
+    const opReturn = await Wormhole.RawTransactions.opReturn(rawTx, payload);
 
     // Set the destination/recieving address for the tokens, with the actual
     // amount of BCH set to a minimal amount.
-    let ref = await Wormhole.RawTransactions.reference(opReturn, RECV_ADDR);
+    const ref = await Wormhole.RawTransactions.reference(opReturn, RECV_ADDR);
 
     // Generate a change output.
-    let changeHex = await Wormhole.RawTransactions.change(
+    const changeHex = await Wormhole.RawTransactions.change(
       ref, // Raw transaction we're working with.
       [utxo], // Previous utxo
       cashAddress, // Destination address.
       0.00001 // Miner fee.
     );
 
-    let tx = Wormhole.Transaction.fromHex(changeHex);
-    let tb = Wormhole.Transaction.fromTransaction(tx);
+    const tx = Wormhole.Transaction.fromHex(changeHex);
+    const tb = Wormhole.Transaction.fromTransaction(tx);
 
     // Finalize and sign transaction.
-    let keyPair = Wormhole.HDNode.toKeyPair(change);
+    const keyPair = Wormhole.HDNode.toKeyPair(change);
     let redeemScript;
     tb.sign(0, keyPair, redeemScript, 0x01, utxo.satoshis);
-    let builtTx = tb.build();
-    let txHex = builtTx.toHex();
+    const builtTx = tb.build();
+    const txHex = builtTx.toHex();
     //console.log(txHex);
 
     // sendRawTransaction to running BCH node
     const broadcast = await BITBOX.RawTransactions.sendRawTransaction(txHex);
+
+    console.log(`You can monitor the below transaction ID on a block explorer.`);
     console.log(`Transaction ID: ${broadcast}`);
   } catch (err) {
     console.log(err);
@@ -103,7 +106,7 @@ function findBiggestUtxo(utxos) {
   let largestAmount = 0;
   let largestIndex = 0;
 
-  for (var i = 0; i < utxos.length; i++) {
+  for (let i = 0; i < utxos.length; i++) {
     const thisUtxo = utxos[i];
 
     if (thisUtxo.satoshis > largestAmount) {
