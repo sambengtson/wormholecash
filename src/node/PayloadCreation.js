@@ -148,17 +148,6 @@ class PayloadCreation {
     }
   }
 
-  async sendAll(ecosystem) {
-    try {
-      let response = await axios.post(
-        `${this.restURL}payloadCreation/sendAll/${ecosystem}`
-      );
-      return response.data;
-    } catch (error) {
-      throw error.response.data;
-    }
-  }
-
   async simpleSend(propertyId, amount) {
     try {
       let response = await axios.post(
