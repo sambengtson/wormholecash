@@ -48,9 +48,9 @@ These example apps roughly follow the
 Managed tokens all new tokens to be created at any time. And existing tokens can
 be revoked.
 
-- [create-managed-token](managed-token) Create a managed token.
+- [create-managed-token](create-managed-token) Create a managed token.
 
-- [managed-token-info-from-tx](token-info-from-tx) Lookup token information based on a
+- [managed-token-info-from-tx](managed-token-info-from-tx) Lookup token information based on a
   TXID generated from `managed-token`. This example will retrieve the `primaryid`
   value needed to issue new tokens.
 
