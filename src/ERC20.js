@@ -1,5 +1,5 @@
-import axios from 'axios';
-let BITBOXCli = require('bitbox-cli/lib/bitbox-cli').default;
+import axios from "axios";
+let BITBOXCli = require("bitbox-cli/lib/bitbox-cli").default;
 let BITBOX = new BITBOXCli();
 
 class ERC20 {
@@ -18,7 +18,9 @@ class ERC20 {
   async totalSupply() {
     // Get the total token supply
     try {
-      let response = await axios.get(`${this.restURL}dataRetrieval/property/${this.token.propertyid}`)
+      let response = await axios.get(
+        `${this.restURL}dataRetrieval/property/${this.token.propertyid}`
+      );
       return response.data.totaltokens;
     } catch (error) {
       throw error.response.data;
@@ -28,11 +30,13 @@ class ERC20 {
   async balanceOf(owner) {
     // Get the account balance of another account with address `owner`
     try {
-      let response = await axios.get(`${this.restURL}dataRetrieval/balancesForAddress/${owner}`)
+      let response = await axios.get(
+        `${this.restURL}dataRetrieval/balancesForAddress/${owner}`
+      );
       let token;
       let tokens = response.data;
       tokens.forEach((tk, ind) => {
-        if(tk.propertyid === this.token.propertyid) {
+        if (tk.propertyid === this.token.propertyid) {
           token = tk;
         }
       });
@@ -52,7 +56,12 @@ class ERC20 {
 
       // master HDNode
       // let masterHDNode = BITBOX.HDNode.fromSeed(rootSeed, BITBOX.Address.detectAddressNetwork(to));
-      let masterHDNode = BITBOX.HDNode.fromSeed(rootSeed, (BITBOX.Address.detectAddressNetwork(to) === 'mainnet' ? 'bitcoincash' : 'testnet'));
+      let masterHDNode = BITBOX.HDNode.fromSeed(
+        rootSeed,
+        BITBOX.Address.detectAddressNetwork(to) === "mainnet"
+          ? "bitcoincash"
+          : "testnet"
+      );
 
       // HDNode of BIP44 account
       let account = BITBOX.HDNode.derivePath(masterHDNode, "m/44'/145'/0'");
@@ -63,7 +72,10 @@ class ERC20 {
       let cashAddress = BITBOX.HDNode.toCashAddress(change);
 
       // Create simple send payload.
-      const payload = await this.PayloadCreation.simpleSend(this.token.propertyid, value);
+      const payload = await this.PayloadCreation.simpleSend(
+        this.token.propertyid,
+        value
+      );
 
       // Get a utxo to use for this transaction.
       let u = await BITBOX.Address.utxo([cashAddress]);
@@ -115,7 +127,10 @@ class ERC20 {
       let cashAddress = BITBOX.HDNode.toCashAddress(from);
 
       // Create simple send payload.
-      const payload = await this.PayloadCreation.simpleSend(this.token.propertyid, value);
+      const payload = await this.PayloadCreation.simpleSend(
+        this.token.propertyid,
+        value
+      );
 
       // Get a utxo to use for this transaction.
       let u = await BITBOX.Address.utxo([cashAddress]);
@@ -170,9 +185,8 @@ class ERC20 {
     // NOOP
   }
 
-// Transfer(address indexed _from, address indexed _to, uint256 _value). [Triggered when tokens are transferred.]
-// Approval(address indexed _owner, address indexed _spender, uint256 _value)[Triggered whenever approve(address _spender, uint256 _value) is called.]
-
+  // Transfer(address indexed _from, address indexed _to, uint256 _value). [Triggered when tokens are transferred.]
+  // Approval(address indexed _owner, address indexed _spender, uint256 _value)[Triggered whenever approve(address _spender, uint256 _value) is called.]
 }
 
 export default ERC20;

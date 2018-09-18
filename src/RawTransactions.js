@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios from "axios";
 class RawTransactions {
   constructor(restURL, rawTransactions) {
     this.restURL = restURL;
@@ -10,13 +10,17 @@ class RawTransactions {
 
   async change(rawtx, prevTxs, destination, fee, position = undefined) {
     let path;
-    if(position) {
-      path = `${this.restURL}rawTransactions/change/${rawtx}/${JSON.stringify(prevTxs)}/${destination}/${fee}?position=${position}`;
+    if (position) {
+      path = `${this.restURL}rawTransactions/change/${rawtx}/${JSON.stringify(
+        prevTxs
+      )}/${destination}/${fee}?position=${position}`;
     } else {
-      path = `${this.restURL}rawTransactions/change/${rawtx}/${JSON.stringify(prevTxs)}/${destination}/${fee}`;
+      path = `${this.restURL}rawTransactions/change/${rawtx}/${JSON.stringify(
+        prevTxs
+      )}/${destination}/${fee}`;
     }
     try {
-      let response = await axios.post(path)
+      let response = await axios.post(path);
       return response.data;
     } catch (error) {
       throw error.response.data;
@@ -25,7 +29,9 @@ class RawTransactions {
 
   async input(rawtx, txid, n) {
     try {
-      let response = await axios.post(`${this.restURL}rawTransactions/input/${rawtx}/${txid}/${n}`)
+      let response = await axios.post(
+        `${this.restURL}rawTransactions/input/${rawtx}/${txid}/${n}`
+      );
       return response.data;
     } catch (error) {
       throw error.response.data;
@@ -34,7 +40,9 @@ class RawTransactions {
 
   async opReturn(rawtx, payload) {
     try {
-      let response = await axios.post(`${this.restURL}rawTransactions/opReturn/${rawtx}/${payload}`)
+      let response = await axios.post(
+        `${this.restURL}rawTransactions/opReturn/${rawtx}/${payload}`
+      );
       return response.data;
     } catch (error) {
       throw error.response.data;
@@ -43,13 +51,15 @@ class RawTransactions {
 
   async reference(rawtx, destination, amount) {
     let path;
-    if(amount) {
-      path = `${this.restURL}rawTransactions/reference/${rawtx}/${destination}?amount=${amount}`;
+    if (amount) {
+      path = `${
+        this.restURL
+      }rawTransactions/reference/${rawtx}/${destination}?amount=${amount}`;
     } else {
       path = `${this.restURL}rawTransactions/reference/${rawtx}/${destination}`;
     }
     try {
-      let response = await axios.post(path)
+      let response = await axios.post(path);
       return response.data;
     } catch (error) {
       throw error.response.data;
@@ -58,17 +68,27 @@ class RawTransactions {
 
   async decodeTransaction(rawtx, prevTxs = undefined, height = undefined) {
     let path;
-    if(prevTxs) {
-      path = `${this.restURL}rawTransactions/decodeTransaction/${rawtx}?prevTxs=${JSON.stringify(prevTxs)}`;
-    } else if(prevTxs && height) {
-      path = `${this.restURL}rawTransactions/decodeTransaction/${rawtx}?prevTxs=${JSON.stringify(prevTxs)}&height=${height}`;
-    } else if(height) {
-      path = `${this.restURL}rawTransactions/decodeTransaction/${rawtx}?height=${height}`;
+    if (prevTxs) {
+      path = `${
+        this.restURL
+      }rawTransactions/decodeTransaction/${rawtx}?prevTxs=${JSON.stringify(
+        prevTxs
+      )}`;
+    } else if (prevTxs && height) {
+      path = `${
+        this.restURL
+      }rawTransactions/decodeTransaction/${rawtx}?prevTxs=${JSON.stringify(
+        prevTxs
+      )}&height=${height}`;
+    } else if (height) {
+      path = `${
+        this.restURL
+      }rawTransactions/decodeTransaction/${rawtx}?height=${height}`;
     } else {
       path = `${this.restURL}rawTransactions/decodeTransaction/${rawtx}`;
     }
     try {
-      let response = await axios.get(path)
+      let response = await axios.get(path);
       return response.data;
     } catch (error) {
       throw error.response.data;
@@ -77,7 +97,11 @@ class RawTransactions {
 
   async create(inputs, outputs = {}) {
     try {
-      let response = await axios.post(`${this.restURL}rawTransactions/create/${JSON.stringify(inputs)}/${JSON.stringify(outputs)}`)
+      let response = await axios.post(
+        `${this.restURL}rawTransactions/create/${JSON.stringify(
+          inputs
+        )}/${JSON.stringify(outputs)}`
+      );
       return response.data;
     } catch (error) {
       throw error.response.data;

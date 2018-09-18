@@ -27,7 +27,7 @@ try {
 }
 
 // Change this value to match your token.
-const propertyId = 219;
+const propertyId = 216;
 
 // Issue new tokens.
 async function revokeManagedTokens() {

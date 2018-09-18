@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios from "axios";
 class DataRetrieval {
   constructor(restURL) {
     this.restURL = restURL;
@@ -6,7 +6,9 @@ class DataRetrieval {
 
   async balancesForAddress(address) {
     try {
-      let response = await axios.get(`${this.restURL}dataRetrieval/balancesForAddress/${address}`)
+      let response = await axios.get(
+        `${this.restURL}dataRetrieval/balancesForAddress/${address}`
+      );
       return response.data;
     } catch (error) {
       throw error.response.data;
@@ -15,7 +17,9 @@ class DataRetrieval {
 
   async balancesForId(propertyId) {
     try {
-      let response = await axios.get(`${this.restURL}dataRetrieval/balancesForId/${propertyId}`)
+      let response = await axios.get(
+        `${this.restURL}dataRetrieval/balancesForId/${propertyId}`
+      );
       return response.data;
     } catch (error) {
       throw error.response.data;
@@ -24,7 +28,9 @@ class DataRetrieval {
 
   async balance(address, propertyId) {
     try {
-      let response = await axios.get(`${this.restURL}dataRetrieval/balance/${address}/${propertyId}`)
+      let response = await axios.get(
+        `${this.restURL}dataRetrieval/balance/${address}/${propertyId}`
+      );
       return response.data;
     } catch (error) {
       throw error.response.data;
@@ -33,7 +39,9 @@ class DataRetrieval {
 
   async balancesHash(propertyId) {
     try {
-      let response = await axios.get(`${this.restURL}dataRetrieval/balancesHash/${propertyId}`)
+      let response = await axios.get(
+        `${this.restURL}dataRetrieval/balancesHash/${propertyId}`
+      );
       return response.data;
     } catch (error) {
       throw error.response.data;
@@ -42,7 +50,9 @@ class DataRetrieval {
 
   async crowdSale(propertyId) {
     try {
-      let response = await axios.get(`${this.restURL}dataRetrieval/crowdSale/${propertyId}`)
+      let response = await axios.get(
+        `${this.restURL}dataRetrieval/crowdSale/${propertyId}`
+      );
       return response.data;
     } catch (error) {
       throw error.response.data;
@@ -51,7 +61,9 @@ class DataRetrieval {
 
   async currentConsensusHash() {
     try {
-      let response = await axios.get(`${this.restURL}dataRetrieval/currentConsensusHash`)
+      let response = await axios.get(
+        `${this.restURL}dataRetrieval/currentConsensusHash`
+      );
       return response.data;
     } catch (error) {
       throw error.response.data;
@@ -60,7 +72,9 @@ class DataRetrieval {
 
   async grants(propertyId) {
     try {
-      let response = await axios.get(`${this.restURL}dataRetrieval/grants/${propertyId}`)
+      let response = await axios.get(
+        `${this.restURL}dataRetrieval/grants/${propertyId}`
+      );
       return response.data;
     } catch (error) {
       throw error.response.data;
@@ -69,7 +83,7 @@ class DataRetrieval {
 
   async info() {
     try {
-      let response = await axios.get(`${this.restURL}dataRetrieval/info`)
+      let response = await axios.get(`${this.restURL}dataRetrieval/info`);
       return response.data;
     } catch (error) {
       throw error.response.data;
@@ -78,7 +92,9 @@ class DataRetrieval {
 
   async payload(txid) {
     try {
-      let response = await axios.get(`${this.restURL}dataRetrieval/payload/${txid}`)
+      let response = await axios.get(
+        `${this.restURL}dataRetrieval/payload/${txid}`
+      );
       return response.data;
     } catch (error) {
       throw error.response.data;
@@ -87,7 +103,9 @@ class DataRetrieval {
 
   async property(propertyId) {
     try {
-      let response = await axios.get(`${this.restURL}dataRetrieval/property/${propertyId}`)
+      let response = await axios.get(
+        `${this.restURL}dataRetrieval/property/${propertyId}`
+      );
       return response.data;
     } catch (error) {
       throw error.response.data;
@@ -96,7 +114,9 @@ class DataRetrieval {
 
   async seedBlocks(startBlock, endBlock) {
     try {
-      let response = await axios.get(`${this.restURL}dataRetrieval/seedBlocks/${startBlock}/${endBlock}`)
+      let response = await axios.get(
+        `${this.restURL}dataRetrieval/seedBlocks/${startBlock}/${endBlock}`
+      );
       return response.data;
     } catch (error) {
       throw error.response.data;
@@ -105,7 +125,9 @@ class DataRetrieval {
 
   async STO(txid, recipientFilter) {
     try {
-      let response = await axios.get(`${this.restURL}dataRetrieval/STO/${txid}/${recipientFilter}`)
+      let response = await axios.get(
+        `${this.restURL}dataRetrieval/STO/${txid}/${recipientFilter}`
+      );
       return response.data;
     } catch (error) {
       throw error.response.data;
@@ -114,7 +136,9 @@ class DataRetrieval {
 
   async transaction(txid) {
     try {
-      let response = await axios.get(`${this.restURL}dataRetrieval/transaction/${txid}`)
+      let response = await axios.get(
+        `${this.restURL}dataRetrieval/transaction/${txid}`
+      );
       return response.data;
     } catch (error) {
       throw error.response.data;
@@ -123,7 +147,9 @@ class DataRetrieval {
 
   async blockTransactions(index) {
     try {
-      let response = await axios.get(`${this.restURL}dataRetrieval/blockTransactions/${index}`)
+      let response = await axios.get(
+        `${this.restURL}dataRetrieval/blockTransactions/${index}`
+      );
       return response.data;
     } catch (error) {
       throw error.response.data;
@@ -132,11 +158,13 @@ class DataRetrieval {
 
   async pendingTransactions(address) {
     let path = `${this.restURL}dataRetrieval/pendingTransactions`;
-    if(address) {
-      path = `${this.restURL}dataRetrieval/pendingTransactions?address=${address}`
+    if (address) {
+      path = `${
+        this.restURL
+      }dataRetrieval/pendingTransactions?address=${address}`;
     }
     try {
-      let response = await axios.get(path)
+      let response = await axios.get(path);
       return response.data;
     } catch (error) {
       throw error.response.data;
@@ -145,7 +173,7 @@ class DataRetrieval {
 
   async properties() {
     try {
-      let response = await axios.get(`${this.restURL}dataRetrieval/properties`)
+      let response = await axios.get(`${this.restURL}dataRetrieval/properties`);
       return response.data;
     } catch (error) {
       throw error.response.data;
@@ -154,7 +182,9 @@ class DataRetrieval {
 
   async transactions() {
     try {
-      let response = await axios.get(`${this.restURL}dataRetrieval/transactions`)
+      let response = await axios.get(
+        `${this.restURL}dataRetrieval/transactions`
+      );
       return response.data;
     } catch (error) {
       throw error.response.data;

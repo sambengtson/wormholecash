@@ -31,7 +31,7 @@ try {
 async function createCrowdSale() {
   try {
     let mnemonic = walletInfo.mnemonic;
-    console.log(mnemonic)
+    console.log(mnemonic);
 
     // root seed buffer
     let rootSeed = Wormhole.Mnemonic.toSeed(mnemonic);
@@ -46,7 +46,7 @@ async function createCrowdSale() {
 
     // get the cash address
     let cashAddress = BITBOX.HDNode.toCashAddress(change);
-    console.log(cashAddress)
+    console.log(cashAddress);
     // let cashAddress = walletInfo.cashAddress;
 
     // close the crowdsale.
@@ -61,7 +61,10 @@ async function createCrowdSale() {
     let rawTx = await Wormhole.RawTransactions.create([utxo], {});
 
     // Add the token information as an op-return code to the tx.
-    let opReturn = await Wormhole.RawTransactions.opReturn(rawTx, closeCrowdSale);
+    let opReturn = await Wormhole.RawTransactions.opReturn(
+      rawTx,
+      closeCrowdSale
+    );
 
     // Generate a change output.
     let changeHex = await Wormhole.RawTransactions.change(
