@@ -27,9 +27,9 @@ try {
 }
 
 // Change these values to match your token.
-const RECV_ADDR = "qznshd05v86hatzdewctxkp8grfumuapdyler89mhf"
+const RECV_ADDR = ""
 const propertyId = 229 // WH ID identifying the token.
-const TOKEN_QTY = 0.55 // Number of tokens to send.
+const TOKEN_QTY = 1 // Number of tokens to send.
 
 // Issue new tokens.
 async function sendTokens() {
@@ -45,19 +45,10 @@ async function sendTokens() {
     // HDNode of BIP44 account
     const account = Wormhole.HDNode.derivePath(masterHDNode, "m/44'/145'/0'")
 
-    const change = Wormhole.HDNode.derivePath(account, "0/3")
-    // const changea = Wormhole.HDNode.derivePath(account, "0/2")
-    // const changeb = Wormhole.HDNode.derivePath(account, "0/3")
-    const change2 = Wormhole.HDNode.derivePath(account, "0/5")
+    const change = Wormhole.HDNode.derivePath(account, "0/0")
 
     // get the cash address
     const cashAddress = BITBOX.HDNode.toCashAddress(change)
-    const cashAddress2 = BITBOX.HDNode.toCashAddress(change2)
-    // const cashAddressa = BITBOX.HDNode.toCashAddress(changea)
-    // const cashAddressb = BITBOX.HDNode.toCashAddress(changeb)
-    // console.log("one", cashAddressa)
-    // console.log("two", cashAddressb)
-    // return false
     // const cashAddress = walletInfo.cashAddress;
 
     // Create simple send payload.
@@ -81,7 +72,7 @@ async function sendTokens() {
 
     // Set the destination/recieving address for the tokens, with the actual
     // amount of BCH set to a minimal amount.
-    const ref = await Wormhole.RawTransactions.reference(opReturn, cashAddress2)
+    const ref = await Wormhole.RawTransactions.reference(opReturn, RECV_ADDR)
 
     // Generate a change output.
     const changeHex = await Wormhole.RawTransactions.change(
