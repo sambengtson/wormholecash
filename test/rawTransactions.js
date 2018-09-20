@@ -33,6 +33,30 @@ describe("#RawTransactions", () => {
         )
       } catch (error) {}
     })
+
+    it(`should fail`, async () => {
+      try {
+        const change = await Wormhole.RawTransactions.change(
+          "fail",
+          [
+            {
+              txid:
+                "6779a710fcd5f6fb0883ea3306360c3ad8c0a3c5de902768ec57ef3104e65eb1",
+              vout: 4,
+              scriptPubKey:
+                "76a9147b25205fd98d462880a3e5b0541235831ae959e588ac",
+              value: 0.00068257
+            }
+          ],
+          "bchtest:qq2j9gp97gm9a6lwvhxc4zu28qvqm0x4j5e72v7ejg",
+          0.000035,
+          1
+        )
+      } catch (error) {
+        assert.equal(error.code, -22)
+        assert.equal(error.message, "Transaction deserialization failed")
+      }
+    })
   })
 
   describe("#input", () => {
@@ -49,6 +73,15 @@ describe("#RawTransactions", () => {
         )
       } catch (error) {}
     })
+
+    it(`should fail`, async () => {
+      try {
+        const input = await Wormhole.RawTransactions.input()
+      } catch (error) {
+        assert.equal(error.code, -22)
+        assert.equal(error.message, "Transaction deserialization failed")
+      }
+    })
   })
 
   describe("#opReturn", () => {
@@ -63,6 +96,15 @@ describe("#RawTransactions", () => {
           "0100000000010000000000000000166a140877686300000000000000020000000006dac2c000000000"
         )
       } catch (error) {}
+    })
+
+    it(`should fail`, async () => {
+      try {
+        const opReturn = await Wormhole.RawTransactions.opReturn()
+      } catch (error) {
+        assert.equal(error.code, -22)
+        assert.equal(error.message, "Transaction deserialization failed")
+      }
     })
   })
 
@@ -79,6 +121,15 @@ describe("#RawTransactions", () => {
           "0100000001a7a9402ecd77f3c9f745793c9ec805bfa2e14b89877581c734c774864247e6f50400000000ffffffff04aa0a0000000000001976a9146d18edfe073d53f84dd491dae1379f8fb0dfe5d488ac5c0d0000000000004751210252ce4bdd3ce38b4ebbc5a6e1343608230da508ff12d23d85b58c964204c4cef3210294cc195fc096f87d0f813a337ae7e5f961b1c8a18f1f8604a909b3a5121f065b52aeaa0a0000000000001976a914946cb2e08075bcbaf157e47bcb67eb2b2339d24288ac20a10700000000001976a9141522a025f2365eebee65cd8a8b8a38180dbcd59588ac00000000"
         )
       } catch (error) {}
+    })
+
+    it(`should fail`, async () => {
+      try {
+        const reference = await Wormhole.RawTransactions.reference()
+      } catch (error) {
+        assert.equal(error.code, -22)
+        assert.equal(error.message, "Transaction deserialization failed")
+      }
     })
   })
 
@@ -101,6 +152,14 @@ describe("#RawTransactions", () => {
         assert.equal(decodeTransaction, "Not a Master Protocol transaction")
       } catch (error) {}
     })
+
+    it(`should fail`, async () => {
+      try {
+        const decodeTransaction = await Wormhole.RawTransactions.decodeTransaction()
+      } catch (error) {
+        assert.equal(error.message, "Not Found")
+      }
+    })
   })
 
   describe("#create", () => {
@@ -112,6 +171,15 @@ describe("#RawTransactions", () => {
         )
         assert.equal(create, "txid must be hexadecimal string (not 'myid')")
       } catch (error) {}
+    })
+
+    it(`should fail`, async () => {
+      try {
+        const create = await Wormhole.RawTransactions.create("fail", {})
+      } catch (error) {
+        assert.equal(error.code, -3)
+        assert.equal(error.message, "Expected type array, got string")
+      }
     })
   })
 })
