@@ -49,14 +49,15 @@ async function burnBch() {
     const change = Wormhole.HDNode.derivePath(account, "0/0");
 
     // get the cash address
-    //let cashAddress = BITBOX.HDNode.toCashAddress(change);
-    const cashAddress = walletInfo.cashAddress;
+    let cashAddress = BITBOX.HDNode.toCashAddress(change);
+    // const cashAddress = walletInfo.cashAddress;
 
     let burnBCH = await Wormhole.PayloadCreation.burnBCH();
 
     // Get a utxo to use for this transaction.
     const u = await BITBOX.Address.utxo([cashAddress]);
     const utxo = findBiggestUtxo(u[0]);
+    console.log(utxo);
 
     // Create a rawTx using the largest utxo in the wallet.
     utxo.value = utxo.amount;
@@ -67,18 +68,37 @@ async function burnBch() {
 
     // Set the destination/recieving address for the tokens, with the actual
     // amount of BCH set to a minimal amount.
+    // const re = await Wormhole.RawTransactions.reference(
+    //   opReturn,
+    //   "bchtest:qqqqqqqqqqqqqqqqqqqqqqqqqqqqqdmwgvnjkt8whc"
+    // );
     const ref = await Wormhole.RawTransactions.reference(opReturn, cashAddress);
 
     // Generate a change output.
-    const changeHex = await Wormhole.RawTransactions.change(
-      ref, // Raw transaction we're working with.
-      [utxo], // Previous utxo
-      cashAddress, // Destination address.
-      0.00001 // Miner fee.
+    // const changeHex = await Wormhole.RawTransactions.change(
+    //   ref, // Raw transaction we're working with.
+    //   [utxo], // Previous utxo
+    //   cashAddress, // Destination address.
+    //   0.00001 // Miner fee.
+    // );
+
+    const tx = Wormhole.Transaction.fromHex(ref);
+    tx.outs.unshift({
+      value: 199990000,
+      script: Buffer.from(
+        "76a9140000000000000000000000000000000000376e4388ac",
+        "hex"
+      )
+    });
+    let buf = BITBOX.Script.pubKey.output.encode(
+      Buffer.from("bchtest:", "hex")
     );
 
-    const tx = Wormhole.Transaction.fromHex(changeHex);
+    console.log(tx.outs);
     const tb = Wormhole.Transaction.fromTransaction(tx);
+    // let ca = "mfWxJ45yp2SFn7UciZyNpvDKu6S3TYMHMR";
+    // console.log(tb);
+    // tb.addOutput('qqqqqqqqqqqqqqqqqqqqqqqqqqqqqdmwgvnjkt8whc', Wormhole.BitcoinCash.toSatoshi(1));
 
     // Finalize and sign transaction.
     const keyPair = Wormhole.HDNode.toKeyPair(change);
