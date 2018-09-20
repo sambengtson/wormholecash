@@ -1,15 +1,17 @@
-import axios from "axios";
+"use strict"
+
+import axios from "axios"
 class PayloadCreation {
   constructor(restURL) {
-    this.restURL = restURL;
+    this.restURL = restURL
   }
 
   async burnBCH() {
     try {
-      let response = await axios.get(`${this.restURL}payloadCreation/burnBCH`);
-      return response.data;
+      let response = await axios.get(`${this.restURL}payloadCreation/burnBCH`)
+      return response.data
     } catch (error) {
-      throw error.response.data;
+      throw error.response.data
     }
   }
 
@@ -17,10 +19,10 @@ class PayloadCreation {
     try {
       let response = await axios.post(
         `${this.restURL}payloadCreation/changeIssuer/${propertyId}`
-      );
-      return response.data;
+      )
+      return response.data
     } catch (error) {
-      throw error.response.data;
+      throw error.response.data
     }
   }
 
@@ -28,27 +30,27 @@ class PayloadCreation {
     try {
       let response = await axios.post(
         `${this.restURL}payloadCreation/closeCrowdSale/${propertyId}`
-      );
-      return response.data;
+      )
+      return response.data
     } catch (error) {
-      throw error.response.data;
+      throw error.response.data
     }
   }
 
   async grant(propertyId, amount, memo = "") {
-    let path;
+    let path
     if (memo !== "") {
       path = `${
         this.restURL
-      }payloadCreation/grant/${propertyId}/${amount}?memo=${memo}`;
+      }payloadCreation/grant/${propertyId}/${amount}?memo=${memo}`
     } else {
-      path = `${this.restURL}payloadCreation/grant/${propertyId}/${amount}`;
+      path = `${this.restURL}payloadCreation/grant/${propertyId}/${amount}`
     }
     try {
-      let response = await axios.post(path);
-      return response.data;
+      let response = await axios.post(path)
+      return response.data
     } catch (error) {
-      throw error.response.data;
+      throw error.response.data
     }
   }
 
@@ -73,10 +75,10 @@ class PayloadCreation {
         `${
           this.restURL
         }payloadCreation/crowdsale/${ecosystem}/${propertyPrecision}/${previousId}/${category}/${subcategory}/${name}/${url}/${data}/${propertyIdDesired}/${tokensPerUnit}/${deadline}/${earlyBonus}/${undefine}/${totalNumber}`
-      );
-      return response.data;
+      )
+      return response.data
     } catch (error) {
-      throw error.response.data;
+      throw error.response.data
     }
   }
 
@@ -96,10 +98,10 @@ class PayloadCreation {
         `${
           this.restURL
         }payloadCreation/fixed/${ecosystem}/${propertyPrecision}/${previousId}/${category}/${subcategory}/${name}/${url}/${data}/${amount}`
-      );
-      return response.data;
+      )
+      return response.data
     } catch (error) {
-      throw error.response.data;
+      throw error.response.data
     }
   }
 
@@ -118,10 +120,10 @@ class PayloadCreation {
         `${
           this.restURL
         }payloadCreation/managed/${ecosystem}/${propertyPrecision}/${previousId}/${category}/${subcategory}/${name}/${url}/${data}`
-      );
-      return response.data;
+      )
+      return response.data
     } catch (error) {
-      throw error.response.data;
+      throw error.response.data
     }
   }
 
@@ -129,10 +131,10 @@ class PayloadCreation {
     try {
       let response = await axios.post(
         `${this.restURL}payloadCreation/participateCrowdSale/${amount}`
-      );
-      return response.data;
+      )
+      return response.data
     } catch (error) {
-      throw error.response.data;
+      throw error.response.data
     }
   }
 
@@ -140,10 +142,10 @@ class PayloadCreation {
     try {
       let response = await axios.post(
         `${this.restURL}payloadCreation/revoke/${propertyId}/${amount}`
-      );
-      return response.data;
+      )
+      return response.data
     } catch (error) {
-      throw error.response.data;
+      throw error.response.data
     }
   }
 
@@ -151,29 +153,29 @@ class PayloadCreation {
     try {
       let response = await axios.post(
         `${this.restURL}payloadCreation/simpleSend/${propertyId}/${amount}`
-      );
-      return response.data;
+      )
+      return response.data
     } catch (error) {
-      throw error.response.data;
+      throw error.response.data
     }
   }
 
   async STO(propertyId, amount, distributionProperty = undefined) {
-    let path;
+    let path
     if (distributionProperty !== undefined) {
       path = `${
         this.restURL
-      }payloadCreation/STO/${propertyId}/${amount}?distributionProperty=${distributionProperty}`;
+      }payloadCreation/STO/${propertyId}/${amount}?distributionProperty=${distributionProperty}`
     } else {
-      path = `${this.restURL}payloadCreation/STO/${propertyId}/${amount}`;
+      path = `${this.restURL}payloadCreation/STO/${propertyId}/${amount}`
     }
     try {
-      let response = await axios.post(path);
-      return response.data;
+      let response = await axios.post(path)
+      return response.data
     } catch (error) {
-      throw error.response.data;
+      throw error.response.data
     }
   }
 }
 
-export default PayloadCreation;
+export default PayloadCreation
