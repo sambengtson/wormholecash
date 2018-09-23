@@ -1,6 +1,6 @@
 {
   "name": "wormholecash",
-  "version": "0.7.1",
+  "version": "0.7.2",
   "description": "BITBOX lib for Wormhole",
   "main": "index.js",
   "scripts": {
@@ -48,7 +48,7 @@
     "socket.io": "^2.1.1",
     "socket.io-client": "^2.1.1",
     "touch": "^3.1.0",
-    "wormholecash": "^0.6.0"
+    "wormholecash": "^0.7.1"
   },
   "devDependencies": {
     "@types/node": "^10.5.2",
