@@ -10,18 +10,15 @@ class RawTransactions {
   }
 
   async change(rawtx, prevTxs, destination, fee, position = undefined) {
-    let path
-    if (position) {
-      path = `${this.restURL}rawTransactions/change/${rawtx}/${JSON.stringify(
-        prevTxs
-      )}/${destination}/${fee}?position=${position}`
-    } else {
-      path = `${this.restURL}rawTransactions/change/${rawtx}/${JSON.stringify(
-        prevTxs
-      )}/${destination}/${fee}`
-    }
+    let path = `${this.restURL}rawTransactions/change`;
     try {
-      let response = await axios.post(path)
+      let response = await axios.post(path, {
+        rawtx: rawtx,
+        prevTxs: prevTxs,
+        destination: destination,
+        fee: fee,
+        position: position
+      })
       return response.data
     } catch (error) {
       throw error.response.data
@@ -99,10 +96,10 @@ class RawTransactions {
   async create(inputs, outputs = {}) {
     try {
       let response = await axios.post(
-        `${this.restURL}rawTransactions/create/${JSON.stringify(
-          inputs
-        )}/${JSON.stringify(outputs)}`
-      )
+        `${this.restURL}rawTransactions/create`, {
+          inputs: inputs,
+          outputs: outputs
+        })
       return response.data
     } catch (error) {
       throw error.response.data
