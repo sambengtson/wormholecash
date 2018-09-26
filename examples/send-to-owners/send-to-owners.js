@@ -1,5 +1,6 @@
 /*
   Transfers coins in the specified currency from the sending address to the current owners of that currency.
+  This is 'airdropping' more of an token to exsiting token holders
 */
 
 "use strict"
