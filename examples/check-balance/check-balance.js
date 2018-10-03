@@ -3,11 +3,9 @@
   create-wallet example app.
 */
 
-"use strict"
-
 const WH = require("wormholecash/lib/Wormhole").default
-//const Wormhole = new WH({restURL: `https://wormholecash-staging.herokuapp.com/v1/`})
-const Wormhole = new WH({ restURL: `http://localhost:3000/v1/` })
+//const Wormhole = new WH({ restURL: `https://trest.bitcoin.com/v1/` })
+const Wormhole = new WH({ restURL: `https://trest.christroutner.com/v1/` })
 
 // Open the wallet generated with create-wallet.
 let walletInfo
