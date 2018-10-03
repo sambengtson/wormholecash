@@ -27,17 +27,22 @@ async function getBalance() {
 
     console.log(`BCH Balance information:`)
     console.log(balance)
-
-    // get token balances
-    const tokens = await Wormhole.DataRetrieval.balancesForAddress(
-      walletInfo.cashAddress
-    )
-
     console.log(``)
     console.log(`Wormhole Token information:`)
-    console.log(JSON.stringify(tokens, null, 2))
+
+    // get token balances
+    try {
+      const tokens = await Wormhole.DataRetrieval.balancesForAddress(
+        walletInfo.cashAddress
+      )
+
+      console.log(JSON.stringify(tokens, null, 2))
+    } catch (error) {
+      if (error.message === "Address not found") console.log(`No tokens found.`)
+    }
   } catch (err) {
     console.error(`Error in getBalance: `, err)
+    console.log(`Error message: ${err.message}`)
     throw err
   }
 }
