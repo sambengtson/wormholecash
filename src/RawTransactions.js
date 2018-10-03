@@ -1,4 +1,3 @@
-"use strict"
 import axios from "axios"
 class RawTransactions {
   constructor(restURL, rawTransactions) {
@@ -21,7 +20,7 @@ class RawTransactions {
       )}/${destination}/${fee}`
     }
     try {
-      let response = await axios.post(path)
+      const response = await axios.post(path)
       return response.data
     } catch (error) {
       throw error.response.data
@@ -30,7 +29,7 @@ class RawTransactions {
 
   async input(rawtx, txid, n) {
     try {
-      let response = await axios.post(
+      const response = await axios.post(
         `${this.restURL}rawTransactions/input/${rawtx}/${txid}/${n}`
       )
       return response.data
@@ -41,7 +40,7 @@ class RawTransactions {
 
   async opReturn(rawtx, payload) {
     try {
-      let response = await axios.post(
+      const response = await axios.post(
         `${this.restURL}rawTransactions/opReturn/${rawtx}/${payload}`
       )
       return response.data
@@ -60,7 +59,7 @@ class RawTransactions {
       path = `${this.restURL}rawTransactions/reference/${rawtx}/${destination}`
     }
     try {
-      let response = await axios.post(path)
+      const response = await axios.post(path)
       return response.data
     } catch (error) {
       throw error.response.data
@@ -89,7 +88,7 @@ class RawTransactions {
       path = `${this.restURL}rawTransactions/decodeTransaction/${rawtx}`
     }
     try {
-      let response = await axios.get(path)
+      const response = await axios.get(path)
       return response.data
     } catch (error) {
       throw error.response.data
@@ -98,7 +97,7 @@ class RawTransactions {
 
   async create(inputs, outputs = {}) {
     try {
-      let response = await axios.post(
+      const response = await axios.post(
         `${this.restURL}rawTransactions/create/${JSON.stringify(
           inputs
         )}/${JSON.stringify(outputs)}`
