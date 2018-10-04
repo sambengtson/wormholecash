@@ -1,11 +1,11 @@
 {
-  "name": "check-balance",
+  "name": "pending-transactions",
   "version": "1.0.0",
-  "description": "Create an HDNode wallet",
-  "main": "create-wallet.js",
+  "description": "Returns a list of unconfirmed Wormhole transactions, pending in the memory pool.",
+  "main": "pending-transactions.js",
   "scripts": {
     "test": "echo no tests yet",
-    "start": "node check-balance.js"
+    "start": "node pending-transactions.js"
   },
   "repository": {
     "type": "git",
@@ -15,7 +15,7 @@
     "wormholecash",
     "example"
   ],
-  "author": "Chris Troutner <chris.troutner@gmail.com>",
+  "author": "Gabriel Cardona <gabriel@bitcoin.com>",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/Bitcoin-com/wormholecash/issues"

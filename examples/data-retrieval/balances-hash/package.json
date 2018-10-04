@@ -1,11 +1,11 @@
 {
-  "name": "list-issuances",
+  "name": "balances-hash",
   "version": "1.0.0",
-  "description": "Change the issuer of a managed token",
-  "main": "list-issuances.js",
+  "description": "Returns a hash of the balances for the property.",
+  "main": "balances-hash.js",
   "scripts": {
     "test": "echo no tests yet",
-    "start": "node list-issuances.js"
+    "start": "node balances-hash.js"
   },
   "repository": {
     "type": "git",
@@ -13,15 +13,7 @@
   },
   "keywords": [
     "wormholecash",
-    "example",
-    "bch",
-    "bitcoin cash",
-    "tokens",
-    "token",
-    "wormhole",
-    "node",
-    "node.js",
-    "javascript"
+    "example"
   ],
   "author": "Gabriel Cardona <gabriel@bitcoin.com>",
   "license": "MIT",

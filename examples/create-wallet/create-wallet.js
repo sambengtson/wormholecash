@@ -3,12 +3,9 @@
   will be used in future examples.
 */
 
-"use strict"
-
 const WH = require("wormholecash/lib/Wormhole").default
-const Wormhole = new WH({
-  restURL: `https://wormholecash-staging.herokuapp.com/v1/`
-})
+//const Wormhole = new WH({ restURL: `https://trest.bitcoin.com/v1/` })
+const Wormhole = new WH({ restURL: `https://trest.christroutner.com/v1/` })
 
 const fs = require("fs")
 
