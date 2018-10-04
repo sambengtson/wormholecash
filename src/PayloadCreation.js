@@ -1,5 +1,3 @@
-"use strict"
-
 import axios from "axios"
 class PayloadCreation {
   constructor(restURL) {
@@ -8,7 +6,7 @@ class PayloadCreation {
 
   async burnBCH() {
     try {
-      let response = await axios.get(`${this.restURL}payloadCreation/burnBCH`)
+      const response = await axios.get(`${this.restURL}payloadCreation/burnBCH`)
       return response.data
     } catch (error) {
       throw error.response.data
@@ -17,7 +15,7 @@ class PayloadCreation {
 
   async changeIssuer(propertyId) {
     try {
-      let response = await axios.post(
+      const response = await axios.post(
         `${this.restURL}payloadCreation/changeIssuer/${propertyId}`
       )
       return response.data
@@ -28,7 +26,7 @@ class PayloadCreation {
 
   async closeCrowdSale(propertyId) {
     try {
-      let response = await axios.post(
+      const response = await axios.post(
         `${this.restURL}payloadCreation/closeCrowdSale/${propertyId}`
       )
       return response.data
@@ -47,7 +45,7 @@ class PayloadCreation {
       path = `${this.restURL}payloadCreation/grant/${propertyId}/${amount}`
     }
     try {
-      let response = await axios.post(path)
+      const response = await axios.post(path)
       return response.data
     } catch (error) {
       throw error.response.data
@@ -71,7 +69,7 @@ class PayloadCreation {
     totalNumber
   ) {
     try {
-      let response = await axios.post(
+      const response = await axios.post(
         `${
           this.restURL
         }payloadCreation/crowdsale/${ecosystem}/${propertyPrecision}/${previousId}/${category}/${subcategory}/${name}/${url}/${data}/${propertyIdDesired}/${tokensPerUnit}/${deadline}/${earlyBonus}/${undefine}/${totalNumber}`
@@ -94,7 +92,7 @@ class PayloadCreation {
     amount
   ) {
     try {
-      let response = await axios.post(
+      const response = await axios.post(
         `${
           this.restURL
         }payloadCreation/fixed/${ecosystem}/${propertyPrecision}/${previousId}/${category}/${subcategory}/${name}/${url}/${data}/${amount}`
@@ -116,7 +114,7 @@ class PayloadCreation {
     data
   ) {
     try {
-      let response = await axios.post(
+      const response = await axios.post(
         `${
           this.restURL
         }payloadCreation/managed/${ecosystem}/${propertyPrecision}/${previousId}/${category}/${subcategory}/${name}/${url}/${data}`
@@ -129,7 +127,7 @@ class PayloadCreation {
 
   async participateCrowdSale(amount) {
     try {
-      let response = await axios.post(
+      const response = await axios.post(
         `${this.restURL}payloadCreation/participateCrowdSale/${amount}`
       )
       return response.data
@@ -140,7 +138,7 @@ class PayloadCreation {
 
   async revoke(propertyId, amount) {
     try {
-      let response = await axios.post(
+      const response = await axios.post(
         `${this.restURL}payloadCreation/revoke/${propertyId}/${amount}`
       )
       return response.data
@@ -151,7 +149,7 @@ class PayloadCreation {
 
   async simpleSend(propertyId, amount) {
     try {
-      let response = await axios.post(
+      const response = await axios.post(
         `${this.restURL}payloadCreation/simpleSend/${propertyId}/${amount}`
       )
       return response.data
@@ -170,7 +168,7 @@ class PayloadCreation {
       path = `${this.restURL}payloadCreation/STO/${propertyId}/${amount}`
     }
     try {
-      let response = await axios.post(path)
+      const response = await axios.post(path)
       return response.data
     } catch (error) {
       throw error.response.data

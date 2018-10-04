@@ -24,6 +24,7 @@ You can run each example script by entering its directory and executing `npm sta
   back to the testnet faucet.)
 
 ## Wormhole Token Functions
+
 These example apps roughly follow the
 [third Wormhole tutorial](https://developer.bitcoin.com/tutorials/wormhole-3-tokens.html)
 
@@ -42,9 +43,8 @@ These example apps roughly follow the
 
 - [list-all-tokens](list-all-tokens) List every token in existence.
 
-
-
 ### Managed Tokens
+
 Managed tokens all new tokens to be created at any time. And existing tokens can
 be revoked.
 
@@ -59,18 +59,25 @@ be revoked.
   before seeing the new tokens with `token-balance`.
 
 - [change-managed-token-issuer](change-managed-token-issuer) Change the address
-capable of issuing new tokens.
+  capable of issuing new tokens.
 
 - [list-issuances](list-issuances) List the issuance transactions.
 
 - [revoke-managed-tokens](revoke-managed-tokens) Revoke existing tokens.
 
 ### Fixed Tokens
+
 Fixed tokens are created with fixed supply.
+
 - [create-fixed-token](create-fixed-token)
 - [fixed-token-info-from-tx](fixed-token-info-from-tx)
 
 ### Crowd Sale
+
 - [create-crowdsale](create-crowdsale)
 - [participate-in-crowdsale](participate-in-crowdsale)
 - [close-crowdsale](close-crowdsale)
+
+## Need to revisit
+
+- dataRetrieval/crowdSale
