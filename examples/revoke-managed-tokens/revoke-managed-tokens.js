@@ -25,7 +25,7 @@ try {
 }
 
 // Change this value to match your token.
-const propertyId = 216
+const propertyId = 307
 
 // Issue new tokens.
 async function revokeManagedTokens() {
@@ -46,15 +46,13 @@ async function revokeManagedTokens() {
     const change = Wormhole.HDNode.derivePath(account, "0/0")
 
     // get the cash address
-    //let cashAddress = BITBOX.HDNode.toCashAddress(change);
     const cashAddress = walletInfo.cashAddress
 
-    const propertyId = 216
     // Create simple send payload.
     const payload = await Wormhole.PayloadCreation.revoke(propertyId, "33.0")
 
     // Get a utxo to use for this transaction.
-    const u = await BITBOX.Address.utxo([cashAddress])
+    const u = await Wormhole.Address.utxo([cashAddress])
     const utxo = findBiggestUtxo(u[0])
 
     // Create a rawTx using the largest utxo in the wallet.
@@ -88,7 +86,7 @@ async function revokeManagedTokens() {
     //console.log(txHex);
 
     // sendRawTransaction to running BCH node
-    const broadcast = await BITBOX.RawTransactions.sendRawTransaction(txHex)
+    const broadcast = await Wormhole.RawTransactions.sendRawTransaction(txHex)
     console.log(`Transaction ID: ${broadcast}`)
   } catch (err) {
     console.log(err)
