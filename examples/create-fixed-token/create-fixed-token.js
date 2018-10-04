@@ -1,20 +1,11 @@
 /*
   Consume 1 WHC to create a new fixed token.
-
-  Dev Note: This code needs to be refactored to remove Bitbox-cli
-  dependencies.
 */
-
-"use strict"
 
 // Instantiate wormholecash
 const WH = require("wormholecash/lib/Wormhole").default
-const Wormhole = new WH({
-  restURL: `https://wormholecash-staging.herokuapp.com/v1/`
-})
-
-const BITBOXCli = require("bitbox-cli/lib/bitbox-cli").default
-const BITBOX = new BITBOXCli({ restURL: "https://trest.bitcoin.com/v1/" })
+//const Wormhole = new WH({ restURL: `https://trest.bitcoin.com/v1/` })
+const Wormhole = new WH({ restURL: `https://trest.christroutner.com/v1/` })
 
 const fs = require("fs")
 
@@ -39,7 +30,8 @@ async function createFixedToken() {
     const rootSeed = Wormhole.Mnemonic.toSeed(mnemonic)
 
     // master HDNode
-    const masterHDNode = Wormhole.HDNode.fromSeed(rootSeed, "testnet")
+    const masterHDNode = Wormhole.HDNode.fromSeed(rootSeed, "testnet") // Testnet
+    //const masterHDNode = Wormhole.HDNode.fromSeed(rootSeed) // Mainnet
 
     // HDNode of BIP44 account
     const account = Wormhole.HDNode.derivePath(masterHDNode, "m/44'/145'/0'")
@@ -47,13 +39,14 @@ async function createFixedToken() {
     const change = Wormhole.HDNode.derivePath(account, "0/0")
 
     // get the cash address
-    //let cashAddress = BITBOX.HDNode.toCashAddress(change);
+    //let cashAddress = Wormhole.HDNode.toCashAddress(change);
     const cashAddress = walletInfo.cashAddress
 
     // Create the fixed token.
     const fixed = await Wormhole.PayloadCreation.fixed(
+      //console.log(txHex);
       1, // Ecosystem, must be 1.
-      1, // Precision, number of decimal places. Must be 0-8.
+      8, // Precision, number of decimal places. Must be 0-8.
       0, // Predecessor token. 0 for new tokens.
       "Companies", // Category.
       "Bitcoin Cash Mining", // Subcategory
@@ -64,7 +57,7 @@ async function createFixedToken() {
     )
 
     // Get a utxo to use for this transaction.
-    const u = await BITBOX.Address.utxo([cashAddress])
+    const u = await Wormhole.Address.utxo([cashAddress])
     const utxo = findBiggestUtxo(u[0])
 
     // Create a rawTx using the largest utxo in the wallet.
@@ -94,10 +87,9 @@ async function createFixedToken() {
     tb.sign(0, keyPair, redeemScript, 0x01, utxo.satoshis)
     const builtTx = tb.build()
     const txHex = builtTx.toHex()
-    //console.log(txHex);
 
     // sendRawTransaction to running BCH node
-    const broadcast = await BITBOX.RawTransactions.sendRawTransaction(txHex)
+    const broadcast = await Wormhole.RawTransactions.sendRawTransaction(txHex)
     console.log(`Transaction ID: ${broadcast}`)
 
     // Write out the basic information into a json file for other apps to use.
