@@ -1,17 +1,17 @@
 /*
-  Issue new tokens for a manged token.
+  Change the address of the issuer of new tokens.
 */
 
-"use strict"
+// Set NETWORK to either testnet or mainnet
+const NETWORK = `testnet`
 
-// Instantiate wormholecash
 const WH = require("wormholecash/lib/Wormhole").default
-const Wormhole = new WH({
-  restURL: `https://wormholecash-staging.herokuapp.com/v1/`
-})
 
-const BITBOXCli = require("bitbox-cli/lib/bitbox-cli").default
-const BITBOX = new BITBOXCli({ restURL: "https://trest.bitcoin.com/v1/" })
+// Instantiate Wormhole based on the network.
+if (NETWORK === `mainnet`)
+  var Wormhole = new WH({ restURL: `https://rest.btctest.net/v1/` })
+//else var Wormhole = new WH({ restURL: `https://trest.bitcoin.com/v1/` })
+else var Wormhole = new WH({ restURL: `https://trest.christroutner.com/v1/` })
 
 // Open the wallet generated with create-wallet.
 let walletInfo
@@ -26,7 +26,10 @@ try {
 }
 
 // Change this value to match your token.
-const propertyId = 216
+const propertyId = 307
+
+// The BCH address of the new issuer.
+const newAddress = `bchtest:qp6hgvevf4gzz6l7pgcte3gaaud9km0l459fa23dul`
 
 // Issue new tokens.
 async function issueNewTokens() {
@@ -37,24 +40,24 @@ async function issueNewTokens() {
     const rootSeed = Wormhole.Mnemonic.toSeed(mnemonic)
 
     // master HDNode
-    const masterHDNode = Wormhole.HDNode.fromSeed(rootSeed, "testnet")
+    if (NETWORK === `mainnet`)
+      var masterHDNode = Wormhole.HDNode.fromSeed(rootSeed)
+    else var masterHDNode = Wormhole.HDNode.fromSeed(rootSeed, "testnet")
 
     // HDNode of BIP44 account
     const account = Wormhole.HDNode.derivePath(masterHDNode, "m/44'/145'/0'")
 
     const change = Wormhole.HDNode.derivePath(account, "0/0")
-    const change2 = Wormhole.HDNode.derivePath(account, "0/1")
+    //const change2 = Wormhole.HDNode.derivePath(account, "0/1")
 
     // get the cash address
-    //let cashAddress = BITBOX.HDNode.toCashAddress(change);
     const cashAddress = walletInfo.cashAddress
-    const cashAddress2 = Wormhole.HDNode.toCashAddress(change2)
 
     // Create payload to change issuer
-    const changeIssuer = await Wormhole.PayloadCreation.changeIssuer(216)
+    const changeIssuer = await Wormhole.PayloadCreation.changeIssuer(propertyId)
 
     // Get a utxo to use for this transaction.
-    const u = await BITBOX.Address.utxo([cashAddress])
+    const u = await Wormhole.Address.utxo([cashAddress])
     const utxo = findBiggestUtxo(u[0])
 
     // Create a rawTx using the largest utxo in the wallet.
@@ -68,7 +71,7 @@ async function issueNewTokens() {
     )
 
     // add the address of the new issuer
-    const ref = await Wormhole.RawTransactions.reference(opReturn, cashAddress2)
+    const ref = await Wormhole.RawTransactions.reference(opReturn, newAddress)
 
     // Generate a change output.
     const changeHex = await Wormhole.RawTransactions.change(
@@ -90,7 +93,7 @@ async function issueNewTokens() {
     //console.log(txHex);
 
     // sendRawTransaction to running BCH node
-    const broadcast = await BITBOX.RawTransactions.sendRawTransaction(txHex)
+    const broadcast = await Wormhole.RawTransactions.sendRawTransaction(txHex)
     console.log(`Transaction ID: ${broadcast}`)
   } catch (err) {
     console.log(err)

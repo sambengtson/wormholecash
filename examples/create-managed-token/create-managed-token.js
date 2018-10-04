@@ -1,20 +1,17 @@
 /*
   Consume 1 WHC to create a new managed token.
-
-  Dev Note: This code needs to be refactored to remove Bitbox-cli
-  dependencies.
 */
 
-"use strict"
+// Set NETWORK to either testnet or mainnet
+const NETWORK = `testnet`
 
-// Instantiate wormholecash
 const WH = require("wormholecash/lib/Wormhole").default
-const Wormhole = new WH({
-  restURL: `https://wormholecash-staging.herokuapp.com/v1/`
-})
 
-const BITBOXCli = require("bitbox-cli/lib/bitbox-cli").default
-const BITBOX = new BITBOXCli({ restURL: "https://trest.bitcoin.com/v1/" })
+// Instantiate Wormhole based on the network.
+if (NETWORK === `mainnet`)
+  var Wormhole = new WH({ restURL: `https://rest.btctest.net/v1/` })
+//else var Wormhole = new WH({ restURL: `https://trest.bitcoin.com/v1/` })
+else var Wormhole = new WH({ restURL: `https://trest.christroutner.com/v1/` })
 
 const fs = require("fs")
 
@@ -39,7 +36,9 @@ async function createManagedToken() {
     const rootSeed = Wormhole.Mnemonic.toSeed(mnemonic)
 
     // master HDNode
-    const masterHDNode = Wormhole.HDNode.fromSeed(rootSeed, "testnet")
+    if (NETWORK === `mainnet`)
+      var masterHDNode = Wormhole.HDNode.fromSeed(rootSeed)
+    else var masterHDNode = Wormhole.HDNode.fromSeed(rootSeed, "testnet")
 
     // HDNode of BIP44 account
     const account = Wormhole.HDNode.derivePath(masterHDNode, "m/44'/145'/0'")
@@ -47,7 +46,7 @@ async function createManagedToken() {
     const change = Wormhole.HDNode.derivePath(account, "0/0")
 
     // get the cash address
-    const cashAddress = BITBOX.HDNode.toCashAddress(change)
+    const cashAddress = Wormhole.HDNode.toCashAddress(change)
     // const cashAddress = walletInfo.cashAddress
 
     // Create the managed token.
@@ -56,17 +55,15 @@ async function createManagedToken() {
       8, // Precision, number of decimal places. Must be 0-8.
       0, // Predecessor token. 0 for new tokens.
       "Companies", // Category.
-      "Bitcoin Cash Mining", // Subcategory
-      "QMC", // Name/Ticker
-      "www.qmc.cash", // URL
-      "Made with BITBOX" // Description.
+      "Bitbox QA", // Subcategory
+      "QAM", // Name/Ticker
+      "developer.bitcoin.com", // URL
+      "Managed Token - Made with BITBOX" // Description.
     )
 
     // Get a utxo to use for this transaction.
-    const u = await BITBOX.Address.utxo([cashAddress])
-    console.log(u)
+    const u = await Wormhole.Address.utxo([cashAddress])
     const utxo = findBiggestUtxo(u[0])
-    console.log(utxo)
 
     // Create a rawTx using the largest utxo in the wallet.
     utxo.value = utxo.amount
@@ -83,7 +80,7 @@ async function createManagedToken() {
       ref, // Raw transaction we're working with.
       [utxo], // Previous utxo
       cashAddress, // Destination address.
-      0.00001 // Miner fee.
+      0.000005 // Miner fee.
     )
 
     const tx = Wormhole.Transaction.fromHex(changeHex)
@@ -95,20 +92,14 @@ async function createManagedToken() {
     tb.sign(0, keyPair, redeemScript, 0x01, utxo.satoshis)
     const builtTx = tb.build()
     const txHex = builtTx.toHex()
-    //console.log(txHex);
 
     // sendRawTransaction to running BCH node
-    const broadcast = await BITBOX.RawTransactions.sendRawTransaction(txHex)
+    const broadcast = await Wormhole.RawTransactions.sendRawTransaction(txHex)
     console.log(`Transaction ID: ${broadcast}`)
 
     // Write out the basic information into a json file for other apps to use.
     const tokenInfo = { tokenTx: broadcast }
-    fs.writeFile("token-tx.json", JSON.stringify(tokenInfo, null, 2), function(
-      err
-    ) {
-      if (err) return console.error(err)
-      console.log(`token-tx.json written successfully.`)
-    })
+    writeTxInfo(tokenInfo)
   } catch (err) {
     console.log(err)
   }
@@ -132,4 +123,15 @@ function findBiggestUtxo(utxos) {
   }
 
   return utxos[largestIndex]
+}
+
+// Write the TX info to a file, in case users need to retrieve it later.
+// Note: it will be overwritten each time this example is executed.
+function writeTxInfo(tokenInfo) {
+  fs.writeFile("token-tx.json", JSON.stringify(tokenInfo, null, 2), function(
+    err
+  ) {
+    if (err) return console.error(err)
+    console.log(`token-tx.json written successfully.`)
+  })
 }
