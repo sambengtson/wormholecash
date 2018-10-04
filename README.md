@@ -5,3 +5,4 @@
 [![Build Status](https://travis-ci.org/Bitcoin-com/wormholecash.svg?branch=master)](https://travis-ci.org/Bitcoin-com/wormholecash)
 
 [![Coverage Status](https://coveralls.io/repos/github/Bitcoin-com/wormholecash/badge.svg?branch=master)](https://coveralls.io/github/Bitcoin-com/wormholecash?branch=master) [![Greenkeeper badge](https://badges.greenkeeper.io/Bitcoin-com/wormholecash.svg)](https://greenkeeper.io/)
+ 
