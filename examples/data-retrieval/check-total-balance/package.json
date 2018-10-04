@@ -1,11 +1,11 @@
 {
-  "name": "ping-wh-node",
+  "name": "check-total-balance",
   "version": "1.0.0",
-  "description": "Send WHC or other tokens",
-  "main": "ping-wh-node.js",
+  "description": "Check all BCH and token balances for an address",
+  "main": "create-total-balance.js",
   "scripts": {
     "test": "echo no tests yet",
-    "start": "node ping-wh-node.js"
+    "start": "node check-total-balance.js"
   },
   "repository": {
     "type": "git",
