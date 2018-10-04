@@ -3,7 +3,7 @@
 */
 
 const WH = require("wormholecash/lib/Wormhole").default
-const Wormhole = new WH({ restURL: `https://rest.btctest.net/v1/` })
+const Wormhole = new WH({ restURL: `/v1/` })
 
 async function blockTransactions() {
   try {

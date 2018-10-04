@@ -5,7 +5,7 @@
 // Instantiate wormholecash
 const WH = require("wormholecash/lib/Wormhole").default
 const Wormhole = new WH({
-  restURL: `https://rest.btctest.net/v1/`
+  restURL: `/v1/`
 })
 
 const propertyId = 194
