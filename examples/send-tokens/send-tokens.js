@@ -33,7 +33,8 @@ async function sendTokens() {
     const rootSeed = Wormhole.Mnemonic.toSeed(mnemonic)
 
     // master HDNode
-    const masterHDNode = Wormhole.HDNode.fromSeed(rootSeed, "testnet")
+    const masterHDNode = Wormhole.HDNode.fromSeed(rootSeed, "testnet") // Testnet
+    //const masterHDNode = Wormhole.HDNode.fromSeed(rootSeed) // Mainnet
 
     // HDNode of BIP44 account
     const account = Wormhole.HDNode.derivePath(masterHDNode, "m/44'/145'/0'")
