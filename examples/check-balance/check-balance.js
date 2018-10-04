@@ -3,9 +3,16 @@
   create-wallet example app.
 */
 
+// Set NETWORK to either testnet or mainnet
+const NETWORK = `testnet`
+
 const WH = require("wormholecash/lib/Wormhole").default
-//const Wormhole = new WH({ restURL: `https://trest.bitcoin.com/v1/` })
-const Wormhole = new WH({ restURL: `https://trest.christroutner.com/v1/` })
+
+// Instantiate Wormhole based on the network.
+if (NETWORK === `mainnet`)
+  var Wormhole = new WH({ restURL: `https://rest.btctest.net/v1/` })
+//else var Wormhole = new WH({ restURL: `https://trest.bitcoin.com/v1/` })
+else var Wormhole = new WH({ restURL: `https://trest.christroutner.com/v1/` })
 
 // Open the wallet generated with create-wallet.
 let walletInfo

@@ -3,10 +3,16 @@
   will be used in future examples.
 */
 
+// Set NETWORK to either testnet or mainnet
+const NETWORK = `testnet`
+
 const WH = require("wormholecash/lib/Wormhole").default
-//const Wormhole = new WH({ restURL: `https://trest.bitcoin.com/v1/` })
-const Wormhole = new WH({ restURL: `https://trest.christroutner.com/v1/` })
-//const Wormhole = new WH({ restURL: `https://rest.btctest.net/v1/` })
+
+// Instantiate Wormhole based on the network.
+if (NETWORK === `mainnet`)
+  var Wormhole = new WH({ restURL: `https://rest.btctest.net/v1/` })
+//else var Wormhole = new WH({ restURL: `https://trest.bitcoin.com/v1/` })
+else var Wormhole = new WH({ restURL: `https://trest.christroutner.com/v1/` })
 
 const fs = require("fs")
 
@@ -29,8 +35,8 @@ outObj.mnemonic = mnemonic
 const rootSeed = Wormhole.Mnemonic.toSeed(mnemonic)
 
 // master HDNode
-const masterHDNode = Wormhole.HDNode.fromSeed(rootSeed, "testnet") // Testnet
-//const masterHDNode = Wormhole.HDNode.fromSeed(rootSeed) // Mainnet
+if (NETWORK === `mainnet`) var masterHDNode = Wormhole.HDNode.fromSeed(rootSeed)
+else var masterHDNode = Wormhole.HDNode.fromSeed(rootSeed, "testnet") // Testnet
 
 // HDNode of BIP44 account
 const account = Wormhole.HDNode.derivePath(masterHDNode, "m/44'/145'/0'")
@@ -56,7 +62,7 @@ for (let i = 0; i < 10; i++) {
 const change = Wormhole.HDNode.derivePath(account, "0/0")
 
 // get the cash address
-const cashAddress = Wormhole.HDNode.toCashAddress(change)
+Wormhole.HDNode.toCashAddress(change)
 
 // Get the legacy address.
 
