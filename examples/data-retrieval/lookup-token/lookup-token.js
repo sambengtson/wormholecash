@@ -2,13 +2,18 @@
   Get the token information based on the primaryid value assigned to it.
 */
 
-// Instantiate wormholecash
-const WH = require("wormholecash/lib/Wormhole").default
-const Wormhole = new WH({
-  restURL: `/v1/`
-})
+// Set NETWORK to either testnet or mainnet
+const NETWORK = `testnet`
 
-const propertyId = 194
+const WH = require("wormholecash/lib/Wormhole").default
+
+// Instantiate Wormhole based on the network.
+if (NETWORK === `mainnet`)
+  var Wormhole = new WH({ restURL: `https://rest.btctest.net/v1/` })
+//else var Wormhole = new WH({ restURL: `https://trest.bitcoin.com/v1/` })
+else var Wormhole = new WH({ restURL: `https://trest.christroutner.com/v1/` })
+
+const propertyId = 307
 
 async function getTokenInfo() {
   try {
