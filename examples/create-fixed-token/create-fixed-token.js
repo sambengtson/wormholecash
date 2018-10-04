@@ -75,7 +75,7 @@ async function createFixedToken() {
       ref, // Raw transaction we're working with.
       [utxo], // Previous utxo
       cashAddress, // Destination address.
-      0.00001 // Miner fee.
+      0.000005 // Miner fee.
     )
 
     const tx = Wormhole.Transaction.fromHex(changeHex)
