@@ -2,15 +2,13 @@
   Get the token information based on the primaryid value assigned to it.
 */
 
-"use strict"
-
 // Instantiate wormholecash
 const WH = require("wormholecash/lib/Wormhole").default
 const Wormhole = new WH({
-  restURL: `https://wormholecash-staging.herokuapp.com/v1/`
+  restURL: `https://rest.btctest.net/v1/`
 })
 
-const propertyId = 195
+const propertyId = 194
 
 async function getTokenInfo() {
   try {

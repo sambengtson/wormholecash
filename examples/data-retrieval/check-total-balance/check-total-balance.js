@@ -4,13 +4,12 @@
 */
 
 const WH = require("wormholecash/lib/Wormhole").default
-//const Wormhole = new WH({ restURL: `https://trest.bitcoin.com/v1/` })
-const Wormhole = new WH({ restURL: `https://trest.christroutner.com/v1/` })
+const Wormhole = new WH({ restURL: `/v1/` })
 
 // Open the wallet generated with create-wallet.
 let walletInfo
 try {
-  walletInfo = require(`../create-wallet/wallet.json`)
+  walletInfo = require(`../../create-wallet/wallet.json`)
 } catch (err) {
   console.log(
     `Could not open wallet.json. Generate a wallet with create-wallet first.`
@@ -18,10 +17,26 @@ try {
   process.exit(0)
 }
 
-async function getBalance() {
+async function getTotalBalance() {
   try {
+    const mnemonic = walletInfo.mnemonic
+
+    // root seed buffer
+    const rootSeed = Wormhole.Mnemonic.toSeed(mnemonic)
+
+    // master HDNode
+    const masterHDNode = Wormhole.HDNode.fromSeed(rootSeed, "bitcoincash")
+
+    // HDNode of BIP44 account
+    const account = Wormhole.HDNode.derivePath(masterHDNode, "m/44'/145'/0'")
+
+    const change = Wormhole.HDNode.derivePath(account, "0/0")
+
+    // get the cash address
+    const cashAddress = Wormhole.HDNode.toCashAddress(change)
+
     // first get BCH balance
-    const balance = await Wormhole.Address.details([walletInfo.cashAddress])
+    const balance = await Wormhole.Address.details([cashAddress])
 
     console.log(`BCH Balance information:`)
     console.log(balance)
@@ -31,7 +46,7 @@ async function getBalance() {
     // get token balances
     try {
       const tokens = await Wormhole.DataRetrieval.balancesForAddress(
-        walletInfo.cashAddress
+        cashAddress
       )
 
       console.log(JSON.stringify(tokens, null, 2))
@@ -44,4 +59,4 @@ async function getBalance() {
     throw err
   }
 }
-getBalance()
+getTotalBalance()
