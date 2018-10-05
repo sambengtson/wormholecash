@@ -9,7 +9,7 @@ const NETWORK = `testnet`
 const RECV_ADDR = `bchtest:qp6hgvevf4gzz6l7pgcte3gaaud9km0l459fa23dul`
 
 // The amount of BCH to send, in satoshis. 1 satoshi = 0.00000001 BCH
-const AMOUNT_TO_SEND = 10000
+const AMOUNT_TO_SEND = 1000
 
 const WH = require("wormholecash/lib/Wormhole").default
 
@@ -52,11 +52,11 @@ async function sendBch() {
   console.log(`Balance of recieving address ${RECV_ADDR} is ${balance2} BCH.`)
 
   const utxo = await Wormhole.Address.utxo(SEND_ADDR)
-  console.log(`utxo: ${JSON.stringify(utxo, null, 2)}`)
 
   // instance of transaction builder
-  const transactionBuilder = new Wormhole.TransactionBuilder("testnet")
-  //const transactionBuilder = new Wormhole.TransactionBuilder("mainnet")
+  if (NETWORK === `mainnet`)
+    var transactionBuilder = new Wormhole.TransactionBuilder()
+  else var transactionBuilder = new Wormhole.TransactionBuilder("testnet")
 
   const satoshisToSend = AMOUNT_TO_SEND
   const originalAmount = utxo[0].satoshis
