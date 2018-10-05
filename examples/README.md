@@ -21,8 +21,8 @@ You can run each example script by entering its directory and executing `npm sta
 - [check-balance](check-balance) Check the balance of your BCH wallet. This
   displays both BCH information as well as Wormhole token information.
 
-- [send-bch](send-bch) Send BCH to another address. (Great for sending balances
-  back to the testnet faucet.)
+- [send-bch](send-bch) Send BCH to another address. (*Great for sending balances
+  back to the testnet faucet.*)
 
 ## Wormhole Token Functions
 

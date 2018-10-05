@@ -1,11 +1,11 @@
 {
-  "name": "fixed-token-info-from-tx",
+  "name": "token-info-from-tx",
   "version": "1.0.0",
-  "description": "Get fixed token details from a TX",
-  "main": "fixed-token-info-from-tx.js",
+  "description": "Get token details from a TX",
+  "main": "token-info-from-tx.js",
   "scripts": {
     "test": "echo no tests yet",
-    "start": "node fixed-token-info-from-tx.js"
+    "start": "node token-info-from-tx.js"
   },
   "repository": {
     "type": "git",
