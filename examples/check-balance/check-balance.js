@@ -30,7 +30,7 @@ async function getBalance() {
     // first get BCH balance
     const balance = await Wormhole.Address.details([walletInfo.cashAddress])
 
-    console.log(`BCH Balance information:`)
+    console.log(`BCH Balance information for ${walletInfo.cashAddress}:`)
     console.log(balance)
     console.log(``)
     console.log(`Wormhole Token information:`)
