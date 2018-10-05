@@ -24,6 +24,12 @@ You can run each example script by entering its directory and executing `npm sta
 - [send-bch](send-bch) Send BCH to another address. (*Great for sending balances
   back to the testnet faucet.*)
 
+- [token-info-from-tx](data-retrieval/token-info-from-tx) Most examples in this
+  directory output a TXID. Once the transaction has been stored to the blockchain
+  (one confirmation), you can retrieve information on the token using this TXID.
+  This is particularly useful for discovering the `propertyId` assigned to a managed
+  token or getting information on a crowd-sale token.
+
 ## Wormhole Token Functions
 
 These example apps roughly follow the
