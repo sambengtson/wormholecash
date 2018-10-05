@@ -1,20 +1,21 @@
 /*
-  Consume 1 WHC to create a new fixed token.
-
-  Dev Note: This code needs to be refactored to remove Bitbox-cli
-  dependencies.
+  Participate in a crowd-sale by sending WHC.
 */
 
-"use strict"
+// Set NETWORK to either testnet or mainnet
+const NETWORK = `testnet`
 
-// Instantiate wormholecash
+// Change these values to match the crowd-sale token.
+const RECV_ADDR = "bchtest:qp6hgvevf4gzz6l7pgcte3gaaud9km0l459fa23dul"
+const TOKEN_QTY = "1.0" // Number of WHC to send, as a string. Up to 8 decimal places.
+
 const WH = require("wormholecash/lib/Wormhole").default
-const Wormhole = new WH({
-  restURL: `https://wormholecash-staging.herokuapp.com/v1/`
-})
 
-const BITBOXCli = require("bitbox-cli/lib/bitbox-cli").default
-const BITBOX = new BITBOXCli({ restURL: "https://trest.bitcoin.com/v1/" })
+// Instantiate Wormhole based on the network.
+if (NETWORK === `mainnet`)
+  var Wormhole = new WH({ restURL: `https://rest.btctest.net/v1/` })
+//else var Wormhole = new WH({ restURL: `https://trest.bitcoin.com/v1/` })
+else var Wormhole = new WH({ restURL: `https://trest.christroutner.com/v1/` })
 
 const fs = require("fs")
 
@@ -30,7 +31,7 @@ try {
   process.exit(0)
 }
 
-// Create a fixed token.
+//
 async function participateInCrowdSale() {
   try {
     const mnemonic = walletInfo.mnemonic
@@ -39,24 +40,25 @@ async function participateInCrowdSale() {
     const rootSeed = Wormhole.Mnemonic.toSeed(mnemonic)
 
     // master HDNode
-    const masterHDNode = Wormhole.HDNode.fromSeed(rootSeed, "testnet")
+    if (NETWORK === `mainnet`)
+      var masterHDNode = Wormhole.HDNode.fromSeed(rootSeed)
+    else var masterHDNode = Wormhole.HDNode.fromSeed(rootSeed, "testnet")
 
     // HDNode of BIP44 account
     const account = Wormhole.HDNode.derivePath(masterHDNode, "m/44'/145'/0'")
 
-    const change = Wormhole.HDNode.derivePath(account, "0/4")
-    const change2 = Wormhole.HDNode.derivePath(account, "0/0")
+    const change = Wormhole.HDNode.derivePath(account, "0/0")
 
     // get the cash address
-    const cashAddress = BITBOX.HDNode.toCashAddress(change)
-    const cashAddress2 = BITBOX.HDNode.toCashAddress(change2)
-    // let cashAddress = walletInfo.cashAddress;
+    const cashAddress = Wormhole.HDNode.toCashAddress(change)
 
+    // crowd-sale participation payload.
     const participateCrowdSale = await Wormhole.PayloadCreation.participateCrowdSale(
-      "1.0"
+      TOKEN_QTY
     )
+
     // Get a utxo to use for this transaction.
-    const u = await BITBOX.Address.utxo([cashAddress])
+    const u = await Wormohole.Address.utxo([cashAddress])
     const utxo = findBiggestUtxo(u[0])
 
     // Create a rawTx using the largest utxo in the wallet.
@@ -69,15 +71,16 @@ async function participateInCrowdSale() {
       participateCrowdSale
     )
 
-    // Set the destination/recieving address
-    const ref = await Wormhole.RawTransactions.reference(opReturn, cashAddress2)
+    // Set the destination/recieving address for the tokens, with the actual
+    // amount of BCH set to a minimal amount.
+    const ref = await Wormhole.RawTransactions.reference(opReturn, RECV_ADDR)
 
     // Generate a change output.
     const changeHex = await Wormhole.RawTransactions.change(
       ref, // Raw transaction we're working with.
       [utxo], // Previous utxo
       cashAddress, // Destination address.
-      0.00001 // Miner fee.
+      0.000005 // Miner fee.
     )
 
     const tx = Wormhole.Transaction.fromHex(changeHex)
@@ -89,13 +92,12 @@ async function participateInCrowdSale() {
     tb.sign(0, keyPair, redeemScript, 0x01, utxo.satoshis)
     const builtTx = tb.build()
     const txHex = builtTx.toHex()
-    //console.log(txHex);
 
     // sendRawTransaction to running BCH node
-    const broadcast = await BITBOX.RawTransactions.sendRawTransaction(txHex)
+    const broadcast = await Wormohole.RawTransactions.sendRawTransaction(txHex)
     console.log(`Transaction ID: ${broadcast}`)
   } catch (err) {
-    console.log(err)
+    console.log(`Error in app: `, err)
   }
 }
 participateInCrowdSale()
