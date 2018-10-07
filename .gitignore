@@ -4,3 +4,4 @@ wallet*
 token-tx.json
 test-wallet.json
 coverage
+yarn.lock

@@ -1,22 +1,29 @@
 /*
-  Issue new tokens for a manged token.
+  Issue new tokens for a manged token. New tokens are sent to the address in
+  wallet.json. These can tokens can then be sent with the send-tokens example.
 */
 
-"use strict"
-
-// Instantiate wormholecash
 const WH = require("wormholecash/lib/Wormhole").default
-const Wormhole = new WH({
-  restURL: `https://wormholecash-staging.herokuapp.com/v1/`
-})
 
-const BITBOXCli = require("bitbox-cli/lib/bitbox-cli").default
-const BITBOX = new BITBOXCli({ restURL: "https://trest.bitcoin.com/v1/" })
+// Set NETWORK to either testnet or mainnet
+const NETWORK = `testnet`
+
+// This is the WH propertyId of the token that this program will be creating
+// new tokens for.
+const PROPERTY_ID = 307
+
+// The quantity of new tokens to issue.
+const TOKEN_QTY = 100
+
+// Instantiate Wormhole based on the network.
+if (NETWORK === `mainnet`)
+  var Wormhole = new WH({ restURL: `https://rest.btctest.net/v1/` })
+//else var Wormhole = new WH({ restURL: `https://trest.bitcoin.com/v1/` })
+else var Wormhole = new WH({ restURL: `https://trest.christroutner.com/v1/` })
 
 // Open the wallet generated with create-wallet.
-let walletInfo
 try {
-  walletInfo = require(`../create-wallet/wallet.json`)
+  var walletInfo = require(`../create-wallet/wallet.json`)
 } catch (err) {
   console.log(
     `Could not open wallet.json. Generate a wallet with create-wallet first.
@@ -26,7 +33,7 @@ try {
 }
 
 // Change this value to match your token.
-const propertyId = 229
+const propertyId = PROPERTY_ID
 
 // Issue new tokens.
 async function issueNewTokens() {
@@ -37,7 +44,9 @@ async function issueNewTokens() {
     const rootSeed = Wormhole.Mnemonic.toSeed(mnemonic)
 
     // master HDNode
-    const masterHDNode = Wormhole.HDNode.fromSeed(rootSeed, "testnet")
+    if (NETWORK === `mainnet`)
+      var masterHDNode = Wormhole.HDNode.fromSeed(rootSeed)
+    else var masterHDNode = Wormhole.HDNode.fromSeed(rootSeed, "testnet")
 
     // HDNode of BIP44 account
     const account = Wormhole.HDNode.derivePath(masterHDNode, "m/44'/145'/0'")
@@ -45,14 +54,13 @@ async function issueNewTokens() {
     const change = Wormhole.HDNode.derivePath(account, "0/0")
 
     // get the cash address
-    const cashAddress = BITBOX.HDNode.toCashAddress(change)
-    // const cashAddress = walletInfo.cashAddress
+    const cashAddress = Wormhole.HDNode.toCashAddress(change)
 
     // grant 10 new tokens.
-    const grant = await Wormhole.PayloadCreation.grant(propertyId, "10")
+    const grant = await Wormhole.PayloadCreation.grant(propertyId, TOKEN_QTY)
 
     // Get a utxo to use for this transaction.
-    const u = await BITBOX.Address.utxo([cashAddress])
+    const u = await Wormhole.Address.utxo([cashAddress])
     const utxo = findBiggestUtxo(u[0])
 
     // Create a rawTx using the largest utxo in the wallet.
@@ -73,7 +81,7 @@ async function issueNewTokens() {
       ref, // Raw transaction we're working with.
       [utxo], // Previous utxo
       cashAddress, // Destination address.
-      0.00001 // Miner fee.
+      0.000005 // Miner fee.
     )
 
     const tx = Wormhole.Transaction.fromHex(changeHex)
@@ -85,13 +93,12 @@ async function issueNewTokens() {
     tb.sign(0, keyPair, redeemScript, 0x01, utxo.satoshis)
     const builtTx = tb.build()
     const txHex = builtTx.toHex()
-    //console.log(txHex);
 
     // sendRawTransaction to running BCH node
-    const broadcast = await BITBOX.RawTransactions.sendRawTransaction(txHex)
+    const broadcast = await Wormhole.RawTransactions.sendRawTransaction(txHex)
     console.log(`Transaction ID: ${broadcast}`)
   } catch (err) {
-    console.log(err)
+    console.log(`Error in app: `, err)
   }
 }
 issueNewTokens()
