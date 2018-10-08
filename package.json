@@ -1,6 +1,6 @@
 {
   "name": "wormholecash",
-  "version": "0.8.1",
+  "version": "0.8.2",
   "description": "BITBOX lib for Wormhole",
   "main": "index.js",
   "scripts": {
@@ -29,7 +29,7 @@
     "babel-preset-react": "^6.24.1",
     "babel-register": "^6.26.0",
     "bigi": "^1.4.2",
-    "bitbox-cli": "^1.8.0",
+    "bitbox-cli": "^1.8.1",
     "buffer": "^5.1.0",
     "chalk": "^2.3.0",
     "clear": "0.1.0",

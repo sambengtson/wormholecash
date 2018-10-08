@@ -11,7 +11,7 @@ const WH = require("wormholecash/lib/Wormhole").default
 if (NETWORK === `mainnet`)
   var Wormhole = new WH({ restURL: `` })
 //else var Wormhole = new WH({ restURL: `https://trest.bitcoin.com/v1/` })
-else var Wormhole = new WH({ restURL: `https://trest.christroutner.com/v1/` })
+else var Wormhole = new WH({ restURL: `https://trest.bitcoin.com/v1/` })
 
 const propertyId = 307
 
