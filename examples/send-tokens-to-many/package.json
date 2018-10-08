@@ -1,0 +1,32 @@
+{
+  "name": "send-tokens-to-many",
+  "version": "1.0.0",
+  "description": "Send existing tokens to multiple addresses.",
+  "main": "send-tokens-to-many.js",
+  "scripts": {
+    "test": "echo no tests yet",
+    "start": "node send-tokens-to-many.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Bitcoin-com/wormholecash.git"
+  },
+  "keywords": [
+    "wormholecash",
+    "example",
+    "bch",
+    "bitcoin cash",
+    "tokens",
+    "token",
+    "wormhole",
+    "node",
+    "node.js",
+    "javascript"
+  ],
+  "author": "Chris Troutner <chris.troutner@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Bitcoin-com/wormholecash/issues"
+  },
+  "homepage": "https://github.com/Bitcoin-com/wormholecash#readme"
+}
