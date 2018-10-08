@@ -1,6 +1,6 @@
 {
   "name": "wormhole-sdk",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "BITBOX lib for Wormhole",
   "main": "index.js",
   "scripts": {
@@ -47,8 +47,7 @@
     "repl.history": "^0.1.4",
     "socket.io": "^2.1.1",
     "socket.io-client": "^2.1.1",
-    "touch": "^3.1.0",
-    "wormhole-sdk": "^0.7.1"
+    "touch": "^3.1.0"
   },
   "devDependencies": {
     "@types/node": "^10.11.4",
