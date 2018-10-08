@@ -35,16 +35,13 @@ You can run each example script by entering its directory and executing `npm sta
 These example apps roughly follow the
 [third Wormhole tutorial](https://developer.bitcoin.com/tutorials/wormhole-3-tokens.html)
 
-- [ping-wh-node](ping-wh-node) Ping the Wormhole node to ensure all networking
-  between you and the node is functioning correctly.
-
 - [burn-bch](burn-bch) **NOT WORKING**
   Burn 1 BCH to generate 100 WHC tokens. These WHC tokens
   are needed to creating your own tokens. You'll need to wait for 1 confirmation
   before seeing the WHC tokens in your account.
 
-- [lookup-token](lookup-token) Lookup token information based on the `primaryid`
-  value assigned to it.
+- [lookup-token](data-retrieval/lookup-token) Lookup token information based on
+  the `primaryid` value assigned to it.
 
 - [send-tokens](send-tokens) Send existing tokens or WHC tokens to another address.
 

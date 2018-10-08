@@ -1,6 +1,6 @@
 # WormholeCash
 
-[Wormhole SDK](https://developer.bitcoin.com/wormhole.html) powered by [BITBOX](https://developer.bitcoin.com/bitbox.html).
+[Wormhole SDK](https://developer.bitcoin.com/wormhole) powered by [BITBOX](https://developer.bitcoin.com/bitbox).
 
 [![Build Status](https://travis-ci.org/Bitcoin-com/wormholecash.svg?branch=master)](https://travis-ci.org/Bitcoin-com/wormholecash)
 
@@ -16,7 +16,5 @@ Learn more about Wormhole SDK here:
 - [Wormhole API documentation](https://developer.bitcoin.com/wormhole/docs/getting-started)
 
 - [Wormhole Full Node GitHub Repo](https://github.com/copernet/wormhole)
-
-- [Wormholecash SDK GitHub Repo](https://github.com/Bitcoin-com/wormholecash)
 
 - [Wormholecash SDK code examples](https://github.com/Bitcoin-com/wormholecash/tree/master/examples)
