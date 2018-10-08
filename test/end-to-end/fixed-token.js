@@ -14,6 +14,9 @@ const NETWORK = `testnet`
 async function fixedTokenTest() {
   try {
     // Open wallet 1.
+    const wallet1 = openWallet(`wallet1.json`)
+    console.log(`wallet1: ${JSON.stringify(wallet1, null, 2)}`)
+
     // Verify wallet has 1 WHC
     // Verify wallet has at least 10000 satoshis
     // Create token
@@ -26,3 +29,7 @@ async function fixedTokenTest() {
   }
 }
 fixedTokenTest()
+
+// Open a wallet and return an object with its address, BCH balance, and WHC
+// token balance.
+function openWallet(filename) {}
