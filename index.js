@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-"use strict"
+
 require("babel-register")
 const path = require("path")
 const program = require("commander")
@@ -18,7 +18,7 @@ const Wormhole = require("./lib/Wormhole").default
 const clone = require("git-clone")
 const cmd = require("node-cmd")
 
-program.version("1.0.0", "-v, --version")
+program.version("1.0.1", "-v, --version")
 
 program
   .command("new <name>")
@@ -158,7 +158,7 @@ program
       config = require(`${process.cwd()}/wormhole.js`).config
     } catch (err) {
       console.log(
-        chalk.red("Console command must be run inside a wormholecash project")
+        chalk.red("Console command must be run inside a wormhole-sdk project")
       )
       process.exit(1)
     }

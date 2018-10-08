@@ -9,16 +9,16 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Bitcoin-com/wormholecash.git"
+    "url": "git+https://github.com/Bitcoin-com/wormhole-sdk.git"
   },
   "keywords": [
-    "wormholecash",
+    "wormhole-sdk",
     "example"
   ],
   "author": "Gabriel Cardona <gabriel@bitcoin.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/Bitcoin-com/wormholecash/issues"
+    "url": "https://github.com/Bitcoin-com/wormhole-sdk/issues"
   },
-  "homepage": "https://github.com/Bitcoin-com/wormholecash#readme"
+  "homepage": "https://github.com/Bitcoin-com/wormhole-sdk#readme"
 }

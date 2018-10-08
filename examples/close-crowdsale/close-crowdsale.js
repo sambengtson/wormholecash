@@ -5,7 +5,7 @@
 "use strict"
 
 // Instantiate wormholecash
-const WH = require("wormholecash/lib/Wormhole").default
+const WH = require("wormhole-sdk/lib/Wormhole").default
 const Wormhole = new WH({
   restURL: `https://wormholecash-staging.herokuapp.com/v1/`
 })

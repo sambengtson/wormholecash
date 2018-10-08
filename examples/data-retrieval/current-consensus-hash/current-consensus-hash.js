@@ -2,7 +2,7 @@
   The consensus hash for all balances for the current block.
 */
 
-const WH = require("wormholecash/lib/Wormhole").default
+const WH = require("wormhole-sdk/lib/Wormhole").default
 const Wormhole = new WH({ restURL: `/v1/` })
 
 async function currentConsensusHash() {

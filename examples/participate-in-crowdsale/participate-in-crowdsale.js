@@ -9,7 +9,7 @@ const NETWORK = `testnet`
 const RECV_ADDR = "bchtest:qp6hgvevf4gzz6l7pgcte3gaaud9km0l459fa23dul"
 const TOKEN_QTY = "1.0" // Number of WHC to send, as a string. Up to 8 decimal places.
 
-const WH = require("wormholecash/lib/Wormhole").default
+const WH = require("wormhole-sdk/lib/Wormhole").default
 
 // Instantiate Wormhole based on the network.
 if (NETWORK === `mainnet`)

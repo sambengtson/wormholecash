@@ -7,7 +7,7 @@
   This is 'airdropping' additional quantities of a token to existing token holders
 */
 
-const WH = require("wormholecash/lib/Wormhole").default
+const WH = require("wormhole-sdk/lib/Wormhole").default
 
 // Set NETWORK to either testnet or mainnet
 const NETWORK = `testnet`

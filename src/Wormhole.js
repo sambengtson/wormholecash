@@ -9,7 +9,7 @@ class Wormhole extends BITBOXCli {
     super(config)
     if (config && config.restURL && config.restURL !== "")
       this.restURL = config.restURL
-    else this.restURL = "http://wormholecash-staging.herokuapp.com/v1/"
+    else this.restURL = "https://rest.bitcoin.com/v1/"
 
     this.DataRetrieval = new DataRetrieval(this.restURL)
     this.PayloadCreation = new PayloadCreation(this.restURL)

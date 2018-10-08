@@ -13,7 +13,7 @@ const NETWORK = `testnet`
 const WALLET1 = `./wallet1.json`
 const WALLET2 = `./wallet2.json`
 
-const WH = require("wormholecash/lib/Wormhole").default
+const WH = require("wormhole-sdk/lib/Wormhole").default
 
 // Inspect utility used for debugging.
 const util = require("util")

@@ -10,7 +10,7 @@ const RECV_ADDR = "bchtest:qr0x5jrn9hefnuauvpgt5z64t4zu754u5srymdj2xm"
 const propertyId = 307 // WH ID identifying the token. 1 === WHC.
 const TOKEN_QTY = 23 // Number of tokens to send.
 
-const WH = require("wormholecash/lib/Wormhole").default
+const WH = require("wormhole-sdk/lib/Wormhole").default
 
 // Instantiate Wormhole based on the network.
 if (NETWORK === `mainnet`)

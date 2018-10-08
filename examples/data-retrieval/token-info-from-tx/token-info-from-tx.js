@@ -8,7 +8,7 @@ const NETWORK = `testnet`
 // The TXID to check.
 const TXID = "36200e48c894043ccbe343d8dee7b417b149189a46b0c7a622f6a2ccd4054d69"
 
-const WH = require("wormholecash/lib/Wormhole").default
+const WH = require("wormhole-sdk/lib/Wormhole").default
 
 // Instantiate Wormhole based on the network.
 if (NETWORK === `mainnet`)

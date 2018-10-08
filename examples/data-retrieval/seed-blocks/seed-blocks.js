@@ -2,7 +2,7 @@
   Returns a list of blocks containing Omni transactions for use in seed block filtering.
 */
 
-const WH = require("wormholecash/lib/Wormhole").default
+const WH = require("wormhole-sdk/lib/Wormhole").default
 const Wormhole = new WH({ restURL: `/v1/` })
 
 async function seedBlocks() {

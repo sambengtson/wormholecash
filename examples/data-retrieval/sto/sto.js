@@ -2,7 +2,7 @@
   Get information and recipients of a send-to-owners transaction.
 */
 
-const WH = require("wormholecash/lib/Wormhole").default
+const WH = require("wormhole-sdk/lib/Wormhole").default
 const Wormhole = new WH({ restURL: `/v1/` })
 
 async function sto() {

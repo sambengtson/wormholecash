@@ -4,7 +4,7 @@ const chai = require("chai")
 const assert = require("assert")
 const wh = require("./../lib/Wormhole").default
 const Wormhole = new wh({
-  restURL: "https://wormholecash-staging.herokuapp.com/v1/"
+  restURL: "https://rest.bitcoin.com/v1/"
 })
 
 describe("#DataRetrieval", () => {

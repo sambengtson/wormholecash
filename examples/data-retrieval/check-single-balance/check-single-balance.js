@@ -2,7 +2,7 @@
   Check all BCH and token balances for an address
 */
 
-const WH = require("wormholecash/lib/Wormhole").default
+const WH = require("wormhole-sdk/lib/Wormhole").default
 const Wormhole = new WH({ restURL: `/v1/` })
 
 // Open the wallet generated with create-wallet.

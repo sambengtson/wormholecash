@@ -2,7 +2,7 @@
   Returns a hash of the balances for the property.
 */
 
-const WH = require("wormholecash/lib/Wormhole").default
+const WH = require("wormhole-sdk/lib/Wormhole").default
 const Wormhole = new WH({ restURL: `/v1/` })
 
 async function balancesHash() {

@@ -3,7 +3,7 @@
   wallet.json. These can tokens can then be sent with the send-tokens example.
 */
 
-const WH = require("wormholecash/lib/Wormhole").default
+const WH = require("wormhole-sdk/lib/Wormhole").default
 
 // Set NETWORK to either testnet or mainnet
 const NETWORK = `testnet`

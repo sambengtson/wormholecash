@@ -5,9 +5,9 @@
 "use strict"
 
 // Instantiate wormholecash
-const WH = require("wormholecash/lib/Wormhole").default
+const WH = require("wormhole-sdk/lib/Wormhole").default
 const Wormhole = new WH({
-  restURL: `https://wormholecash-staging.herokuapp.com/v1/`
+  restURL: `https://rest.bitcoin.com/v1/`
 })
 
 const BITBOXCli = require("bitbox-cli/lib/bitbox-cli").default

@@ -5,7 +5,7 @@
 // Set NETWORK to either testnet or mainnet
 const NETWORK = `testnet`
 
-const WH = require("wormholecash/lib/Wormhole").default
+const WH = require("wormhole-sdk/lib/Wormhole").default
 
 // Instantiate Wormhole based on the network.
 if (NETWORK === `mainnet`)
