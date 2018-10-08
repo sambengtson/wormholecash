@@ -7,7 +7,7 @@
 [![Coverage Status](https://coveralls.io/repos/github/Bitcoin-com/wormholecash/badge.svg?branch=master)](https://coveralls.io/github/Bitcoin-com/wormholecash?branch=master) [![Greenkeeper badge](https://badges.greenkeeper.io/Bitcoin-com/wormholecash.svg)](https://greenkeeper.io/)
 
 
-Wormhole SDK is a superset of the [BITBOX SDK](https://developer.bitcoin.com/bitbox.html)
+Wormhole SDK is a superset of the [BITBOX SDK](https://developer.bitcoin.com/bitbox)
 for creating tokens (ERC20 and others) on the Bitcoin Cash network.
 Learn more about Wormhole SDK here:
 
