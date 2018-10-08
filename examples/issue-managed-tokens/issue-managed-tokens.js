@@ -17,7 +17,7 @@ const TOKEN_QTY = 100
 
 // Instantiate Wormhole based on the network.
 if (NETWORK === `mainnet`)
-  var Wormhole = new WH({ restURL: `https://rest.btctest.net/v1/` })
+  var Wormhole = new WH({ restURL: `` })
 //else var Wormhole = new WH({ restURL: `https://trest.bitcoin.com/v1/` })
 else var Wormhole = new WH({ restURL: `https://trest.christroutner.com/v1/` })
 
