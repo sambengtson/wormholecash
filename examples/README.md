@@ -73,7 +73,7 @@ be revoked.
 - [change-managed-token-issuer](change-managed-token-issuer) Change the address
   capable of issuing new tokens, the 'Token Manager'.
 
-- [revoke-managed-tokens](revoke-managed-tokens) Revoke existing tokens.
+- [revoke-managed-tokens](revoke-managed-tokens) Revoke existing tokens. 
 
 
 ### Crowd Sale
