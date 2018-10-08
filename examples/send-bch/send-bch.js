@@ -1,13 +1,22 @@
 /*
-  Send 1000 satoshis to RECV_ADDR.
+  Send BCH to RECV_ADDR.
 */
 
-const WH = require("wormholecash/lib/Wormhole").default
-//const Wormhole = new WH({ restURL: `https://trest.bitcoin.com/v1/` })
-const Wormhole = new WH({ restURL: `https://trest.christroutner.com/v1/` })
+// Set NETWORK to either testnet or mainnet
+const NETWORK = `testnet`
 
 // Replace the address below with the address you want to send the BCH to.
-const RECV_ADDR = `bchtest:qr45kxqda7yw8atztvkc4ckqnrlhmp0kvsep4p345q`
+const RECV_ADDR = `bchtest:qp6hgvevf4gzz6l7pgcte3gaaud9km0l459fa23dul`
+
+// The amount of BCH to send, in satoshis. 1 satoshi = 0.00000001 BCH
+const AMOUNT_TO_SEND = 1000
+
+const WH = require("wormholecash/lib/Wormhole").default
+
+// Instantiate Wormhole based on the network.
+if (NETWORK === `mainnet`)
+  var Wormhole = new WH({ restURL: `https://rest.bitcoin.com/v1/` })
+else var Wormhole = new WH({ restURL: `https://trest.bitcoin.com/v1/` })
 
 // Open the wallet generated with create-wallet.
 let walletInfo
@@ -42,12 +51,13 @@ async function sendBch() {
   console.log(`Balance of recieving address ${RECV_ADDR} is ${balance2} BCH.`)
 
   const utxo = await Wormhole.Address.utxo(SEND_ADDR)
-  console.log(`utxo: ${JSON.stringify(utxo, null, 2)}`)
 
   // instance of transaction builder
-  const transactionBuilder = new Wormhole.TransactionBuilder("testnet")
+  if (NETWORK === `mainnet`)
+    var transactionBuilder = new Wormhole.TransactionBuilder()
+  else var transactionBuilder = new Wormhole.TransactionBuilder("testnet")
 
-  const satoshisToSend = 1000
+  const satoshisToSend = AMOUNT_TO_SEND
   const originalAmount = utxo[0].satoshis
   const vout = utxo[0].vout
   const txid = utxo[0].txid
@@ -61,7 +71,7 @@ async function sendBch() {
     { P2PKH: 2 }
   )
   console.log(`byteCount: ${byteCount}`)
-  const satoshisPerByte = 1.2
+  const satoshisPerByte = 1.1
   const txFee = Math.floor(satoshisPerByte * byteCount)
   console.log(`txFee: ${txFee}`)
 

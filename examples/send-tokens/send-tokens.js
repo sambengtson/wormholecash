@@ -5,13 +5,17 @@
 // Set NETWORK to either testnet or mainnet
 const NETWORK = `testnet`
 
+// Change these values to match your token.
+const RECV_ADDR = "bchtest:qr0x5jrn9hefnuauvpgt5z64t4zu754u5srymdj2xm"
+const propertyId = 307 // WH ID identifying the token. 1 === WHC.
+const TOKEN_QTY = 23 // Number of tokens to send.
+
 const WH = require("wormholecash/lib/Wormhole").default
 
 // Instantiate Wormhole based on the network.
 if (NETWORK === `mainnet`)
-  var Wormhole = new WH({ restURL: `` })
-//else var Wormhole = new WH({ restURL: `https://trest.bitcoin.com/v1/` })
-else var Wormhole = new WH({ restURL: `https://trest.christroutner.com/v1/` })
+  var Wormhole = new WH({ restURL: `https://rest.bitcoin.com/v1/` })
+else var Wormhole = new WH({ restURL: `https://trest.bitcoin.com/v1/` })
 
 // Open the wallet generated with create-wallet.
 let walletInfo
@@ -24,11 +28,6 @@ try {
   )
   process.exit(0)
 }
-
-// Change these values to match your token.
-const RECV_ADDR = ""
-const propertyId = 1 // WH ID identifying the token. 1 === WHC.
-const TOKEN_QTY = 1 // Number of tokens to send.
 
 // Issue new tokens.
 async function sendTokens() {
