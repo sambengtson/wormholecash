@@ -2,9 +2,9 @@
   Token air-drop:
   Sends coins from the wallet (wallet.json) in the specified token to current
   owners of that token. Pulls from existing balance of tokens; it does not issue
-  new tokens.
+  new tokens. This process also costs 1 satoshi per address/owner in WHC (not BCH).
 
-  This is 'airdropping' additional quantities of a token to exsiting token holders
+  This is 'airdropping' additional quantities of a token to existing token holders
 */
 
 const WH = require("wormholecash/lib/Wormhole").default
