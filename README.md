@@ -11,9 +11,9 @@ Wormhole SDK is a superset of the [BITBOX SDK](https://developer.bitcoin.com/bit
 for creating tokens (ERC20 and others) on the Bitcoin Cash network.
 Learn more about Wormhole SDK here:
 
-- [Wormhole tokens overview](https://developer.bitcoin.com/wormhole.html)
+- [Wormhole tokens overview](https://developer.bitcoin.com/wormhole)
 
-- [Wormhole API documentation](https://developer.bitcoin.com/wormhole/docs/getting-started.html)
+- [Wormhole API documentation](https://developer.bitcoin.com/wormhole/docs/getting-started)
 
 - [Wormhole Full Node GitHub Repo](https://github.com/copernet/wormhole)
 
