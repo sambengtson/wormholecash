@@ -45,7 +45,7 @@ These example apps roughly follow the
 
 - [send-tokens](send-tokens) Send existing tokens or WHC tokens to another address.
 
-- [list-all-tokens](list-all-tokens) List every token in existence.
+- [list-all-tokens](data-retrieval/list-all-tokens) List every token in existence.
 
 ### Fixed Tokens
 
