@@ -10,7 +10,18 @@
 // Set NETWORK to either testnet or mainnet
 const NETWORK = `testnet`
 
+const WALLET1 = `./wallet1.json`
+const WALLET2 = `./wallet2.json`
+
 const WH = require("wormholecash/lib/Wormhole").default
+
+// Inspect utility used for debugging.
+const util = require("util")
+util.inspect.defaultOptions = {
+  showHidden: true,
+  colors: true,
+  depth: 1
+}
 
 // Instantiate Wormhole based on the network.
 if (NETWORK === `mainnet`)
@@ -22,11 +33,23 @@ else var Wormhole = new WH({ restURL: `https://trest.christroutner.com/v1/` })
 async function fixedTokenTest() {
   try {
     // Open wallet 1.
-    const wallet1 = await openWallet(`./wallet1.json`)
+    const wallet1 = await openWallet(WALLET1)
     console.log(`wallet1: ${JSON.stringify(wallet1, null, 2)}`)
 
     // Verify wallet has 1 WHC
+    const WHC = wallet1.tokenBalance.find(token => token.propertyid === 1)
+    const WHCBalance = Number(WHC.balance)
+    if (WHCBalance < 1.0) {
+      console.log(
+        `Wallet 1 does not have a WHC token needed to run the test.
+        Exiting.`
+      )
+      process.exit(0)
+    }
+
     // Verify wallet has at least 10000 satoshis
+    const BCHBalance = wallet1.bchBalance
+
     // Create token
     // Wait for 1-conf
     // Send tokens to wallet 2.
@@ -61,7 +84,7 @@ async function getBalance(walletInfo) {
     // first get BCH balance
     const balance = await Wormhole.Address.details([walletInfo.cashAddress])
 
-    walletInfo.bchBalance = balance
+    walletInfo.bchBalance = balance[0]
 
     // get token balances
     try {

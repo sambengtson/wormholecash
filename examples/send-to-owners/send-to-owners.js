@@ -1,18 +1,26 @@
 /*
-  Transfers coins in the specified currency from the sending address to the
-  current owners of that currency.
-  This is 'airdropping' more of an token to exsiting token holders
+  Token air-drop:
+  Sends coins from the wallet (wallet.json) in the specified token to current
+  owners of that token. Pulls from existing balance of tokens; it does not issue
+  new tokens.
+
+  This is 'airdropping' additional quantities of a token to exsiting token holders
 */
 
-// Instantiate wormholecash
-//let Wormhole = require("wormholecash/lib/Wormhole").default;
 const WH = require("wormholecash/lib/Wormhole").default
-const Wormhole = new WH({
-  restURL: `https://wormholecash-staging.herokuapp.com/v1/`
-})
 
-const BITBOXCli = require("bitbox-cli/lib/bitbox-cli").default
-const BITBOX = new BITBOXCli({ restURL: "https://trest.bitcoin.com/v1/" })
+// Set NETWORK to either testnet or mainnet
+const NETWORK = `testnet`
+
+// Change these values to match your token.
+const propertyId = 307 // WH ID identifying the token.
+const TOKEN_QTY = 33 // Number of tokens to send.
+
+// Instantiate Wormhole based on the network.
+if (NETWORK === `mainnet`)
+  var Wormhole = new WH({ restURL: `https://rest.bitcoin.com/v1/` })
+//else var Wormhole = new WH({ restURL: `https://trest.bitcoin.com/v1/` })
+else var Wormhole = new WH({ restURL: `https://trest.christroutner.com/v1/` })
 
 // Open the wallet generated with create-wallet.
 let walletInfo
@@ -25,10 +33,6 @@ try {
   )
   process.exit(0)
 }
-
-// Change these values to match your token.
-const propertyId = 248 // WH ID identifying the token.
-const TOKEN_QTY = 1 // Number of tokens to send.
 
 // Issue new tokens.
 async function sendTokens() {
@@ -47,16 +51,14 @@ async function sendTokens() {
     const change = Wormhole.HDNode.derivePath(account, "0/0")
 
     // get the cash address
-    const cashAddress = BITBOX.HDNode.toCashAddress(change)
-    // const cashAddress = walletInfo.cashAddress;
+    const cashAddress = Wormhole.HDNode.toCashAddress(change)
 
     // Create send to owners payload.
     const STO = await Wormhole.PayloadCreation.STO(propertyId, TOKEN_QTY)
 
     // Get a utxo to use for this transaction.
-    const u = await BITBOX.Address.utxo([cashAddress])
+    const u = await Wormhole.Address.utxo([cashAddress])
     const utxo = findBiggestUtxo(u[0])
-    // const utxo = u[0][1]
 
     // Create a rawTx using the largest utxo in the wallet.
     utxo.value = utxo.amount
@@ -70,7 +72,7 @@ async function sendTokens() {
       opReturn, // Raw transaction we're working with.
       [utxo], // Previous utxo
       cashAddress, // Destination address.
-      0.00001 // Miner fee.
+      0.000005 // Miner fee.
     )
 
     const tx = Wormhole.Transaction.fromHex(changeHex)
@@ -84,7 +86,7 @@ async function sendTokens() {
     const txHex = builtTx.toHex()
 
     // sendRawTransaction to running BCH node
-    const broadcast = await BITBOX.RawTransactions.sendRawTransaction(txHex)
+    const broadcast = await Wormhole.RawTransactions.sendRawTransaction(txHex)
 
     console.log(`You can monitor the below transaction ID on a block explorer.`)
     console.log(`Transaction ID: ${broadcast}`)
