@@ -47,9 +47,9 @@ async function burnBch() {
     const rootSeed = Wormhole.Mnemonic.toSeed(mnemonic)
 
     // master HDNode
-    if (NETWORK === `mainnet`)
-      var masterHDNode = Wormhole.HDNode.fromSeed(rootSeed)
-    else var masterHDNode = Wormhole.HDNode.fromSeed(rootSeed, "testnet") // Testnet
+    let masterHDNode
+    if (NETWORK === `mainnet`) masterHDNode = Wormhole.HDNode.fromSeed(rootSeed)
+    else masterHDNode = Wormhole.HDNode.fromSeed(rootSeed, "testnet") // Testnet
 
     // HDNode of BIP44 account
     const account = Wormhole.HDNode.derivePath(masterHDNode, "m/44'/145'/0'")
@@ -57,7 +57,7 @@ async function burnBch() {
     const change = Wormhole.HDNode.derivePath(account, "0/0")
 
     // get the cash address
-    const cashAddress = walletInfo.cashAddress
+    const cashAddress = Wormhole.HDNode.toCashAddress(change)
 
     const burnBCH = await Wormhole.PayloadCreation.burnBCH()
 
@@ -75,7 +75,7 @@ async function burnBch() {
     // Set the destination/recieving address for the tokens, with the actual
     // amount of BCH set to a minimal amount.
     const burnAddr = "bchtest:qqqqqqqqqqqqqqqqqqqqqqqqqqqqqdmwgvnjkt8whc"
-    const ref = await Wormhole.RawTransactions.reference(opReturn, burnAddr)
+    const ref = await Wormhole.RawTransactions.reference(opReturn, cashAddress)
     //const ref = await Wormhole.RawTransactions.reference(opReturn, cashAddress)
 
     const minerFee = 0.000005
@@ -122,10 +122,10 @@ async function burnBch() {
     tb.sign(0, keyPair, redeemScript, 0x01, utxo.satoshis)
     const builtTx = tb.build()
     const txHex = builtTx.toHex()
-    //console.log(txHex)
+    console.log(txHex)
 
     // sendRawTransaction to running BCH node
-    const broadcast = await Wormhole.RawTransactions.sendRawTransaction(txHex)
+    // const broadcast = await Wormhole.RawTransactions.sendRawTransaction(txHex)
 
     console.log(`You can monitor the below transaction ID on a block explorer.`)
     console.log(`Transaction ID: ${broadcast}`)
