@@ -30,17 +30,26 @@ try {
   process.exit(0)
 }
 
-// Verify the address has at least 1 BCH.
-
 async function burnBch() {
   try {
+    // Exit if the user does not have 1.0 BCH to burn.
+    const bchBalance = await getBCHBalance(walletInfo.cashAddress, false)
+    if (bchBalance < 1.0) {
+      console.log(
+        `Wallet has a balance of ${bchBalance} which is less than the 1 BCH requirement to burn. Exiting.`
+      )
+      process.exit(0)
+    }
+
     const mnemonic = walletInfo.mnemonic
 
     // root seed buffer
     const rootSeed = Wormhole.Mnemonic.toSeed(mnemonic)
 
     // master HDNode
-    const masterHDNode = Wormhole.HDNode.fromSeed(rootSeed, "testnet")
+    if (NETWORK === `mainnet`)
+      var masterHDNode = Wormhole.HDNode.fromSeed(rootSeed)
+    else var masterHDNode = Wormhole.HDNode.fromSeed(rootSeed, "testnet") // Testnet
 
     // HDNode of BIP44 account
     const account = Wormhole.HDNode.derivePath(masterHDNode, "m/44'/145'/0'")
@@ -63,18 +72,49 @@ async function burnBch() {
     // Add the token information as an op-return code to the tx.
     const opReturn = await Wormhole.RawTransactions.opReturn(rawTx, burnBCH)
 
-    const ref = await Wormhole.RawTransactions.reference(opReturn, cashAddress)
+    // Set the destination/recieving address for the tokens, with the actual
+    // amount of BCH set to a minimal amount.
+    const burnAddr = "bchtest:qqqqqqqqqqqqqqqqqqqqqqqqqqqqqdmwgvnjkt8whc"
+    const ref = await Wormhole.RawTransactions.reference(opReturn, burnAddr)
+    //const ref = await Wormhole.RawTransactions.reference(opReturn, cashAddress)
+
+    const minerFee = 0.000005
 
     // Generate a change output.
     const changeHex = await Wormhole.RawTransactions.change(
       ref, // Raw transaction we're working with.
       [utxo], // Previous utxo
-      cashAddress, // Destination address.
-      0.000005 // Miner fee.
+      burnAddr, // Destination address.
+      //cashAddress,
+      minerFee // Miner fee.
     )
+
+    /*
+    const tx = Wormhole.Transaction.fromHex(ref)
+    tx.outs.unshift({
+      value: 199990000,
+      script: Buffer.from(
+        "76a9140000000000000000000000000000000000376e4388ac",
+        "hex"
+      )
+    })
+    const buf = Wormhole.Script.pubKey.output.encode(
+      Buffer.from("bchtest:", "hex")
+    )
+
+    console.log(tx.outs)
+    const tb = Wormhole.Transaction.fromTransaction(tx)
+    // let ca = "mfWxJ45yp2SFn7UciZyNpvDKu6S3TYMHMR";
+    // console.log(tb);
+    // tb.addOutput('qqqqqqqqqqqqqqqqqqqqqqqqqqqqqdmwgvnjkt8whc', Wormhole.BitcoinCash.toSatoshi(1));
+    */
 
     const tx = Wormhole.Transaction.fromHex(changeHex)
     const tb = Wormhole.Transaction.fromTransaction(tx)
+
+    // amount to send back to the sending address. It's the original amount - 1 sat/byte for tx size
+    //const remainder = bchBalance - 1.0 - minerFee
+    //tb.addOutput(walletInfo.cashAddress, remainder)
 
     // Finalize and sign transaction.
     const keyPair = Wormhole.HDNode.toKeyPair(change)
@@ -82,6 +122,7 @@ async function burnBch() {
     tb.sign(0, keyPair, redeemScript, 0x01, utxo.satoshis)
     const builtTx = tb.build()
     const txHex = builtTx.toHex()
+    //console.log(txHex)
 
     // sendRawTransaction to running BCH node
     const broadcast = await Wormhole.RawTransactions.sendRawTransaction(txHex)
@@ -111,4 +152,21 @@ function findBiggestUtxo(utxos) {
   }
 
   return utxos[largestIndex]
+}
+
+// Get the balance in BCH of a BCH address.
+async function getBCHBalance(addr, verbose) {
+  try {
+    const result = await Wormhole.Address.details([addr])
+
+    if (verbose) console.log(result)
+
+    const bchBalance = result[0]
+
+    return bchBalance.balance
+  } catch (err) {
+    console.error(`Error in getBCHBalance: `, err)
+    console.log(`addr: ${addr}`)
+    throw err
+  }
 }
