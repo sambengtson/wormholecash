@@ -2,21 +2,18 @@
   Burn 1 BCH to generate 100 WHC used for creating new tokens.
 */
 
-const fs = require("fs")
+// Set NETWORK to either testnet or mainnet
+const NETWORK = `mainnet`
 
-const BITBOXCli = require("bitbox-cli/lib/bitbox-cli").default
-const BITBOX = new BITBOXCli({ restURL: "https://trest.bitcoin.com/v1/" })
 const WH = require("wormhole-sdk/lib/Wormhole").default
-const Wormhole = new WH({
-  restURL: `https://rest.bitcoin.com/v1/`
-})
 
-const util = require("util")
-util.inspect.defaultOptions = {
-  showHidden: true,
-  colors: true
-}
-console.log(`wormhole.Transaction: ${util.inspect(Wormhole.Transaction)}`)
+// Instantiate Wormhole based on the network.
+let Wormhole
+if (NETWORK === `mainnet`)
+  Wormhole = new WH({ restURL: `https://rest.bitcoin.com/v1/` })
+else Wormhole = new WH({ restURL: `https://trest.bitcoin.com/v1/` })
+
+// const fs = require("fs")
 
 // Open the wallet generated with create-wallet.
 let walletInfo
@@ -39,7 +36,9 @@ async function burnBch() {
     const rootSeed = Wormhole.Mnemonic.toSeed(mnemonic)
 
     // master HDNode
-    const masterHDNode = Wormhole.HDNode.fromSeed(rootSeed, "testnet")
+    let masterHDNode
+    if (NETWORK === `mainnet`) masterHDNode = Wormhole.HDNode.fromSeed(rootSeed)
+    else masterHDNode = Wormhole.HDNode.fromSeed(rootSeed, "testnet")
 
     // HDNode of BIP44 account
     const account = Wormhole.HDNode.derivePath(masterHDNode, "m/44'/145'/0'")
