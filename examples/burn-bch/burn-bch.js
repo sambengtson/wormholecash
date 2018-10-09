@@ -2,21 +2,22 @@
   Burn 1 BCH to generate 100 WHC used for creating new tokens.
 */
 
-const fs = require("fs")
-
-const BITBOXCli = require("bitbox-cli/lib/bitbox-cli").default
-const BITBOX = new BITBOXCli({ restURL: "https://trest.bitcoin.com/v1/" })
-const WH = require("wormhole-sdk/lib/Wormhole").default
-const Wormhole = new WH({
-  restURL: `https://rest.bitcoin.com/v1/`
-})
-
+// Used for debugging.
 const util = require("util")
 util.inspect.defaultOptions = {
   showHidden: true,
   colors: true
 }
-console.log(`wormhole.Transaction: ${util.inspect(Wormhole.Transaction)}`)
+
+// Set NETWORK to either testnet or mainnet
+const NETWORK = `testnet`
+
+const WH = require("../../lib/Wormhole").default
+
+// Instantiate Wormhole based on the network.
+if (NETWORK === `mainnet`)
+  var Wormhole = new WH({ restURL: `https://rest.bitcoin.com/v1/` })
+else var Wormhole = new WH({ restURL: `https://trest.bitcoin.com/v1/` })
 
 // Open the wallet generated with create-wallet.
 let walletInfo
@@ -47,15 +48,13 @@ async function burnBch() {
     const change = Wormhole.HDNode.derivePath(account, "0/0")
 
     // get the cash address
-    const cashAddress = BITBOX.HDNode.toCashAddress(change)
-    // const cashAddress = walletInfo.cashAddress;
+    const cashAddress = walletInfo.cashAddress
 
     const burnBCH = await Wormhole.PayloadCreation.burnBCH()
 
     // Get a utxo to use for this transaction.
-    const u = await BITBOX.Address.utxo([cashAddress])
+    const u = await Wormhole.Address.utxo([cashAddress])
     const utxo = findBiggestUtxo(u[0])
-    console.log(utxo)
 
     // Create a rawTx using the largest utxo in the wallet.
     utxo.value = utxo.amount
@@ -64,39 +63,18 @@ async function burnBch() {
     // Add the token information as an op-return code to the tx.
     const opReturn = await Wormhole.RawTransactions.opReturn(rawTx, burnBCH)
 
-    // Set the destination/recieving address for the tokens, with the actual
-    // amount of BCH set to a minimal amount.
-    // const re = await Wormhole.RawTransactions.reference(
-    //   opReturn,
-    //   "bchtest:qqqqqqqqqqqqqqqqqqqqqqqqqqqqqdmwgvnjkt8whc"
-    // );
     const ref = await Wormhole.RawTransactions.reference(opReturn, cashAddress)
 
     // Generate a change output.
-    // const changeHex = await Wormhole.RawTransactions.change(
-    //   ref, // Raw transaction we're working with.
-    //   [utxo], // Previous utxo
-    //   cashAddress, // Destination address.
-    //   0.00001 // Miner fee.
-    // );
-
-    const tx = Wormhole.Transaction.fromHex(ref)
-    tx.outs.unshift({
-      value: 199990000,
-      script: Buffer.from(
-        "76a9140000000000000000000000000000000000376e4388ac",
-        "hex"
-      )
-    })
-    const buf = BITBOX.Script.pubKey.output.encode(
-      Buffer.from("bchtest:", "hex")
+    const changeHex = await Wormhole.RawTransactions.change(
+      ref, // Raw transaction we're working with.
+      [utxo], // Previous utxo
+      cashAddress, // Destination address.
+      0.000005 // Miner fee.
     )
 
-    console.log(tx.outs)
+    const tx = Wormhole.Transaction.fromHex(changeHex)
     const tb = Wormhole.Transaction.fromTransaction(tx)
-    // let ca = "mfWxJ45yp2SFn7UciZyNpvDKu6S3TYMHMR";
-    // console.log(tb);
-    // tb.addOutput('qqqqqqqqqqqqqqqqqqqqqqqqqqqqqdmwgvnjkt8whc', Wormhole.BitcoinCash.toSatoshi(1));
 
     // Finalize and sign transaction.
     const keyPair = Wormhole.HDNode.toKeyPair(change)
@@ -104,10 +82,9 @@ async function burnBch() {
     tb.sign(0, keyPair, redeemScript, 0x01, utxo.satoshis)
     const builtTx = tb.build()
     const txHex = builtTx.toHex()
-    console.log(txHex)
 
     // sendRawTransaction to running BCH node
-    // const broadcast = await BITBOX.RawTransactions.sendRawTransaction(txHex);
+    const broadcast = await Wormhole.RawTransactions.sendRawTransaction(txHex)
 
     console.log(`You can monitor the below transaction ID on a block explorer.`)
     console.log(`Transaction ID: ${broadcast}`)
