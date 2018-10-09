@@ -1,10 +1,9 @@
-"use strict"
 // let fixtures = require('./fixtures/DataRetrieval.json')
 const chai = require("chai")
 const assert = require("assert")
 const wh = require("./../lib/Wormhole").default
 const Wormhole = new wh({
-  restURL: "https://rest.bitcoin.com/v1/"
+  restURL: "https://trest.bitcoin.com/v1/"
 })
 
 describe("#DataRetrieval", () => {
@@ -48,7 +47,7 @@ describe("#DataRetrieval", () => {
 
     it(`should fail`, async () => {
       try {
-        const balancesForId = await Wormhole.DataRetrieval.balancesForId("fail")
+        const balancesForId = await Wormhole.DataRetrieval.balancesForId()
       } catch (error) {
         assert.equal(error.code, -1)
         assert.equal(error.message, "JSON value is not an integer as expected")
@@ -323,11 +322,11 @@ describe("#DataRetrieval", () => {
     it(`should get transaction`, async () => {
       try {
         const transaction = await Wormhole.DataRetrieval.transaction(
-          "000000000000000000000000000000000000000000000000000000000000000"
+          "aa5ed83708d0889d25691a27668fe5a6a406cab24191afae7d78bb867a324641"
         )
         assert.deepEqual(
           transaction,
-          "txid must be hexadecimal string (not '000000000000000000000000000000000000000000000000000000000000000')"
+          "txid must be hexadecimal string (not 'aa5ed83708d0889d25691a27668fe5a6a406cab24191afae7d78bb867a324641')"
         )
       } catch (error) {}
     })
