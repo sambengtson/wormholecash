@@ -9,9 +9,10 @@ const NETWORK = `testnet`
 const WH = require("wormhole-sdk/lib/Wormhole").default
 
 // Instantiate Wormhole based on the network.
+let Wormhole
 if (NETWORK === `mainnet`)
-  var Wormhole = new WH({ restURL: `https://rest.bitcoin.com/v1/` })
-else var Wormhole = new WH({ restURL: `https://trest.bitcoin.com/v1/` })
+  Wormhole = new WH({ restURL: `https://rest.bitcoin.com/v1/` })
+else Wormhole = new WH({ restURL: `https://trest.bitcoin.com/v1/` })
 
 // Open the wallet generated with create-wallet.
 let walletInfo
@@ -26,10 +27,27 @@ try {
 
 async function getBalance() {
   try {
-    // first get BCH balance
-    const balance = await Wormhole.Address.details([walletInfo.cashAddress])
+    const mnemonic = walletInfo.mnemonic
 
-    console.log(`BCH Balance information for ${walletInfo.cashAddress}:`)
+    // root seed buffer
+    const rootSeed = Wormhole.Mnemonic.toSeed(mnemonic)
+    // master HDNode
+    if (NETWORK === `mainnet`)
+      var masterHDNode = Wormhole.HDNode.fromSeed(rootSeed)
+    else var masterHDNode = Wormhole.HDNode.fromSeed(rootSeed, "testnet") // Testnet
+
+    // HDNode of BIP44 account
+    const account = Wormhole.HDNode.derivePath(masterHDNode, "m/44'/145'/1'")
+
+    const change = Wormhole.HDNode.derivePath(account, "0/0")
+
+    // get the cash address
+    const cashAddress = Wormhole.HDNode.toCashAddress(change)
+
+    // first get BCH balance
+    const balance = await Wormhole.Address.details([cashAddress])
+
+    console.log(`BCH Balance information for ${cashAddress}:`)
     console.log(balance)
     console.log(``)
     console.log(`Wormhole Token information:`)
@@ -37,7 +55,7 @@ async function getBalance() {
     // get token balances
     try {
       const tokens = await Wormhole.DataRetrieval.balancesForAddress(
-        walletInfo.cashAddress
+        cashAddress
       )
 
       console.log(JSON.stringify(tokens, null, 2))
