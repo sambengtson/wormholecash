@@ -32,15 +32,6 @@ try {
 
 async function burnBch() {
   try {
-    // Exit if the user does not have 1.0 BCH to burn.
-    //const bchBalance = await getBCHBalance(walletInfo.cashAddress, false)
-    if (bchBalance < 1.0) {
-      console.log(
-        `Wallet has a balance of ${bchBalance} which is less than the 1 BCH requirement to burn. Exiting.`
-      )
-      process.exit(0)
-    }
-
     const mnemonic = walletInfo.mnemonic
 
     // root seed buffer
@@ -52,7 +43,7 @@ async function burnBch() {
     else var masterHDNode = Wormhole.HDNode.fromSeed(rootSeed, "testnet") // Testnet
 
     // HDNode of BIP44 account
-    const account = Wormhole.HDNode.derivePath(masterHDNode, "m/44'/145'/1'")
+    const account = Wormhole.HDNode.derivePath(masterHDNode, "m/44'/145'/0'")
 
     const change = Wormhole.HDNode.derivePath(account, "0/0")
 
@@ -68,6 +59,7 @@ async function burnBch() {
       process.exit(0)
     }
 
+    // Get the burnBCH payload.
     const burnBCH = await Wormhole.PayloadCreation.burnBCH()
 
     // Get a utxo to use for this transaction.
@@ -85,13 +77,20 @@ async function burnBch() {
     // amount of BCH set to a minimal amount.
     const burnAddr = "bchtest:qqqqqqqqqqqqqqqqqqqqqqqqqqqqqdmwgvnjkt8whc"
     //const ref = await Wormhole.RawTransactions.reference(opReturn, cashAddress)
-    const ref = await Wormhole.RawTransactions.reference(opReturn, burnAddr)
+    // Creates the
+    //const ref = await Wormhole.RawTransactions.reference(opReturn, burnAddr)
 
-    const minerFee = 0.000005
+    const minerFee = 0.00001
+
+    // amount to send back to the sending address. It's the original amount - 1 sat/byte for tx size
+    const remainder = bchBalance - 1.0 - minerFee
+
+    //opReturn.addOutput(cashAddress, remainder)
 
     // Generate a change output.
     const changeHex = await Wormhole.RawTransactions.change(
-      ref, // Raw transaction we're working with.
+      //ref, // Raw transaction we're working with.
+      opReturn,
       [utxo], // Previous utxo
       burnAddr, // Destination address.
       //cashAddress,
