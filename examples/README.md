@@ -36,10 +36,11 @@ You can run each example script by entering its directory and executing `npm sta
 These example apps roughly follow the
 [third Wormhole tutorial](https://developer.bitcoin.com/tutorials/wormhole-3-tokens.html)
 
-- [burn-bch](burn-bch) **NOT WORKING**
+- [burn-bch](burn-bch)
   Burn 1 BCH to generate 100 WHC tokens. These WHC tokens
-  are needed for creating your own tokens. You'll need to wait for 1 confirmation
-  before seeing the WHC tokens in your account.
+  are needed for creating your own tokens. Before seeing the WHC tokens appear
+  in the `check-balance` example, you'll have to wait 4 confirmations on testnet
+  and 1000 confirmations (7 days) on mainnet.
 
 - [lookup-token](data-retrieval/lookup-token) Lookup token information based on
   the `primaryid` value assigned to it.
@@ -73,7 +74,7 @@ be revoked.
 - [change-managed-token-issuer](change-managed-token-issuer) Change the address
   capable of issuing new tokens, the 'Token Manager'.
 
-- [revoke-managed-tokens](revoke-managed-tokens) Revoke existing tokens. 
+- [revoke-managed-tokens](revoke-managed-tokens) Revoke existing tokens.
 
 
 ### Crowd Sale
