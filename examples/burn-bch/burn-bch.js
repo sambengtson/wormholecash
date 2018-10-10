@@ -66,24 +66,83 @@ async function burnBch() {
     const u = await Wormhole.Address.utxo([cashAddress])
     const utxo = findBiggestUtxo(u[0])
 
-    // Create a rawTx using the largest utxo in the wallet.
+    //
+    //
+    //
+
+    // instance of transaction builder
+    if (NETWORK === `mainnet`)
+      var transactionBuilder = new Wormhole.TransactionBuilder()
+    else var transactionBuilder = new Wormhole.TransactionBuilder("testnet")
+
+    console.log(`utxo: ${util.inspect(utxo)}`)
+    const vout = utxo.vout
+    const txid = utxo.txid
+    transactionBuilder.addInput(txid, vout)
+
     utxo.value = utxo.amount
-    const rawTx = await Wormhole.RawTransactions.create([utxo], {})
+    //const rawTx = await Wormhole.RawTransactions.create([utxo], {})
+
+    const minerFee = 1000
+
+    // amount to send back to the sending address. It's the original amount - 1 sat/byte for tx size
+    const remainder = Math.floor(bchBalance * 100000000 - 100000000 - minerFee)
+    console.log(`remainder: ${remainder}`)
+
+    const burnAddr = "bchtest:qqqqqqqqqqqqqqqqqqqqqqqqqqqqqdmwgvnjkt8whc"
+
+    const opReturn = Wormhole.Script.encode([
+      Wormhole.Script.opcodes.OP_RETURN,
+      burnBCH
+    ])
+
+    // add output w/ address and amount to send
+    transactionBuilder.addOutput(burnAddr, 100000000)
+    transactionBuilder.addOutput(opReturn, 0) // Op_return
+    transactionBuilder.addOutput(
+      Wormhole.Address.toLegacyAddress(cashAddress),
+      remainder
+    )
+
+    // Generate a keypair from the change address.
+    const keyPair = Wormhole.HDNode.toKeyPair(change)
+
+    // Sign the transaction with the HD node.
+    let redeemScript
+    transactionBuilder.sign(
+      0,
+      keyPair,
+      redeemScript,
+      transactionBuilder.hashTypes.SIGHASH_ALL,
+      Math.floor(bchBalance * 100000000)
+    )
+
+    // build tx
+    const tx = transactionBuilder.build()
+    const hex = tx.toHex()
+    console.log(hex)
+
+    //
+    //
+    //
+
+    /*
+
+    // Create a rawTx using the largest utxo in the wallet.
+    //utxo.value = utxo.amount
+    //const rawTx = await Wormhole.RawTransactions.create([utxo], {})
 
     // Add the token information as an op-return code to the tx.
     const opReturn = await Wormhole.RawTransactions.opReturn(rawTx, burnBCH)
+    console.log(`opReturn: ${util.inspect(opReturn)}`)
 
     // Set the destination/recieving address for the tokens, with the actual
     // amount of BCH set to a minimal amount.
-    const burnAddr = "bchtest:qqqqqqqqqqqqqqqqqqqqqqqqqqqqqdmwgvnjkt8whc"
+
     //const ref = await Wormhole.RawTransactions.reference(opReturn, cashAddress)
     // Creates the
     //const ref = await Wormhole.RawTransactions.reference(opReturn, burnAddr)
 
-    const minerFee = 0.00001
-
-    // amount to send back to the sending address. It's the original amount - 1 sat/byte for tx size
-    const remainder = bchBalance - 1.0 - minerFee
 
     //opReturn.addOutput(cashAddress, remainder)
 
@@ -97,6 +156,7 @@ async function burnBch() {
       minerFee // Miner fee.
     )
 
+    */
     /*
     const tx = Wormhole.Transaction.fromHex(ref)
     tx.outs.unshift({
@@ -116,8 +176,8 @@ async function burnBch() {
     // console.log(tb);
     // tb.addOutput('qqqqqqqqqqqqqqqqqqqqqqqqqqqqqdmwgvnjkt8whc', Wormhole.BitcoinCash.toSatoshi(1));
     */
-
-    const tx = Wormhole.Transaction.fromHex(changeHex)
+    /*
+    //const tx = Wormhole.Transaction.fromHex(changeHex)
     const tb = Wormhole.Transaction.fromTransaction(tx)
 
     // amount to send back to the sending address. It's the original amount - 1 sat/byte for tx size
@@ -131,6 +191,7 @@ async function burnBch() {
     const builtTx = tb.build()
     const txHex = builtTx.toHex()
     console.log(txHex)
+    */
 
     // sendRawTransaction to running BCH node
 
