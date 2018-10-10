@@ -6,13 +6,12 @@
 // Set NETWORK to either testnet or mainnet
 const NETWORK = `testnet`
 
-const WH = require("wormhole-sdk/lib/Wormhole").default
+const WH = require("../../lib/Wormhole").default
 
 // Instantiate Wormhole based on the network.
-let Wormhole
 if (NETWORK === `mainnet`)
-  Wormhole = new WH({ restURL: `https://rest.bitcoin.com/v1/` })
-else Wormhole = new WH({ restURL: `https://trest.bitcoin.com/v1/` })
+  var Wormhole = new WH({ restURL: `https://rest.bitcoin.com/v1/` })
+else var Wormhole = new WH({ restURL: `https://trest.bitcoin.com/v1/` })
 
 // Open the wallet generated with create-wallet.
 let walletInfo
@@ -37,7 +36,7 @@ async function getBalance() {
     else var masterHDNode = Wormhole.HDNode.fromSeed(rootSeed, "testnet") // Testnet
 
     // HDNode of BIP44 account
-    const account = Wormhole.HDNode.derivePath(masterHDNode, "m/44'/145'/1'")
+    const account = Wormhole.HDNode.derivePath(masterHDNode, "m/44'/145'/0'")
 
     const change = Wormhole.HDNode.derivePath(account, "0/0")
 
