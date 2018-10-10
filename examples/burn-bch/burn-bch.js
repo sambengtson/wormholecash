@@ -126,9 +126,8 @@ async function burnBch() {
 
     // sendRawTransaction to running BCH node
     // const broadcast = await Wormhole.RawTransactions.sendRawTransaction(txHex)
-
-    console.log(`You can monitor the below transaction ID on a block explorer.`)
-    console.log(`Transaction ID: ${broadcast}`)
+    //console.log(`You can monitor the below transaction ID on a block explorer.`)
+    //console.log(`Transaction ID: ${broadcast}`)
   } catch (err) {
     console.error(err)
   }
