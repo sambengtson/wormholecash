@@ -6,10 +6,10 @@
 const NETWORK = `testnet`
 
 // Replace the address below with the address you want to send the BCH to.
-const RECV_ADDR = `bchtest:qzjtnzcvzxx7s0na88yrg3zl28wwvfp97538sgrrmr`
+const RECV_ADDR = `bchtest:qp6hgvevf4gzz6l7pgcte3gaaud9km0l459fa23dul`
 
 // The amount of BCH to send, in satoshis. 1 satoshi = 0.00000001 BCH
-const AMOUNT_TO_SEND = 10000
+const AMOUNT_TO_SEND = 68270906
 
 const WH = require("../../lib/Wormhole").default
 
@@ -54,7 +54,8 @@ async function sendBch() {
   console.log(`Receiver Legacy Address: ${RECV_ADDR_LEGACY}`)
   console.log(`Balance of recieving address ${RECV_ADDR} is ${balance2} BCH.\n`)
 
-  const utxo = await Wormhole.Address.utxo([SEND_ADDR])
+  const u = await Wormhole.Address.utxo([SEND_ADDR])
+  const utxo = findBiggestUtxo(u[0])
 
   // instance of transaction builder
   if (NETWORK === `mainnet`)
@@ -62,9 +63,10 @@ async function sendBch() {
   else var transactionBuilder = new Wormhole.TransactionBuilder("testnet")
 
   const satoshisToSend = AMOUNT_TO_SEND
-  const originalAmount = utxo[0][0].satoshis
-  const vout = utxo[0][0].vout
-  const txid = utxo[0][0].txid
+  const originalAmount = utxo.satoshis
+
+  const vout = utxo.vout
+  const txid = utxo.txid
 
   // add input with txid and index of vout
   transactionBuilder.addInput(txid, vout)
@@ -84,7 +86,10 @@ async function sendBch() {
 
   // add output w/ address and amount to send
   transactionBuilder.addOutput(RECV_ADDR, satoshisToSend)
-  transactionBuilder.addOutput(SEND_ADDR, remainder)
+  transactionBuilder.addOutput(
+    Wormhole.Address.toLegacyAddress(RECV_ADDR),
+    remainder
+  )
 
   // Generate a keypair from the change address.
   const keyPair = Wormhole.HDNode.toKeyPair(change)
@@ -144,4 +149,21 @@ async function getBCHBalance(addr, verbose) {
     console.log(`addr: ${addr}`)
     throw err
   }
+}
+
+// Returns the utxo with the biggest balance from an array of utxos.
+function findBiggestUtxo(utxos) {
+  let largestAmount = 0
+  let largestIndex = 0
+
+  for (var i = 0; i < utxos.length; i++) {
+    const thisUtxo = utxos[i]
+
+    if (thisUtxo.satoshis > largestAmount) {
+      largestAmount = thisUtxo.satoshis
+      largestIndex = i
+    }
+  }
+
+  return utxos[largestIndex]
 }
