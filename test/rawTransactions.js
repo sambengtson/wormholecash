@@ -1,10 +1,9 @@
-"use strict"
 // let fixtures = require('./fixtures/PayloadCreation.json')
 const chai = require("chai")
 const assert = require("assert")
 const wh = require("./../lib/Wormhole").default
 const Wormhole = new wh({
-  restURL: "https://rest.bitcoin.com/v1/"
+  restURL: "https://trest.bitcoin.com/v1/"
 })
 
 describe("#RawTransactions", () => {
@@ -172,7 +171,7 @@ describe("#RawTransactions", () => {
         assert.equal(create, "txid must be hexadecimal string (not 'myid')")
       } catch (error) {}
     })
-
+    /*
     it(`should fail`, async () => {
       try {
         const create = await Wormhole.RawTransactions.create("fail", {})
@@ -181,5 +180,6 @@ describe("#RawTransactions", () => {
         assert.equal(error.message, "Expected type array, got string")
       }
     })
+    */
   })
 })

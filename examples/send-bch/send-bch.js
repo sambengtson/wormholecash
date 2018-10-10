@@ -6,17 +6,18 @@
 const NETWORK = `testnet`
 
 // Replace the address below with the address you want to send the BCH to.
-const RECV_ADDR = `bchtest:qp6hgvevf4gzz6l7pgcte3gaaud9km0l459fa23dul`
+const RECV_ADDR = `bchtest:qq7cfllv3r32rkvd9qfaejwz78spfxp6qyflftn6x8`
 
 // The amount of BCH to send, in satoshis. 1 satoshi = 0.00000001 BCH
-const AMOUNT_TO_SEND = 1000
+const AMOUNT_TO_SEND = 100100000
 
 const WH = require("wormhole-sdk/lib/Wormhole").default
 
 // Instantiate Wormhole based on the network.
+let Wormhole
 if (NETWORK === `mainnet`)
-  var Wormhole = new WH({ restURL: `https://rest.bitcoin.com/v1/` })
-else var Wormhole = new WH({ restURL: `https://trest.bitcoin.com/v1/` })
+  Wormhole = new WH({ restURL: `https://rest.bitcoin.com/v1/` })
+else Wormhole = new WH({ restURL: `https://trest.bitcoin.com/v1/` })
 
 // Open the wallet generated with create-wallet.
 let walletInfo
@@ -29,8 +30,10 @@ try {
   process.exit(0)
 }
 
-const SEND_ADDR = walletInfo.cashAddress
 const SEND_MNEMONIC = walletInfo.mnemonic
+// Generate a change address from a Mnemonic of a private key.
+const change = changeAddrFromMnemonic(SEND_MNEMONIC)
+const SEND_ADDR = Wormhole.HDNode.toCashAddress(change)
 
 async function sendBch() {
   const balance = await getBCHBalance(SEND_ADDR, false)
@@ -50,17 +53,18 @@ async function sendBch() {
   const balance2 = await getBCHBalance(RECV_ADDR, false)
   console.log(`Balance of recieving address ${RECV_ADDR} is ${balance2} BCH.`)
 
-  const utxo = await Wormhole.Address.utxo(SEND_ADDR)
+  const utxo = await Wormhole.Address.utxo([SEND_ADDR])
 
   // instance of transaction builder
+  let transactionBuilder
   if (NETWORK === `mainnet`)
-    var transactionBuilder = new Wormhole.TransactionBuilder()
-  else var transactionBuilder = new Wormhole.TransactionBuilder("testnet")
+    transactionBuilder = new Wormhole.TransactionBuilder()
+  else transactionBuilder = new Wormhole.TransactionBuilder("testnet")
 
   const satoshisToSend = AMOUNT_TO_SEND
-  const originalAmount = utxo[0].satoshis
-  const vout = utxo[0].vout
-  const txid = utxo[0].txid
+  const originalAmount = utxo[0][0].satoshis
+  const vout = utxo[0][0].vout
+  const txid = utxo[0][0].txid
 
   // add input with txid and index of vout
   transactionBuilder.addInput(txid, vout)
@@ -82,9 +86,6 @@ async function sendBch() {
   transactionBuilder.addOutput(RECV_ADDR, satoshisToSend)
   transactionBuilder.addOutput(SEND_ADDR, remainder)
 
-  // Generate a change address from a Mnemonic of a private key.
-  const change = changeAddrFromMnemonic(SEND_MNEMONIC)
-
   // Generate a keypair from the change address.
   const keyPair = Wormhole.HDNode.toKeyPair(change)
 
@@ -102,8 +103,8 @@ async function sendBch() {
   const tx = transactionBuilder.build()
   // output rawhex
   const hex = tx.toHex()
-  //console.log(`Transaction raw hex: `);
-  //console.log(`${hex}`);
+  console.log(`Transaction raw hex: `)
+  console.log(hex)
 
   // sendRawTransaction to running BCH node
   const broadcast = await Wormhole.RawTransactions.sendRawTransaction(hex)

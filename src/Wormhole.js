@@ -1,10 +1,10 @@
-const BITBOXCli = require("bitbox-cli/lib/bitbox-cli").default
+const BITBOXSDK = require("bitbox-sdk/lib/bitbox-sdk").default
 import DataRetrieval from "./DataRetrieval"
 import PayloadCreation from "./PayloadCreation"
 import RawTransactions from "./RawTransactions"
 import ERC20 from "./ERC20"
 
-class Wormhole extends BITBOXCli {
+class Wormhole extends BITBOXSDK {
   constructor(config) {
     super(config)
     if (config && config.restURL && config.restURL !== "")

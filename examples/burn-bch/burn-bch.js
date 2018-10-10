@@ -19,6 +19,7 @@ if (NETWORK === `mainnet`)
   var Wormhole = new WH({ restURL: `https://rest.bitcoin.com/v1/` })
 else var Wormhole = new WH({ restURL: `https://trest.bitcoin.com/v1/` })
 
+
 // Open the wallet generated with create-wallet.
 let walletInfo
 try {
@@ -47,17 +48,26 @@ async function burnBch() {
     const rootSeed = Wormhole.Mnemonic.toSeed(mnemonic)
 
     // master HDNode
-    let masterHDNode
-    if (NETWORK === `mainnet`) masterHDNode = Wormhole.HDNode.fromSeed(rootSeed)
-    else masterHDNode = Wormhole.HDNode.fromSeed(rootSeed, "testnet") // Testnet
+    if (NETWORK === `mainnet`)
+      var masterHDNode = Wormhole.HDNode.fromSeed(rootSeed)
+    else var masterHDNode = Wormhole.HDNode.fromSeed(rootSeed, "testnet") // Testnet
 
     // HDNode of BIP44 account
-    const account = Wormhole.HDNode.derivePath(masterHDNode, "m/44'/145'/0'")
+    const account = Wormhole.HDNode.derivePath(masterHDNode, "m/44'/145'/1'")
 
     const change = Wormhole.HDNode.derivePath(account, "0/0")
 
     // get the cash address
     const cashAddress = Wormhole.HDNode.toCashAddress(change)
+
+    // Exit if the user does not have 1.0 BCH to burn.
+    const bchBalance = await getBCHBalance(cashAddress, false)
+    if (bchBalance < 1.0) {
+      console.log(
+        `Wallet has a balance of ${bchBalance} which is less than the 1 BCH requirement to burn. Exiting.`
+      )
+      process.exit(0)
+    }
 
     const burnBCH = await Wormhole.PayloadCreation.burnBCH()
 
@@ -75,8 +85,8 @@ async function burnBch() {
     // Set the destination/recieving address for the tokens, with the actual
     // amount of BCH set to a minimal amount.
     const burnAddr = "bchtest:qqqqqqqqqqqqqqqqqqqqqqqqqqqqqdmwgvnjkt8whc"
-    const ref = await Wormhole.RawTransactions.reference(opReturn, cashAddress)
     //const ref = await Wormhole.RawTransactions.reference(opReturn, cashAddress)
+    const ref = await Wormhole.RawTransactions.reference(opReturn, burnAddr)
 
     const minerFee = 0.000005
 
@@ -125,6 +135,7 @@ async function burnBch() {
     console.log(txHex)
 
     // sendRawTransaction to running BCH node
+
     // const broadcast = await Wormhole.RawTransactions.sendRawTransaction(txHex)
     //console.log(`You can monitor the below transaction ID on a block explorer.`)
     //console.log(`Transaction ID: ${broadcast}`)

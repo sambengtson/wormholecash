@@ -1,9 +1,9 @@
-let BITBOXCli = require("bitbox-cli/lib/bitbox-cli").default;
+let BITBOXSDK = require("bitbox-sdk/lib/bitbox-sdk").default;
 const DataRetrieval = require("./DataRetrieval");
 const PayloadCreation = require("./PayloadCreation");
 const RawTransactions = require("./RawTransactions");
 
-class Wormhole extends BITBOXCli {
+class Wormhole extends BITBOXSDK {
   constructor(config) {
     super(config);
     if (config && config.restURL && config.restURL !== "") {

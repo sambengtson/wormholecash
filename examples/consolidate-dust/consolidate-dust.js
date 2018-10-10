@@ -10,8 +10,8 @@ const Wormhole = new WH({
   restURL: `https://rest.bitcoin.com/v1/`
 })
 
-const BITBOXCli = require("bitbox-cli/lib/bitbox-cli").default
-const BITBOX = new BITBOXCli({ restURL: "https://trest.bitcoin.com/v1/" })
+const BITBOXSDK = require("bitbox-sdk/lib/bitbox-sdk").default
+const BITBOX = new BITBOXSDK({ restURL: "https://trest.bitcoin.com/v1/" })
 
 // Open the wallet generated with create-wallet.
 let walletInfo
