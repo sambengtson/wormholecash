@@ -6,10 +6,10 @@
 const NETWORK = `testnet`
 
 // Replace the address below with the address you want to send the BCH to.
-const RECV_ADDR = `bchtest:qp6hgvevf4gzz6l7pgcte3gaaud9km0l459fa23dul`
+const RECV_ADDR = ``
 
 // The amount of BCH to send, in satoshis. 1 satoshi = 0.00000001 BCH
-const AMOUNT_TO_SEND = 68270906
+const AMOUNT_TO_SEND = 50701489
 
 const WH = require("../../lib/Wormhole").default
 
@@ -56,6 +56,7 @@ async function sendBch() {
 
   const u = await Wormhole.Address.utxo([SEND_ADDR])
   const utxo = findBiggestUtxo(u[0])
+  //console.log(`utxo: ${JSON.stringify(utxo, null, 2)}`)
 
   // instance of transaction builder
   if (NETWORK === `mainnet`)
@@ -109,7 +110,7 @@ async function sendBch() {
   // output rawhex
   const hex = tx.toHex()
   console.log(`Transaction raw hex: `)
-  console.log(hex)
+  //console.log(hex)
 
   // sendRawTransaction to running BCH node
   const broadcast = await Wormhole.RawTransactions.sendRawTransaction(hex)
