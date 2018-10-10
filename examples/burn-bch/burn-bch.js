@@ -46,15 +46,13 @@ async function burnBch() {
 
     // Exit if the user does not have 1.0 BCH to burn.
     const bchBalance = await getBCHBalance(cashAddress, false)
+    console.log(`bchBalance: ${bchBalance}`)
     if (bchBalance < 1.0) {
       console.log(
         `Wallet has a balance of ${bchBalance} which is less than the 1 BCH requirement to burn. Exiting.`
       )
       process.exit(0)
     }
-
-    // Get the Wormohle burnBCH payload.
-    const burnBCH = await Wormhole.PayloadCreation.burnBCH()
 
     // Get a utxo to use for this transaction.
     const u = await Wormhole.Address.utxo([cashAddress])
@@ -82,16 +80,8 @@ async function burnBch() {
       `remainder: ${remainder} satoshis - will be sent back to orginating address.`
     )
 
-    // Generate the op_return code for Wormhole.
-    const opReturn = Wormhole.Script.encode([
-      Wormhole.Script.opcodes.OP_RETURN,
-      //burnBCH
-      `6a080877686300000044`
-    ])
-
     // add outputs w/ address and amount to send
     transactionBuilder.addOutput(burnAddr, satoshisToBurn)
-    transactionBuilder.addOutput(opReturn, 0) // Op_return for WH
     transactionBuilder.addOutput(cashAddress, remainder)
 
     // Generate a keypair from the change address.
@@ -110,8 +100,22 @@ async function burnBch() {
     // build tx
     const tx = transactionBuilder.build()
     const hex = tx.toHex()
-    console.log(hex)
 
+    // Get the burnBCH OP_RETURN payload.
+    const payload = await Wormhole.PayloadCreation.burnBCH()
+
+    // Modify the raw TX hex to add the WH OP_RETURN.
+    const opReturn3 = await Wormhole.RawTransactions.opReturn(hex, payload)
+
+    console.log(`
+You can review the output script for errors by replacing <tx-hex> with the TX
+hex at this URL:
+https://trest.bitcoin.com/v1/rawtransactions/decodeRawTransaction/<tx-hex>
+
+      `)
+    console.log(`TX Hex: ${opReturn3}`)
+
+    // COMMENT OUT THESE LINES TO ACTUALLY BURN A TOKEN
     //const broadcast = await Wormhole.RawTransactions.sendRawTransaction(hex)
     //console.log(`You can monitor the below transaction ID on a block explorer.`)
     //console.log(`Transaction ID: ${broadcast}`)
