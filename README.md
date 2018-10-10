@@ -12,6 +12,8 @@ Learn more about Wormhole SDK here:
 
 - [Wormhole tokens overview](https://developer.bitcoin.com/wormhole)
 
+- [Wormohle Token Tutorial](https://developer.bitcoin.com/tutorials/wormhole-3-tokens/)
+
 - [Wormhole API documentation](https://developer.bitcoin.com/wormhole/docs/getting-started)
 
 - [Wormhole Full Node GitHub Repo](https://github.com/copernet/wormhole)
