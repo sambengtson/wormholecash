@@ -19,7 +19,6 @@ if (NETWORK === `mainnet`)
   var Wormhole = new WH({ restURL: `https://rest.bitcoin.com/v1/` })
 else var Wormhole = new WH({ restURL: `https://trest.bitcoin.com/v1/` })
 
-
 // Open the wallet generated with create-wallet.
 let walletInfo
 try {
@@ -34,7 +33,7 @@ try {
 async function burnBch() {
   try {
     // Exit if the user does not have 1.0 BCH to burn.
-    const bchBalance = await getBCHBalance(walletInfo.cashAddress, false)
+    //const bchBalance = await getBCHBalance(walletInfo.cashAddress, false)
     if (bchBalance < 1.0) {
       console.log(
         `Wallet has a balance of ${bchBalance} which is less than the 1 BCH requirement to burn. Exiting.`
