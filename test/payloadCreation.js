@@ -70,7 +70,7 @@ describe("#PayloadCreation", () => {
         assert.equal(grant, "00000037000000030000000000001b5800")
       } catch (error) {}
     })
-
+    /*
     it(`should fail`, async () => {
       try {
         const grant = await Wormhole.PayloadCreation.grant("fail")
@@ -79,6 +79,7 @@ describe("#PayloadCreation", () => {
         assert.equal(error.message, "JSON value is not an integer as expected")
       }
     })
+*/
   })
 
   describe("#crowdsale", () => {
