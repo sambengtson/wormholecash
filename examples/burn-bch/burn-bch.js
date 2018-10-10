@@ -85,7 +85,8 @@ async function burnBch() {
     // Generate the op_return code for Wormhole.
     const opReturn = Wormhole.Script.encode([
       Wormhole.Script.opcodes.OP_RETURN,
-      burnBCH
+      //burnBCH
+      `6a080877686300000044`
     ])
 
     // add outputs w/ address and amount to send
@@ -109,11 +110,11 @@ async function burnBch() {
     // build tx
     const tx = transactionBuilder.build()
     const hex = tx.toHex()
-    //console.log(hex)
+    console.log(hex)
 
-    const broadcast = await Wormhole.RawTransactions.sendRawTransaction(hex)
-    console.log(`You can monitor the below transaction ID on a block explorer.`)
-    console.log(`Transaction ID: ${broadcast}`)
+    //const broadcast = await Wormhole.RawTransactions.sendRawTransaction(hex)
+    //console.log(`You can monitor the below transaction ID on a block explorer.`)
+    //console.log(`Transaction ID: ${broadcast}`)
   } catch (err) {
     console.error(err)
   }
