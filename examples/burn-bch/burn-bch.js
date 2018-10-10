@@ -2,23 +2,15 @@
   Burn 1 BCH to generate 100 WHC used for creating new tokens.
 */
 
-// Used for debugging.
-const util = require("util")
-util.inspect.defaultOptions = {
-  showHidden: true,
-  colors: true
-}
-
 // Set NETWORK to either testnet or mainnet
 const NETWORK = `testnet`
 
 const WH = require("../../lib/Wormhole").default
 
 // Instantiate Wormhole based on the network.
-let Wormhole
 if (NETWORK === `mainnet`)
-  Wormhole = new WH({ restURL: `https://rest.bitcoin.com/v1/` })
-else Wormhole = new WH({ restURL: `https://trest.bitcoin.com/v1/` })
+  var Wormhole = new WH({ restURL: `https://rest.bitcoin.com/v1/` })
+else var Wormhole = new WH({ restURL: `https://trest.bitcoin.com/v1/` })
 
 // Open the wallet generated with create-wallet.
 let walletInfo
@@ -44,15 +36,17 @@ async function burnBch() {
     else var masterHDNode = Wormhole.HDNode.fromSeed(rootSeed, "testnet") // Testnet
 
     // HDNode of BIP44 account
-    const account = Wormhole.HDNode.derivePath(masterHDNode, "m/44'/145'/1'")
+    const account = Wormhole.HDNode.derivePath(masterHDNode, "m/44'/145'/0'")
 
+    // Generate the first change address.
     const change = Wormhole.HDNode.derivePath(account, "0/0")
 
-    // get the cash address
+    // get the cash address from the change address.
     const cashAddress = Wormhole.HDNode.toCashAddress(change)
 
     // Exit if the user does not have 1.0 BCH to burn.
     const bchBalance = await getBCHBalance(cashAddress, false)
+    console.log(`bchBalance: ${bchBalance}`)
     if (bchBalance < 1.0) {
       console.log(
         `Wallet has a balance of ${bchBalance} which is less than the 1 BCH requirement to burn. Exiting.`
@@ -60,76 +54,71 @@ async function burnBch() {
       process.exit(0)
     }
 
-    const burnBCH = await Wormhole.PayloadCreation.burnBCH()
-
     // Get a utxo to use for this transaction.
     const u = await Wormhole.Address.utxo([cashAddress])
     const utxo = findBiggestUtxo(u[0])
 
-    // Create a rawTx using the largest utxo in the wallet.
-    utxo.value = utxo.amount
-    const rawTx = await Wormhole.RawTransactions.create([utxo], {})
+    // Instatiate the transaction builder
+    if (NETWORK === `mainnet`)
+      var transactionBuilder = new Wormhole.TransactionBuilder()
+    else var transactionBuilder = new Wormhole.TransactionBuilder("testnet")
 
-    // Add the token information as an op-return code to the tx.
-    const opReturn = await Wormhole.RawTransactions.opReturn(rawTx, burnBCH)
+    // Create the input part of the transaction.
+    const vout = utxo.vout
+    const txid = utxo.txid
+    transactionBuilder.addInput(txid, vout)
 
-    // Set the destination/recieving address for the tokens, with the actual
-    // amount of BCH set to a minimal amount.
+    // Constant values to be used in creating the output of the TX.
+    const satoshiBalance = utxo.satoshis
+    const satoshisToBurn = 100000000
+    const minerFee = 1000 // This could be more refined than a hard value.
     const burnAddr = "bchtest:qqqqqqqqqqqqqqqqqqqqqqqqqqqqqdmwgvnjkt8whc"
-    const ref = await Wormhole.RawTransactions.reference(opReturn, burnAddr)
-    //const ref = await Wormhole.RawTransactions.reference(opReturn, cashAddress)
 
-    const minerFee = 0.000005
-
-    // Generate a change output .
-    const changeHex = await Wormhole.RawTransactions.change(
-      ref, // Raw transaction we're working with.
-      [utxo], // Previous utxo
-      burnAddr, // Destination address.
-      //cashAddress,
-      minerFee // Miner fee.
+    // Remainder amount to send back to the sending address.
+    const remainder = satoshiBalance - satoshisToBurn - minerFee
+    console.log(
+      `remainder: ${remainder} satoshis - will be sent back to orginating address.`
     )
 
-    /*
-    const tx = Wormhole.Transaction.fromHex(ref)
-    tx.outs.unshift({
-      value: 199990000,
-      script: Buffer.from(
-        "76a9140000000000000000000000000000000000376e4388ac",
-        "hex"
-      )
-    })
-    const buf = Wormhole.Script.pubKey.output.encode(
-      Buffer.from("bchtest:", "hex")
-    )
+    // add outputs w/ address and amount to send
+    transactionBuilder.addOutput(burnAddr, satoshisToBurn)
+    transactionBuilder.addOutput(cashAddress, remainder)
 
-    console.log(tx.outs)
-    const tb = Wormhole.Transaction.fromTransaction(tx)
-    // let ca = "mfWxJ45yp2SFn7UciZyNpvDKu6S3TYMHMR";
-    // console.log(tb);
-    // tb.addOutput('qqqqqqqqqqqqqqqqqqqqqqqqqqqqqdmwgvnjkt8whc', Wormhole.BitcoinCash.toSatoshi(1));
-    */
-
-    const tx = Wormhole.Transaction.fromHex(changeHex)
-    const tb = Wormhole.Transaction.fromTransaction(tx)
-
-    // amount to send back to the sending address. It's the original amount - 1 sat/byte for tx size
-    //const remainder = bchBalance - 1.0 - minerFee
-    //tb.addOutput(walletInfo.cashAddress, remainder)
-
-    // Finalize and sign transaction.
+    // Generate a keypair from the change address.
     const keyPair = Wormhole.HDNode.toKeyPair(change)
+
+    // Sign the transaction with the HD node.
     let redeemScript
-    tb.sign(0, keyPair, redeemScript, 0x01, utxo.satoshis)
-    const builtTx = tb.build()
-    const txHex = builtTx.toHex()
-    console.log(txHex)
+    transactionBuilder.sign(
+      0,
+      keyPair,
+      redeemScript,
+      transactionBuilder.hashTypes.SIGHASH_ALL,
+      satoshiBalance
+    )
 
-    // sendRawTransaction to running BCH node
-    const broadcast = await Wormhole.RawTransactions.sendRawTransaction(txHex)
+    // build tx
+    const tx = transactionBuilder.build()
+    const hex = tx.toHex()
 
-    console.log(`You can monitor the below transaction ID on a block explorer.`)
-    console.log(`Transaction ID: ${broadcast}`)
+    // Get the burnBCH OP_RETURN payload.
+    const payload = await Wormhole.PayloadCreation.burnBCH()
+
+    // Modify the raw TX hex to add the WH OP_RETURN.
+    const opReturn3 = await Wormhole.RawTransactions.opReturn(hex, payload)
+
+    console.log(`
+You can review the output script for errors by replacing <tx-hex> with the TX
+hex at this URL:
+https://trest.bitcoin.com/v1/rawtransactions/decodeRawTransaction/<tx-hex>
+
+      `)
+    console.log(`TX Hex: ${opReturn3}`)
+
+    // COMMENT OUT THESE LINES TO ACTUALLY BURN A TOKEN
+    //const broadcast = await Wormhole.RawTransactions.sendRawTransaction(hex)
+    //console.log(`You can monitor the below transaction ID on a block explorer.`)
+    //console.log(`Transaction ID: ${broadcast}`)
   } catch (err) {
     console.error(err)
   }

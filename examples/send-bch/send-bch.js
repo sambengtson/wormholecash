@@ -6,12 +6,12 @@
 const NETWORK = `testnet`
 
 // Replace the address below with the address you want to send the BCH to.
-const RECV_ADDR = `bchtest:qq7cfllv3r32rkvd9qfaejwz78spfxp6qyflftn6x8`
+const RECV_ADDR = `bchtest:qzjtnzcvzxx7s0na88yrg3zl28wwvfp97538sgrrmr`
 
 // The amount of BCH to send, in satoshis. 1 satoshi = 0.00000001 BCH
-const AMOUNT_TO_SEND = 100100000
+const AMOUNT_TO_SEND = 10000
 
-const WH = require("wormhole-sdk/lib/Wormhole").default
+const WH = require("../../lib/Wormhole").default
 
 // Instantiate Wormhole based on the network.
 let Wormhole
@@ -36,8 +36,12 @@ const change = changeAddrFromMnemonic(SEND_MNEMONIC)
 const SEND_ADDR = Wormhole.HDNode.toCashAddress(change)
 
 async function sendBch() {
+  const SEND_ADDR_LEGACY = Wormhole.Address.toLegacyAddress(SEND_ADDR)
+  const RECV_ADDR_LEGACY = Wormhole.Address.toLegacyAddress(RECV_ADDR)
+
   const balance = await getBCHBalance(SEND_ADDR, false)
-  console.log(`balance: ${JSON.stringify(balance, null, 2)}`)
+  console.log(`Send Address: ${SEND_ADDR}`)
+  console.log(`Sender Legacy Address: ${SEND_ADDR_LEGACY}`)
   console.log(`Balance of sending address ${SEND_ADDR} is ${balance} BCH.`)
 
   if (balance <= 0.0) {
@@ -45,21 +49,17 @@ async function sendBch() {
     process.exit(0)
   }
 
-  const SEND_ADDR_LEGACY = Wormhole.Address.toLegacyAddress(SEND_ADDR)
-  const RECV_ADDR_LEGACY = Wormhole.Address.toLegacyAddress(RECV_ADDR)
-  console.log(`Sender Legacy Address: ${SEND_ADDR_LEGACY}`)
-  console.log(`Receiver Legacy Address: ${RECV_ADDR_LEGACY}`)
-
   const balance2 = await getBCHBalance(RECV_ADDR, false)
-  console.log(`Balance of recieving address ${RECV_ADDR} is ${balance2} BCH.`)
+  console.log(`\nReceiver Address: ${RECV_ADDR}`)
+  console.log(`Receiver Legacy Address: ${RECV_ADDR_LEGACY}`)
+  console.log(`Balance of recieving address ${RECV_ADDR} is ${balance2} BCH.\n`)
 
   const utxo = await Wormhole.Address.utxo([SEND_ADDR])
 
   // instance of transaction builder
-  let transactionBuilder
   if (NETWORK === `mainnet`)
-    transactionBuilder = new Wormhole.TransactionBuilder()
-  else transactionBuilder = new Wormhole.TransactionBuilder("testnet")
+    var transactionBuilder = new Wormhole.TransactionBuilder()
+  else var transactionBuilder = new Wormhole.TransactionBuilder("testnet")
 
   const satoshisToSend = AMOUNT_TO_SEND
   const originalAmount = utxo[0][0].satoshis
@@ -77,7 +77,7 @@ async function sendBch() {
   console.log(`byteCount: ${byteCount}`)
   const satoshisPerByte = 1.1
   const txFee = Math.floor(satoshisPerByte * byteCount)
-  console.log(`txFee: ${txFee}`)
+  console.log(`txFee: ${txFee} satoshis\n`)
 
   // amount to send back to the sending address. It's the original amount - 1 sat/byte for tx size
   const remainder = originalAmount - satoshisToSend - txFee
