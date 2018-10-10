@@ -37,7 +37,7 @@ async function getBalance() {
     else var masterHDNode = Wormhole.HDNode.fromSeed(rootSeed, "testnet") // Testnet
 
     // HDNode of BIP44 account
-    const account = Wormhole.HDNode.derivePath(masterHDNode, "m/44'/145'/1'")
+    const account = Wormhole.HDNode.derivePath(masterHDNode, "m/44'/145'/0'")
 
     const change = Wormhole.HDNode.derivePath(account, "0/0")
 
