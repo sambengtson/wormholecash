@@ -171,7 +171,7 @@ describe("#RawTransactions", () => {
         assert.equal(create, "txid must be hexadecimal string (not 'myid')")
       } catch (error) {}
     })
-
+    /*
     it(`should fail`, async () => {
       try {
         const create = await Wormhole.RawTransactions.create("fail", {})
@@ -180,5 +180,6 @@ describe("#RawTransactions", () => {
         assert.equal(error.message, "Expected type array, got string")
       }
     })
+    */
   })
 })
