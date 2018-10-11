@@ -169,17 +169,29 @@ function findBiggestUtxo(utxos) {
   return utxos[largestIndex]
 }
 
+// Wait until the TX shows at least 1 confirmation.
 async function waitFor1Conf(txid) {
-  const txInfo = await getTxInfo(txid)
+  const PERIOD = 10000 // time in milliseconds
 
-  console.log(`txInfo: ${util.inspect(txInfo)}`)
+  let confirms = 0
+
+  while (confirms < 1) {
+    console.log(`Checking for confirmation...`)
+
+    const txInfo = await getTxInfo(txid)
+    //console.log(`txInfo: ${util.inspect(txInfo)}`)
+
+    confirms = txInfo.confirmations
+
+    // Wait and check again.
+    await sleep(PERIOD)
+  }
 }
 
 // Get Token info from the TX.
 async function getTxInfo(txid) {
   const retVal = await Wormhole.DataRetrieval.transaction(txid)
-
-  //console.log(`Info from TXID ${TXID}: ${JSON.stringify(retVal, null, 2)}`)
+  //console.log(`Info from TXID ${txid}: ${JSON.stringify(retVal, null, 2)}`)
   return retVal
 }
 

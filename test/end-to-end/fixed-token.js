@@ -53,6 +53,7 @@ async function fixedTokenTest() {
 
     // Wait for 1-conf
     await lib.waitFor1Conf(txid)
+    console.log(`1 confirmation detected.`)
 
     // Send tokens to wallet 2.
     // Wait for 1-conf
