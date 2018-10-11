@@ -13,7 +13,7 @@ const NETWORK = `testnet`
 const WALLET1 = `./wallet1.json`
 const WALLET2 = `./wallet2.json`
 
-const WH = require("wormhole-sdk/lib/Wormhole").default
+const WH = require("../../lib/Wormhole").default
 
 // Inspect utility used for debugging.
 const util = require("util")
@@ -49,6 +49,11 @@ async function fixedTokenTest() {
 
     // Verify wallet has at least 10000 satoshis
     const BCHBalance = wallet1.bchBalance
+    //console.log(`BCHBalance: ${JSON.stringify(BCHBalance, null, 2)}`)
+    if (BCHBalance.balanceSat < 10000) {
+      console.log(`Wallet 1 contains less than 10,000 satoshis. Exiting.`)
+      process.exit(0)
+    }
 
     // Create token
     // Wait for 1-conf
