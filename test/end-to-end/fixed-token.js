@@ -7,13 +7,10 @@
   by the create-wallet example app.
 */
 
-// Set NETWORK to either testnet or mainnet
-const NETWORK = `testnet`
-
 const WALLET1 = `./wallet1.json`
 const WALLET2 = `./wallet2.json`
 
-const WH = require("../../lib/Wormhole").default
+const lib = require("./util.js") // Support library.
 
 // Inspect utility used for debugging.
 const util = require("util")
@@ -23,17 +20,11 @@ util.inspect.defaultOptions = {
   depth: 1
 }
 
-// Instantiate Wormhole based on the network.
-if (NETWORK === `mainnet`)
-  var Wormhole = new WH({ restURL: `https://rest.bitcoin.com/v1/` })
-//else var Wormhole = new WH({ restURL: `https://trest.bitcoin.com/v1/` })
-else var Wormhole = new WH({ restURL: `https://trest.bitcoin.com/v1/` })
-
 // The main test function.
 async function fixedTokenTest() {
   try {
     // Open wallet 1.
-    const wallet1 = await openWallet(WALLET1)
+    const wallet1 = await lib.openWallet(WALLET1)
     console.log(`wallet1: ${JSON.stringify(wallet1, null, 2)}`)
 
     // Verify wallet has 1 WHC
@@ -56,7 +47,13 @@ async function fixedTokenTest() {
     }
 
     // Create token
+    //const txid = await lib.createFixedToken()
+    const txid = `3b2e9747767cf3d0070ceaffbd60ae40f1cd46f04c8dac3617659073f324f19d`
+    console.log(`txid: ${txid}`)
+
     // Wait for 1-conf
+    await lib.waitFor1Conf(txid)
+
     // Send tokens to wallet 2.
     // Wait for 1-conf
     // Verify wallet 2 has tokens.
@@ -65,46 +62,3 @@ async function fixedTokenTest() {
   }
 }
 fixedTokenTest()
-
-// Open a wallet and return an object with its address, BCH balance, and WHC
-// token balance.
-async function openWallet(filename) {
-  try {
-    walletInfo = require(filename)
-
-    const walletBalance = await getBalance(walletInfo)
-
-    return walletBalance
-  } catch (err) {
-    console.log(
-      `Could not open ${filename}. Generate a wallet with create-wallet first.`
-    )
-    process.exit(0)
-  }
-}
-
-// Get the balance for an opened wallet.
-async function getBalance(walletInfo) {
-  try {
-    // first get BCH balance
-    const balance = await Wormhole.Address.details([walletInfo.cashAddress])
-
-    walletInfo.bchBalance = balance[0]
-
-    // get token balances
-    try {
-      const tokens = await Wormhole.DataRetrieval.balancesForAddress(
-        walletInfo.cashAddress
-      )
-
-      walletInfo.tokenBalance = tokens
-
-      return walletInfo
-    } catch (error) {
-      if (error.message === "Address not found") console.log(`No tokens found.`)
-    }
-  } catch (err) {
-    console.error(`Error in getBalance()`)
-    throw err
-  }
-}

@@ -6,9 +6,9 @@
 const NETWORK = `testnet`
 
 // The TXID to check.
-const TXID = "36200e48c894043ccbe343d8dee7b417b149189a46b0c7a622f6a2ccd4054d69"
+const TXID = "3b2e9747767cf3d0070ceaffbd60ae40f1cd46f04c8dac3617659073f324f19d"
 
-const WH = require("wormhole-sdk/lib/Wormhole").default
+const WH = require("../../../lib/Wormhole").default
 
 // Instantiate Wormhole based on the network.
 if (NETWORK === `mainnet`)
