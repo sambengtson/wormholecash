@@ -2,7 +2,7 @@
   This is an end-to-end test which verified the happy-path of creating and
   sending a fixed token.
 
-  This program expects two wallets. Wallet 1 must have at least 1WHC and 10,0000
+  This program expects two wallets. Wallet 1 must have at least 1 WHC and 10,0000
   satoshis. Wallet 2 is the recieving wallet. These are wallet.json files generated
   by the create-wallet example app.
 */
@@ -51,9 +51,9 @@ async function fixedTokenTest() {
     }
 
     // Create token
-    //const txid = await lib.createFixedToken()
-    const createTxid = `3b2e9747767cf3d0070ceaffbd60ae40f1cd46f04c8dac3617659073f324f19d`
-    console.log(`txid: ${createTxid}`)
+    //const createTxid = await lib.createFixedToken(wallet1)
+    const createTxid = `af1c19345739139fff1bc0c1070aa45e0e720f018eb8aa327efbe0b09c14428d`
+    console.log(`\nNew Fixed-supply token created. txid: ${createTxid}`)
 
     // Wait for 1-conf
     const propertyId = await lib.waitFor1Conf(createTxid)
@@ -63,14 +63,33 @@ async function fixedTokenTest() {
 
     // Send tokens to wallet 2.
     const sendTxid = await lib.sendTokens(wallet1, wallet2, propertyId)
+    console.log(`TXID: ${sendTxid}`)
 
     // Wait for 1-conf
     await lib.waitFor1Conf(sendTxid)
     console.log(`1 confirmation detected.`)
 
-    // Verify wallet 2 has tokens.
+    // Get the new balance of wallet 2.
     const newBalance = await lib.getBalance(wallet2)
+    // console.log(`newBalance: ${JSON.stringify(newBalance, null, 2)}`)
+
+    // Verify wallet 2 has the new tokens.
+    let tokenBalance = newBalance.tokenBalance.find(
+      token => Number(token.propertyid) === Number(propertyId)
+    )
+    console.log(`tokenBalance first blush: ${util.inspect(tokenBalance)}`)
+    tokenBalance = Number(tokenBalance)
+
+    // Assert that tokens exist and are a specific amount.
+    if (tokenBalance === 345) {
+      console.log(`Test passed! Congradulations`)
+      return
+    }
+
+    // Test failed.
+    console.log(`Hmm... Something went wrong.`)
     console.log(`newBalance: ${JSON.stringify(newBalance, null, 2)}`)
+    console.log(`tokenBalance: ${util.inspect(tokenBalance)}`)
   } catch (err) {
     console.log(`Error in fixedTokenTest: `, err)
   }

@@ -76,7 +76,7 @@ async function getBalance(walletInfo) {
 }
 
 // Create a fixed token.
-async function createFixedToken() {
+async function createFixedToken(walletInfo) {
   try {
     const mnemonic = walletInfo.mnemonic
 

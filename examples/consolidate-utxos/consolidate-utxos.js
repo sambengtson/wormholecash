@@ -122,7 +122,7 @@ https://trest.bitcoin.com/v1/rawtransactions/decodeRawTransaction/<tx-hex>
 
     // sendRawTransaction to running BCH node
     const broadcast = await Wormhole.RawTransactions.sendRawTransaction(hex)
-    console.log(`Transaction ID: ${broadcast}`)
+    console.log(`\nTransaction ID: ${broadcast}`)
   } catch (err) {
     console.log(err)
   }
