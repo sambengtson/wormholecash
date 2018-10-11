@@ -60,17 +60,19 @@ async function consolidateDust() {
     const u = await Wormhole.Address.utxo([cashAddress])
     const inputs = []
     let originalAmount = 0
-    //let i = 0
-    u[0].forEach(utxo => {
-      //console.log(`utxo[${i}]: ${util.inspect(utxo)}`)
-      //i++
+
+    for (let i = 0; i < u[0].length; i++) {
+      // REST API only supports 20 UTXOs at a time.
+      if (i > 20) break
+
+      const utxo = u[0][i]
 
       originalAmount = originalAmount + utxo.satoshis
 
       inputs.push(utxo)
 
       transactionBuilder.addInput(utxo.txid, utxo.vout)
-    })
+    }
 
     // original amount of satoshis in vin
     //const originalAmount = inputs.length * dust

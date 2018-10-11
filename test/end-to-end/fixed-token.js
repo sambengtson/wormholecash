@@ -25,7 +25,11 @@ async function fixedTokenTest() {
   try {
     // Open wallet 1.
     const wallet1 = await lib.openWallet(WALLET1)
-    console.log(`wallet1: ${JSON.stringify(wallet1, null, 2)}`)
+    //console.log(`wallet1: ${JSON.stringify(wallet1, null, 2)}`)
+
+    // Open wallet 2
+    const wallet2 = await lib.openWallet(WALLET2)
+    //console.log(`wallet2: ${JSON.stringify(wallet2, null, 2)}`)
 
     // Verify wallet has 1 WHC
     const WHC = wallet1.tokenBalance.find(token => token.propertyid === 1)
@@ -48,16 +52,25 @@ async function fixedTokenTest() {
 
     // Create token
     //const txid = await lib.createFixedToken()
-    const txid = `3b2e9747767cf3d0070ceaffbd60ae40f1cd46f04c8dac3617659073f324f19d`
-    console.log(`txid: ${txid}`)
+    const createTxid = `3b2e9747767cf3d0070ceaffbd60ae40f1cd46f04c8dac3617659073f324f19d`
+    console.log(`txid: ${createTxid}`)
 
     // Wait for 1-conf
-    await lib.waitFor1Conf(txid)
-    console.log(`1 confirmation detected.`)
+    const propertyId = await lib.waitFor1Conf(createTxid)
+    console.log(
+      `1 confirmation detected. New token propertyId is ${propertyId}`
+    )
 
     // Send tokens to wallet 2.
+    const sendTxid = await lib.sendTokens(wallet1, wallet2, propertyId)
+
     // Wait for 1-conf
+    await lib.waitFor1Conf(sendTxid)
+    console.log(`1 confirmation detected.`)
+
     // Verify wallet 2 has tokens.
+    const newBalance = await lib.getBalance(wallet2)
+    console.log(`newBalance: ${JSON.stringify(newBalance, null, 2)}`)
   } catch (err) {
     console.log(`Error in fixedTokenTest: `, err)
   }
