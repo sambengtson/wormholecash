@@ -1,5 +1,15 @@
 /*
-  Burn 1 BCH to generate 100 WHC used for creating new tokens.
+  Burn all BCH in an UTXO. If that UTXO contains more than 1 BCH, it will
+  generate 100 WHC, used for creating new tokens.
+
+  Before seeing the WHC tokens appear
+  in the `check-balance` example, you'll have to wait 4 confirmations on testnet
+  and 1000 confirmations (7 days) on mainnet.
+
+  This is just an example, *not intended for real burning!*. One side effect of
+  this early example is that it will consume all the BCH in a UTXO. *Be sure
+  to use a new wallet with a 1.00001000 tBCH (1 BCH + TX fee). Anything in
+  addition to this will be burned.*
 */
 
 // Used for debugging.
@@ -15,9 +25,10 @@ const NETWORK = `testnet`
 const WH = require("../../lib/Wormhole").default
 
 // Instantiate Wormhole based on the network.
+let Wormhole
 if (NETWORK === `mainnet`)
-  var Wormhole = new WH({ restURL: `https://rest.bitcoin.com/v1/` })
-else var Wormhole = new WH({ restURL: `https://trest.bitcoin.com/v1/` })
+  Wormhole = new WH({ restURL: `https://rest.bitcoin.com/v1/` })
+else Wormhole = new WH({ restURL: `https://trest.bitcoin.com/v1/` })
 
 // Open the wallet generated with create-wallet.
 let walletInfo
@@ -59,13 +70,11 @@ async function burnBch() {
       process.exit(0)
     }
 
-    // Get the burnBCH payload.
     const burnBCH = await Wormhole.PayloadCreation.burnBCH()
 
     // Get a utxo to use for this transaction.
     const u = await Wormhole.Address.utxo([cashAddress])
     const utxo = findBiggestUtxo(u[0])
-    console.log(`utxo: ${util.inspect(utxo)}`)
 
     // Create a rawTx using the largest utxo in the wallet.
     utxo.value = utxo.amount
@@ -77,52 +86,20 @@ async function burnBch() {
     // Set the destination/recieving address for the tokens, with the actual
     // amount of BCH set to a minimal amount.
     const burnAddr = "bchtest:qqqqqqqqqqqqqqqqqqqqqqqqqqqqqdmwgvnjkt8whc"
-    //const ref = await Wormhole.RawTransactions.reference(opReturn, cashAddress)
-    // Creates the
-    //const ref = await Wormhole.RawTransactions.reference(opReturn, burnAddr)
+    const ref = await Wormhole.RawTransactions.reference(opReturn, burnAddr)
 
-    const minerFee = 0.00001
+    const minerFee = 0.000005
 
-    // amount to send back to the sending address. It's the original amount - 1 sat/byte for tx size
-    const remainder = bchBalance - 1.0 - minerFee
-
-    //opReturn.addOutput(cashAddress, remainder)
-
-    // Generate a change output.
+    // Generate a change output .
     const changeHex = await Wormhole.RawTransactions.change(
-      //ref, // Raw transaction we're working with.
-      opReturn,
+      ref, // Raw transaction we're working with.
       [utxo], // Previous utxo
       burnAddr, // Destination address.
-      //cashAddress,
       minerFee // Miner fee.
     )
 
-    /*
-    const tx = Wormhole.Transaction.fromHex(ref)
-    tx.outs.unshift({
-      value: 199990000,
-      script: Buffer.from(
-        "76a9140000000000000000000000000000000000376e4388ac",
-        "hex"
-      )
-    })
-    const buf = Wormhole.Script.pubKey.output.encode(
-      Buffer.from("bchtest:", "hex")
-    )
-    console.log(tx.outs)
-    const tb = Wormhole.Transaction.fromTransaction(tx)
-    // let ca = "mfWxJ45yp2SFn7UciZyNpvDKu6S3TYMHMR";
-    // console.log(tb);
-    // tb.addOutput('qqqqqqqqqqqqqqqqqqqqqqqqqqqqqdmwgvnjkt8whc', Wormhole.BitcoinCash.toSatoshi(1));
-    */
-
     const tx = Wormhole.Transaction.fromHex(changeHex)
     const tb = Wormhole.Transaction.fromTransaction(tx)
-
-    // amount to send back to the sending address. It's the original amount - 1 sat/byte for tx size
-    //const remainder = bchBalance - 1.0 - minerFee
-    //tb.addOutput(walletInfo.cashAddress, remainder)
 
     // Finalize and sign transaction.
     const keyPair = Wormhole.HDNode.toKeyPair(change)
@@ -132,9 +109,16 @@ async function burnBch() {
     const txHex = builtTx.toHex()
     console.log(txHex)
 
-    // sendRawTransaction to running BCH node
+    console.log(`
+You can review the output script for errors by replacing <tx-hex> with the TX
+hex at this URL:
+https://trest.bitcoin.com/v1/rawtransactions/decodeRawTransaction/<tx-hex>
+      `)
+    console.log(`TX Hex: ${hex}`)
 
-    // const broadcast = await Wormhole.RawTransactions.sendRawTransaction(txHex)
+    // sendRawTransaction to running BCH node
+    // UNCOMMENT THE CODE BELOW HERE
+    //const broadcast = await Wormhole.RawTransactions.sendRawTransaction(txHex)
     //console.log(`You can monitor the below transaction ID on a block explorer.`)
     //console.log(`Transaction ID: ${broadcast}`)
   } catch (err) {

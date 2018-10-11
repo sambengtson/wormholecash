@@ -56,19 +56,16 @@ async function consolidateDust() {
     // instance of transaction builder
     const transactionBuilder = new Wormhole.TransactionBuilder("testnet")
 
+    // Combine all the utxos into the inputs of the TX.
     const u = await Wormhole.Address.utxo([cashAddress])
     const inputs = []
     let originalAmount = 0
     u[0].forEach(utxo => {
       originalAmount = originalAmount + utxo.satoshis
-      //console.log(`utxo: ${util.inspect(utxo)}`)
-      //if (utxo.satoshis === dust) {
+
       inputs.push(utxo)
 
-      // console.log(utxo.txid, utxo.vout)
-      // add input with txid and index of vout
       transactionBuilder.addInput(utxo.txid, utxo.vout)
-      //}
     })
 
     // original amount of satoshis in vin
