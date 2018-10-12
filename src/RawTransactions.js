@@ -11,16 +11,12 @@ class RawTransactions {
   async change(rawtx, prevTxs, destination, fee, position = undefined) {
     let path
     if (position) {
-      path = `${this.restURL}rawTransactions/change/${rawtx}/${JSON.stringify(
-        prevTxs
-      )}/${destination}/${fee}?position=${position}`
+      path = `${this.restURL}rawTransactions/change?position=${position}`
     } else {
-      path = `${this.restURL}rawTransactions/change/${rawtx}/${JSON.stringify(
-        prevTxs
-      )}/${destination}/${fee}`
+      path = `${this.restURL}rawTransactions/change`
     }
     try {
-      const response = await axios.post(path)
+      const response = await axios.post(path, {rawtx: rawtx, prevTxs: prevTxs, destination: destination, fee: fee})
       return response.data
     } catch (error) {
       throw error.response.data
@@ -41,7 +37,7 @@ class RawTransactions {
   async opReturn(rawtx, payload) {
     try {
       const response = await axios.post(
-        `${this.restURL}rawTransactions/opReturn/${rawtx}/${payload}`
+        `${this.restURL}rawTransactions/opReturn`, {rawtx: rawtx, payload: payload}
       )
       return response.data
     } catch (error) {
@@ -54,12 +50,12 @@ class RawTransactions {
     if (amount) {
       path = `${
         this.restURL
-      }rawTransactions/reference/${rawtx}/${destination}?amount=${amount}`
+      }rawTransactions/reference?amount=${amount}`
     } else {
-      path = `${this.restURL}rawTransactions/reference/${rawtx}/${destination}`
+      path = `${this.restURL}rawTransactions/reference`
     }
     try {
-      const response = await axios.post(path)
+      const response = await axios.post(path, {rawtx: rawtx, destination: destination})
       return response.data
     } catch (error) {
       throw error.response.data
@@ -98,9 +94,7 @@ class RawTransactions {
   async create(inputs, outputs = {}) {
     try {
       const response = await axios.post(
-        `${this.restURL}rawTransactions/create/${JSON.stringify(
-          inputs
-        )}/${JSON.stringify(outputs)}`
+        `${this.restURL}rawTransactions/create/`, {inputs: inputs, outputs: outputs}
       )
       return response.data
     } catch (error) {
