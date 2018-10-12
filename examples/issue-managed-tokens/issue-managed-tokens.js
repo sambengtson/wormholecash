@@ -6,11 +6,11 @@
 const WH = require("wormhole-sdk/lib/Wormhole").default
 
 // Set NETWORK to either testnet or mainnet
-const NETWORK = `testnet`
+const NETWORK = `mainnet`
 
 // This is the WH propertyId of the token that this program will be creating
 // new tokens for.
-const PROPERTY_ID = 307
+const PROPERTY_ID = 200
 
 // The quantity of new tokens to issue.
 const TOKEN_QTY = 100

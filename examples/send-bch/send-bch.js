@@ -6,10 +6,10 @@
 const NETWORK = `testnet`
 
 // Replace the address below with the address you want to send the BCH to.
-const RECV_ADDR = `bchtest:qzjtnzcvzxx7s0na88yrg3zl28wwvfp97538sgrrmr`
+const RECV_ADDR = `bchtest:qz2mxw2hp67ld7q4w4tjrk5w3w9rkjqjcqzvmwd7nl`
 
 // The amount of BCH to send, in satoshis. 1 satoshi = 0.00000001 BCH
-const AMOUNT_TO_SEND = 10000
+const AMOUNT_TO_SEND = 100000000
 
 const WH = require("../../lib/Wormhole").default
 
