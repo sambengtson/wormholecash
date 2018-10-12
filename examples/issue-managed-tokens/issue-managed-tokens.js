@@ -6,19 +6,20 @@
 const WH = require("wormhole-sdk/lib/Wormhole").default
 
 // Set NETWORK to either testnet or mainnet
-const NETWORK = `testnet`
+const NETWORK = `mainnet`
 
 // This is the WH propertyId of the token that this program will be creating
 // new tokens for.
-const PROPERTY_ID = 307
+const PROPERTY_ID = 200
 
 // The quantity of new tokens to issue.
 const TOKEN_QTY = 100
 
 // Instantiate Wormhole based on the network.
+let Wormhole
 if (NETWORK === `mainnet`)
-  var Wormhole = new WH({ restURL: `https://rest.bitcoin.com/v1/` })
-else var Wormhole = new WH({ restURL: `https://trest.bitcoin.com/v1/` })
+  Wormhole = new WH({ restURL: `https://rest.bitcoin.com/v1/` })
+else Wormhole = new WH({ restURL: `https://trest.bitcoin.com/v1/` })
 
 // Open the wallet generated with create-wallet.
 try {
@@ -43,9 +44,9 @@ async function issueNewTokens() {
     const rootSeed = Wormhole.Mnemonic.toSeed(mnemonic)
 
     // master HDNode
-    if (NETWORK === `mainnet`)
-      var masterHDNode = Wormhole.HDNode.fromSeed(rootSeed)
-    else var masterHDNode = Wormhole.HDNode.fromSeed(rootSeed, "testnet")
+    let masterHDNode
+    if (NETWORK === `mainnet`) masterHDNode = Wormhole.HDNode.fromSeed(rootSeed)
+    else masterHDNode = Wormhole.HDNode.fromSeed(rootSeed, "testnet")
 
     // HDNode of BIP44 account
     const account = Wormhole.HDNode.derivePath(masterHDNode, "m/44'/145'/0'")

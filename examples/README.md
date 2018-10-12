@@ -22,8 +22,8 @@ You can run each example script by entering its directory and executing `npm sta
 - [check-balance](check-balance) Check the balance of your BCH wallet. This
   displays both BCH information as well as Wormhole token information.
 
-- [send-bch](send-bch) Send BCH to another address. (*Great for sending balances
-  back to the testnet faucet.*)
+- [send-bch](send-bch) Send BCH to another address. (_Great for sending balances
+  back to the testnet faucet._)
 
 - [token-info-from-tx](data-retrieval/token-info-from-tx) Most examples in this
   directory output a TXID. Once the transaction has been stored to the blockchain
@@ -33,19 +33,16 @@ You can run each example script by entering its directory and executing `npm sta
 
 ## Wormhole Token Functions
 
-These example apps roughly follow the
-[third Wormhole tutorial](https://developer.bitcoin.com/tutorials/wormhole-3-tokens.html)
-
 - [burn-bch](burn-bch)
   Burn 1 BCH to generate 100 WHC tokens. These WHC tokens
   are needed for creating your own tokens. Before seeing the WHC tokens appear
   in the `check-balance` example, you'll have to wait 4 confirmations on testnet
   and 1000 confirmations (7 days) on mainnet.
 
-  This is just an example, *not intended for real burning!*. One side effect of
-  this early example is that it will consume all the BCH in a UTXO. *Be sure
+  This is just an example, _not intended for real burning!_. One side effect of
+  this early example is that it will consume all the BCH in a UTXO. _Be sure
   to use a new wallet with a 1.00001000 tBCH (1 BCH + TX fee). Anything in
-  addition to this will be burned.*
+  addition to this will be burned._
 
 - [lookup-token](data-retrieval/lookup-token) Lookup token information based on
   the `primaryid` value assigned to it.
@@ -59,7 +56,7 @@ These example apps roughly follow the
 Fixed tokens are created with fixed supply, which can never be expanded or revoked.
 
 - [create-fixed-token](create-fixed-token) - Create a fixed token class and generate
-all the tokens, costs 1 WHC.
+  all the tokens, costs 1 WHC.
 
 ### Managed Tokens
 
@@ -80,7 +77,6 @@ be revoked.
   capable of issuing new tokens, the 'Token Manager'.
 
 - [revoke-managed-tokens](revoke-managed-tokens) Revoke existing tokens.
-
 
 ### Crowd Sale
 
