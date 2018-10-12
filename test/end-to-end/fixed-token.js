@@ -51,8 +51,8 @@ async function fixedTokenTest() {
     }
 
     // Create token
-    //const createTxid = await lib.createFixedToken(wallet1)
-    const createTxid = `af1c19345739139fff1bc0c1070aa45e0e720f018eb8aa327efbe0b09c14428d`
+    const createTxid = await lib.createFixedToken(wallet1)
+    //const createTxid = `af1c19345739139fff1bc0c1070aa45e0e720f018eb8aa327efbe0b09c14428d`
     console.log(`\nNew Fixed-supply token created. txid: ${createTxid}`)
 
     // Wait for 1-conf
@@ -77,7 +77,6 @@ async function fixedTokenTest() {
     let tokenBalance = newBalance.tokenBalance.find(
       token => Number(token.propertyid) === Number(propertyId)
     )
-    console.log(`tokenBalance first blush: ${util.inspect(tokenBalance)}`)
     tokenBalance = Number(tokenBalance.balance)
 
     // Assert that tokens exist and are a specific amount.
