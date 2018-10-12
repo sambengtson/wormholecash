@@ -42,6 +42,11 @@ These example apps roughly follow the
   in the `check-balance` example, you'll have to wait 4 confirmations on testnet
   and 1000 confirmations (7 days) on mainnet.
 
+  This is just an example, *not intended for real burning!*. One side effect of
+  this early example is that it will consume all the BCH in a UTXO. *Be sure
+  to use a new wallet with a 1.00001000 tBCH (1 BCH + TX fee). Anything in
+  addition to this will be burned.*
+
 - [lookup-token](data-retrieval/lookup-token) Lookup token information based on
   the `primaryid` value assigned to it.
 

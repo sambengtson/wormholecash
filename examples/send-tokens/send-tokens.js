@@ -10,7 +10,7 @@ const RECV_ADDR = "qz6svmakwcvh0c8smqp2jmu73cq88latyvnevx6ctp"
 const propertyId = 200 // WH ID identifying the token. 1 === WHC.
 const TOKEN_QTY = 1 // Number of tokens to send.
 
-const WH = require("wormhole-sdk/lib/Wormhole").default
+const WH = require("../../lib/Wormhole").default
 
 // Instantiate Wormhole based on the network.
 let Wormhole
@@ -30,7 +30,7 @@ try {
   process.exit(0)
 }
 
-// Issue new tokens.
+// Send existing tokens
 async function sendTokens() {
   try {
     const mnemonic = walletInfo.mnemonic
