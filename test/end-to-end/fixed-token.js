@@ -78,7 +78,7 @@ async function fixedTokenTest() {
       token => Number(token.propertyid) === Number(propertyId)
     )
     console.log(`tokenBalance first blush: ${util.inspect(tokenBalance)}`)
-    tokenBalance = Number(tokenBalance)
+    tokenBalance = Number(tokenBalance.balance)
 
     // Assert that tokens exist and are a specific amount.
     if (tokenBalance === 345) {
