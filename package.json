@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "build": "babel src/ -d lib/",
+    "postbuild": "cp -R typings/* lib",
     "test": "nyc --reporter=text mocha --require babel-core/register --timeout 10000",
     "coverage": "nyc report --reporter=text-lcov | coveralls",
     "coverage:report": "nyc --reporter=html mocha --require babel-core/register --timeout 10000"
