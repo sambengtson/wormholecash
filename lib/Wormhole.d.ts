@@ -2,9 +2,9 @@ import { DataRetrieval } from "./DataRetrieval"
 import { PayloadCreation } from "./PayloadCreation"
 import { RawTransactions } from "./RawTransactions"
 import { ERC20 } from "./ERC20"
-import BITBOXCli from "bitbox-cli/lib/bitbox-cli"
+import BITBOXSDK from "bitbox-sdk/lib/bitbox-sdk"
 
-declare class Wormhole extends BITBOXCli {
+declare class Wormhole extends BITBOXSDK {
   constructor(config?: Config)
 
   DataRetrieval: DataRetrieval
