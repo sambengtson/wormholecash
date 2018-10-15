@@ -11,7 +11,7 @@ export declare interface RawTransactions {
   opReturn(rawtx: string, payload: string): Promise<string>
   reference(rawtx: string, destination: string, amount?: number): Promise<string> 
   decodeTransaction(rawtx: string, prevTxs?: TransactionInput[], height?: number): Promise<TransactionResult>
-  create(inputs: TransactionInput[], outputs: TransactionOutput[]): Promise<string>
+  create(inputs: TransactionInput[], outputs?: TransactionOutput): Promise<string>
 }
 
 export declare interface TransactionInput {
