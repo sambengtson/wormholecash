@@ -1,11 +1,11 @@
 {
-  "name": "participate-in-crowdsale",
+  "name": "fixed-token.js",
   "version": "1.0.0",
-  "description": "Use 1 WHC to create a crowd sale / ICO.",
-  "main": "participate-in-crowdsale.js",
+  "description": "End-to-end test for fixed tokens",
+  "main": "fixed-token.js",
   "scripts": {
     "test": "echo no tests yet",
-    "start": "node participate-in-crowdsale.js"
+    "start": "node fixed-token.js"
   },
   "repository": {
     "type": "git",
@@ -13,17 +13,9 @@
   },
   "keywords": [
     "wormhole-sdk",
-    "example",
-    "bch",
-    "bitcoin cash",
-    "tokens",
-    "token",
-    "wormhole",
-    "node",
-    "node.js",
-    "javascript"
+    "example"
   ],
-  "author": "Gabriel Cardona <gabriel@bitcoin.com>",
+  "author": "Chris Troutner <chris.troutner@gmail.com>",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/Bitcoin-com/wormhole-sdk/issues"

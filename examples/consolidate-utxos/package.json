@@ -1,11 +1,11 @@
 {
-  "name": "participate-in-crowdsale",
+  "name": "consolidate-utxos",
   "version": "1.0.0",
-  "description": "Use 1 WHC to create a crowd sale / ICO.",
-  "main": "participate-in-crowdsale.js",
+  "description": "Consolidate all UTXOs in a wallet back into a single UTXO",
+  "main": "consolidate-utxos.js",
   "scripts": {
     "test": "echo no tests yet",
-    "start": "node participate-in-crowdsale.js"
+    "start": "node consolidate-utxos.js"
   },
   "repository": {
     "type": "git",
@@ -23,13 +23,13 @@
     "node.js",
     "javascript"
   ],
-  "author": "Gabriel Cardona <gabriel@bitcoin.com>",
+  "author": "Chris Troutner <chris.troutner@gmail.com>",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/Bitcoin-com/wormhole-sdk/issues"
   },
   "homepage": "https://github.com/Bitcoin-com/wormhole-sdk#readme",
   "dependencies": {
-    "wormhole-sdk": "^1.0.4"
+    "wormhole-sdk": "^0.6.0"
   }
 }

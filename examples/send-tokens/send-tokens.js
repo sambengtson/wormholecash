@@ -3,19 +3,20 @@
 */
 
 // Set NETWORK to either testnet or mainnet
-const NETWORK = `testnet`
+const NETWORK = `mainnet`
 
 // Change these values to match your token.
-const RECV_ADDR = "bchtest:qr0x5jrn9hefnuauvpgt5z64t4zu754u5srymdj2xm"
-const propertyId = 307 // WH ID identifying the token. 1 === WHC.
-const TOKEN_QTY = 23 // Number of tokens to send.
+const RECV_ADDR = "qz6svmakwcvh0c8smqp2jmu73cq88latyvnevx6ctp"
+const propertyId = 200 // WH ID identifying the token. 1 === WHC.
+const TOKEN_QTY = 1 // Number of tokens to send.
 
-const WH = require("wormhole-sdk/lib/Wormhole").default
+const WH = require("../../lib/Wormhole").default
 
 // Instantiate Wormhole based on the network.
+let Wormhole
 if (NETWORK === `mainnet`)
-  var Wormhole = new WH({ restURL: `https://rest.bitcoin.com/v1/` })
-else var Wormhole = new WH({ restURL: `https://trest.bitcoin.com/v1/` })
+  Wormhole = new WH({ restURL: `https://rest.bitcoin.com/v1/` })
+else Wormhole = new WH({ restURL: `https://trest.bitcoin.com/v1/` })
 
 // Open the wallet generated with create-wallet.
 let walletInfo
@@ -29,7 +30,7 @@ try {
   process.exit(0)
 }
 
-// Issue new tokens.
+// Send existing tokens
 async function sendTokens() {
   try {
     const mnemonic = walletInfo.mnemonic
@@ -38,9 +39,9 @@ async function sendTokens() {
     const rootSeed = Wormhole.Mnemonic.toSeed(mnemonic)
 
     // master HDNode
-    if (NETWORK === `mainnet`)
-      var masterHDNode = Wormhole.HDNode.fromSeed(rootSeed)
-    else var masterHDNode = Wormhole.HDNode.fromSeed(rootSeed, "testnet") // Testnet
+    let masterHDNode
+    if (NETWORK === `mainnet`) masterHDNode = Wormhole.HDNode.fromSeed(rootSeed)
+    else masterHDNode = Wormhole.HDNode.fromSeed(rootSeed, "testnet") // Testnet
 
     // HDNode of BIP44 account
     const account = Wormhole.HDNode.derivePath(masterHDNode, "m/44'/145'/0'")

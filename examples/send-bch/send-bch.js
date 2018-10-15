@@ -6,17 +6,18 @@
 const NETWORK = `testnet`
 
 // Replace the address below with the address you want to send the BCH to.
-const RECV_ADDR = `bchtest:qp6hgvevf4gzz6l7pgcte3gaaud9km0l459fa23dul`
+const RECV_ADDR = ``
 
 // The amount of BCH to send, in satoshis. 1 satoshi = 0.00000001 BCH
-const AMOUNT_TO_SEND = 1000
+const AMOUNT_TO_SEND = 100000000
 
-const WH = require("wormhole-sdk/lib/Wormhole").default
+const WH = require("../../lib/Wormhole").default
 
 // Instantiate Wormhole based on the network.
+let Wormhole
 if (NETWORK === `mainnet`)
-  var Wormhole = new WH({ restURL: `https://rest.bitcoin.com/v1/` })
-else var Wormhole = new WH({ restURL: `https://trest.bitcoin.com/v1/` })
+  Wormhole = new WH({ restURL: `https://rest.bitcoin.com/v1/` })
+else Wormhole = new WH({ restURL: `https://trest.bitcoin.com/v1/` })
 
 // Open the wallet generated with create-wallet.
 let walletInfo
@@ -29,12 +30,18 @@ try {
   process.exit(0)
 }
 
-const SEND_ADDR = walletInfo.cashAddress
 const SEND_MNEMONIC = walletInfo.mnemonic
+// Generate a change address from a Mnemonic of a private key.
+const change = changeAddrFromMnemonic(SEND_MNEMONIC)
+const SEND_ADDR = Wormhole.HDNode.toCashAddress(change)
 
 async function sendBch() {
+  const SEND_ADDR_LEGACY = Wormhole.Address.toLegacyAddress(SEND_ADDR)
+  const RECV_ADDR_LEGACY = Wormhole.Address.toLegacyAddress(RECV_ADDR)
+
   const balance = await getBCHBalance(SEND_ADDR, false)
-  console.log(`balance: ${JSON.stringify(balance, null, 2)}`)
+  console.log(`Send Address: ${SEND_ADDR}`)
+  console.log(`Sender Legacy Address: ${SEND_ADDR_LEGACY}`)
   console.log(`Balance of sending address ${SEND_ADDR} is ${balance} BCH.`)
 
   if (balance <= 0.0) {
@@ -42,15 +49,14 @@ async function sendBch() {
     process.exit(0)
   }
 
-  const SEND_ADDR_LEGACY = Wormhole.Address.toLegacyAddress(SEND_ADDR)
-  const RECV_ADDR_LEGACY = Wormhole.Address.toLegacyAddress(RECV_ADDR)
-  console.log(`Sender Legacy Address: ${SEND_ADDR_LEGACY}`)
-  console.log(`Receiver Legacy Address: ${RECV_ADDR_LEGACY}`)
-
   const balance2 = await getBCHBalance(RECV_ADDR, false)
-  console.log(`Balance of recieving address ${RECV_ADDR} is ${balance2} BCH.`)
+  console.log(`\nReceiver Address: ${RECV_ADDR}`)
+  console.log(`Receiver Legacy Address: ${RECV_ADDR_LEGACY}`)
+  console.log(`Balance of recieving address ${RECV_ADDR} is ${balance2} BCH.\n`)
 
-  const utxo = await Wormhole.Address.utxo(SEND_ADDR)
+  const u = await Wormhole.Address.utxo([SEND_ADDR])
+  const utxo = findBiggestUtxo(u[0])
+  //console.log(`utxo: ${JSON.stringify(utxo, null, 2)}`)
 
   // instance of transaction builder
   if (NETWORK === `mainnet`)
@@ -58,9 +64,10 @@ async function sendBch() {
   else var transactionBuilder = new Wormhole.TransactionBuilder("testnet")
 
   const satoshisToSend = AMOUNT_TO_SEND
-  const originalAmount = utxo[0].satoshis
-  const vout = utxo[0].vout
-  const txid = utxo[0].txid
+  const originalAmount = utxo.satoshis
+
+  const vout = utxo.vout
+  const txid = utxo.txid
 
   // add input with txid and index of vout
   transactionBuilder.addInput(txid, vout)
@@ -73,17 +80,17 @@ async function sendBch() {
   console.log(`byteCount: ${byteCount}`)
   const satoshisPerByte = 1.1
   const txFee = Math.floor(satoshisPerByte * byteCount)
-  console.log(`txFee: ${txFee}`)
+  console.log(`txFee: ${txFee} satoshis\n`)
 
   // amount to send back to the sending address. It's the original amount - 1 sat/byte for tx size
   const remainder = originalAmount - satoshisToSend - txFee
 
   // add output w/ address and amount to send
   transactionBuilder.addOutput(RECV_ADDR, satoshisToSend)
-  transactionBuilder.addOutput(SEND_ADDR, remainder)
-
-  // Generate a change address from a Mnemonic of a private key.
-  const change = changeAddrFromMnemonic(SEND_MNEMONIC)
+  transactionBuilder.addOutput(
+    Wormhole.Address.toLegacyAddress(RECV_ADDR),
+    remainder
+  )
 
   // Generate a keypair from the change address.
   const keyPair = Wormhole.HDNode.toKeyPair(change)
@@ -102,8 +109,8 @@ async function sendBch() {
   const tx = transactionBuilder.build()
   // output rawhex
   const hex = tx.toHex()
-  //console.log(`Transaction raw hex: `);
-  //console.log(`${hex}`);
+  console.log(`Transaction raw hex: `)
+  //console.log(hex)
 
   // sendRawTransaction to running BCH node
   const broadcast = await Wormhole.RawTransactions.sendRawTransaction(hex)
@@ -143,4 +150,21 @@ async function getBCHBalance(addr, verbose) {
     console.log(`addr: ${addr}`)
     throw err
   }
+}
+
+// Returns the utxo with the biggest balance from an array of utxos.
+function findBiggestUtxo(utxos) {
+  let largestAmount = 0
+  let largestIndex = 0
+
+  for (var i = 0; i < utxos.length; i++) {
+    const thisUtxo = utxos[i]
+
+    if (thisUtxo.satoshis > largestAmount) {
+      largestAmount = thisUtxo.satoshis
+      largestIndex = i
+    }
+  }
+
+  return utxos[largestIndex]
 }

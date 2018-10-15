@@ -28,5 +28,8 @@
   "bugs": {
     "url": "https://github.com/Bitcoin-com/wormhole-sdk/issues"
   },
-  "homepage": "https://github.com/Bitcoin-com/wormhole-sdk#readme"
+  "homepage": "https://github.com/Bitcoin-com/wormhole-sdk#readme",
+  "dependencies": {
+    "wormhole-sdk": "^1.0.4"
+  }
 }

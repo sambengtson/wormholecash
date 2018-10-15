@@ -1,6 +1,6 @@
 import axios from "axios"
-const BITBOXCli = require("bitbox-cli/lib/bitbox-cli").default
-const BITBOX = new BITBOXCli()
+const BITBOXSDK = require("bitbox-sdk/lib/bitbox-sdk").default
+const BITBOX = new BITBOXSDK()
 
 class ERC20 {
   constructor(restURL, dataRetrieval, payloadCreation, rawTransactions) {
@@ -118,7 +118,7 @@ class ERC20 {
     }
   }
 
-  async transferFrom(from, to, value) {
+  async transferFrom(from, to, value, cb) {
     // Send `value` amount of tokens from address `from` to address `to`
     try {
       // get the cash address
@@ -178,7 +178,7 @@ class ERC20 {
     // NOOP
   }
 
-  async allowance(owner, spender) {
+  async allowance(owner, spender, cb) {
     // Returns the amount which `spender` is still allowed to withdraw from `owner`
     // NOOP
   }
