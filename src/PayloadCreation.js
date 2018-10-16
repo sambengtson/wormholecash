@@ -175,10 +175,10 @@ class PayloadCreation {
     }
   }
 
-  async freeze(toAddress, propertyId, amount) {
+  async freeze(toAddress, propertyId) {
     const path = `${
       this.restURL
-    }payloadCreation/freeze/${toAddress}/${propertyId}/${amount}`
+    }payloadCreation/freeze/${toAddress}/${propertyId}`
     try {
       const response = await axios.post(path)
       return response.data
@@ -187,10 +187,10 @@ class PayloadCreation {
     }
   }
 
-  async unfreeze(toAddress, propertyId, amount) {
+  async unfreeze(toAddress, propertyId) {
     const path = `${
       this.restURL
-    }payloadCreation/unfreeze/${toAddress}/${propertyId}/${amount}`
+    }payloadCreation/unfreeze/${toAddress}/${propertyId}`
     try {
       const response = await axios.post(path)
       return response.data
