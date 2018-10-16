@@ -18,7 +18,7 @@ const Wormhole = require("./lib/Wormhole").default
 const clone = require("git-clone")
 const cmd = require("node-cmd")
 
-program.version("1.1.0", "-v, --version")
+program.version("1.2.0", "-v, --version")
 
 program
   .command("new <name>")
