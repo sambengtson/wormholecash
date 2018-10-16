@@ -11,8 +11,8 @@ export declare interface DataRetrieval {
   payload(txid: string): Promise<PayloadResult>
   property(propertyId: number): Promise<PropertyResult>
   seedBlocks(startBlock: number, endBlock: number): Promise<number[]>
-  STO(txid: number, recipientFilter: string): Promise<STOResult>
-  transaction(txid: number): Promise<TransactionResult>
+  STO(txid: string, recipientFilter: string): Promise<STOResult>
+  transaction(txid: string): Promise<TransactionResult>
   blockTransactions(index: number): Promise<string[]>
   pendingTransactions(address: string): Promise<PendingTransaction[]>
   properties(): Promise<PropertyResult[]>
