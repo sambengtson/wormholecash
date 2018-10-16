@@ -3,7 +3,7 @@
 */
 
 // Set NETWORK to either testnet or mainnet
-const NETWORK = `testnet`
+const NETWORK = `mainnet`
 
 const WH = require("wormhole-sdk/lib/Wormhole").default
 
@@ -36,9 +36,9 @@ async function createManagedToken() {
     const rootSeed = Wormhole.Mnemonic.toSeed(mnemonic)
 
     // master HDNode
-    if (NETWORK === `mainnet`)
-      var masterHDNode = Wormhole.HDNode.fromSeed(rootSeed)
-    else var masterHDNode = Wormhole.HDNode.fromSeed(rootSeed, "testnet")
+    let masterHDNode
+    if (NETWORK === `mainnet`) masterHDNode = Wormhole.HDNode.fromSeed(rootSeed)
+    else masterHDNode = Wormhole.HDNode.fromSeed(rootSeed, "testnet")
 
     // HDNode of BIP44 account
     const account = Wormhole.HDNode.derivePath(masterHDNode, "m/44'/145'/0'")
@@ -56,9 +56,9 @@ async function createManagedToken() {
       0, // Predecessor token. 0 for new tokens.
       "Companies", // Category.
       "Bitbox QA", // Subcategory
-      "QAM", // Name/Ticker
+      "FREEZE", // Name/Ticker
       "developer.bitcoin.com", // URL
-      "Managed Token - Made with BITBOX" // Description.
+      "Stable Coin - Made with BITBOX" // Description.
     )
 
     // Get a utxo to use for this transaction.
