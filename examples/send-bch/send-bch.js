@@ -9,7 +9,7 @@ const NETWORK = `testnet`
 const RECV_ADDR = ``
 
 // The amount of BCH to send, in satoshis. 1 satoshi = 0.00000001 BCH
-const AMOUNT_TO_SEND = 50701489
+const AMOUNT_TO_SEND = 100000000
 
 const WH = require("../../lib/Wormhole").default
 

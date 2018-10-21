@@ -1,5 +1,5 @@
 /*
-  Consolidate dust to clean up wallet.
+  Consolidate all UTXOs for an address into a single UTXO.
 */
 
 // Inspect utility used for debugging.
@@ -16,9 +16,10 @@ const NETWORK = `testnet`
 const WH = require("../../lib/Wormhole").default
 
 // Instantiate Wormhole based on the network.
+let Wormhole
 if (NETWORK === `mainnet`)
-  var Wormhole = new WH({ restURL: `https://rest.bitcoin.com/v1/` })
-else var Wormhole = new WH({ restURL: `https://trest.bitcoin.com/v1/` })
+  Wormhole = new WH({ restURL: `https://rest.bitcoin.com/v1/` })
+else Wormhole = new WH({ restURL: `https://trest.bitcoin.com/v1/` })
 
 // Open the wallet generated with create-wallet.
 let walletInfo
@@ -60,13 +61,19 @@ async function consolidateDust() {
     const u = await Wormhole.Address.utxo([cashAddress])
     const inputs = []
     let originalAmount = 0
-    u[0].forEach(utxo => {
+
+    for (let i = 0; i < u[0].length; i++) {
+      // REST API only supports 20 UTXOs at a time.
+      if (i > 20) break
+
+      const utxo = u[0][i]
+
       originalAmount = originalAmount + utxo.satoshis
 
       inputs.push(utxo)
 
       transactionBuilder.addInput(utxo.txid, utxo.vout)
-    })
+    }
 
     // original amount of satoshis in vin
     //const originalAmount = inputs.length * dust
@@ -116,7 +123,7 @@ https://trest.bitcoin.com/v1/rawtransactions/decodeRawTransaction/<tx-hex>
 
     // sendRawTransaction to running BCH node
     const broadcast = await Wormhole.RawTransactions.sendRawTransaction(hex)
-    console.log(`Transaction ID: ${broadcast}`)
+    console.log(`\nTransaction ID: ${broadcast}`)
   } catch (err) {
     console.log(err)
   }

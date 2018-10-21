@@ -118,7 +118,7 @@ class ERC20 {
     }
   }
 
-  async transferFrom(from, to, value) {
+  async transferFrom(from, to, value, cb) {
     // Send `value` amount of tokens from address `from` to address `to`
     try {
       // get the cash address
@@ -178,7 +178,7 @@ class ERC20 {
     // NOOP
   }
 
-  async allowance(owner, spender) {
+  async allowance(owner, spender, cb) {
     // Returns the amount which `spender` is still allowed to withdraw from `owner`
     // NOOP
   }

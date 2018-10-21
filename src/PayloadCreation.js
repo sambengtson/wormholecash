@@ -174,6 +174,30 @@ class PayloadCreation {
       throw error.response.data
     }
   }
+
+  async freeze(toAddress, propertyId) {
+    const path = `${
+      this.restURL
+    }payloadCreation/freeze/${toAddress}/${propertyId}`
+    try {
+      const response = await axios.post(path)
+      return response.data
+    } catch (error) {
+      throw error.response.data
+    }
+  }
+
+  async unfreeze(toAddress, propertyId) {
+    const path = `${
+      this.restURL
+    }payloadCreation/unfreeze/${toAddress}/${propertyId}`
+    try {
+      const response = await axios.post(path)
+      return response.data
+    } catch (error) {
+      throw error.response.data
+    }
+  }
 }
 
 export default PayloadCreation
