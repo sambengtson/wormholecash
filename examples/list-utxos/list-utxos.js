@@ -1,15 +1,22 @@
 /*
-  Check the BCH and Wormhole token balance for the wallet created with the
-  create-wallet example app.
+  Consolidate all UTXOs for an address into a single UTXO.
 */
 
+// Inspect utility used for debugging.
+const util = require("util")
+util.inspect.defaultOptions = {
+  showHidden: true,
+  colors: true,
+  depth: 1
+}
+
 // Set NETWORK to either testnet or mainnet
-const NETWORK = `mainnet`
+const NETWORK = `testnet`
 
 const WH = require("../../lib/Wormhole").default
 
 // Instantiate Wormhole based on the network.
-let Wormhole;
+let Wormhole
 if (NETWORK === `mainnet`)
   Wormhole = new WH({ restURL: `https://rest.bitcoin.com/v1/` })
 else Wormhole = new WH({ restURL: `https://trest.bitcoin.com/v1/` })
@@ -20,17 +27,19 @@ try {
   walletInfo = require(`../create-wallet/wallet.json`)
 } catch (err) {
   console.log(
-    `Could not open wallet.json. Generate a wallet with create-wallet first.`
+    `Could not open wallet.json. Generate a wallet with create-wallet first.
+    Exiting.`
   )
   process.exit(0)
 }
 
-async function getBalance() {
+async function consolidateDust() {
   try {
     const mnemonic = walletInfo.mnemonic
 
     // root seed buffer
     const rootSeed = Wormhole.Mnemonic.toSeed(mnemonic)
+
     // master HDNode
     if (NETWORK === `mainnet`)
       var masterHDNode = Wormhole.HDNode.fromSeed(rootSeed)
@@ -43,29 +52,20 @@ async function getBalance() {
 
     // get the cash address
     const cashAddress = Wormhole.HDNode.toCashAddress(change)
+    // const cashAddress = walletInfo.cashAddress
 
-    // first get BCH balance
-    const balance = await Wormhole.Address.details([cashAddress])
+    // Combine all the utxos into the inputs of the TX.
+    const u = await Wormhole.Address.utxo([cashAddress])
 
-    console.log(`BCH Balance information for ${cashAddress}:`)
-    console.log(balance)
-    console.log(``)
-    console.log(`Wormhole Token information:`)
+    let i = 0
+    u[0].forEach(utxo => {
+      console.log(`utxo[${i}]: ${util.inspect(utxo)}`)
+      i++
 
-    // get token balances
-    try {
-      const tokens = await Wormhole.DataRetrieval.balancesForAddress(
-        cashAddress
-      )
-
-      console.log(JSON.stringify(tokens, null, 2))
-    } catch (error) {
-      if (error.message === "Address not found") console.log(`No tokens found.`)
-    }
+      console.log(` `)
+    })
   } catch (err) {
-    console.error(`Error in getBalance: `, err)
-    console.log(`Error message: ${err.message}`)
-    throw err
+    console.log(err)
   }
 }
-getBalance()
+consolidateDust()

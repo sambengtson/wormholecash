@@ -192,6 +192,39 @@ class DataRetrieval {
       throw error.response.data
     }
   }
+
+  async frozenBalance(address, propertyId) {
+    try {
+      const response = await axios.get(
+        `${this.restURL}dataRetrieval/frozenBalance/${address}/${propertyId}`
+      )
+      return response.data
+    } catch (error) {
+      throw error.response.data
+    }
+  }
+
+  async frozenBalanceForAddress(address) {
+    try {
+      const response = await axios.get(
+        `${this.restURL}dataRetrieval/frozenBalanceForAddress/${address}`
+      )
+      return response.data
+    } catch (error) {
+      throw error.response.data
+    }
+  }
+
+  async frozenBalanceForId(propertyId) {
+    try {
+      const response = await axios.get(
+        `${this.restURL}dataRetrieval/frozenBalanceForId/${propertyId}`
+      )
+      return response.data
+    } catch (error) {
+      throw error.response.data
+    }
+  }
 }
 
 export default DataRetrieval

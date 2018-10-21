@@ -9,9 +9,10 @@ const NETWORK = `testnet`
 const WH = require("../../lib/Wormhole").default
 
 // Instantiate Wormhole based on the network.
+let Wormhole
 if (NETWORK === `mainnet`)
-  var Wormhole = new WH({ restURL: `https://rest.bitcoin.com/v1/` })
-else var Wormhole = new WH({ restURL: `https://trest.bitcoin.com/v1/` })
+  Wormhole = new WH({ restURL: `https://rest.bitcoin.com/v1/` })
+else Wormhole = new WH({ restURL: `https://trest.bitcoin.com/v1/` })
 
 const fs = require("fs")
 
